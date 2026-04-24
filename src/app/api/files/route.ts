@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { put, del, head } from '@vercel/blob';
+import { put, del } from '@vercel/blob';
 import { sql } from '@vercel/postgres';
 
 function getCategoryFromMime(mimeType: string): string {
@@ -23,20 +23,23 @@ export async function GET(request: NextRequest) {
     const category = searchParams.get('category') || '';
     const sort = searchParams.get('sort') || 'recent';
 
-    let whereClause = '';
     const conditions: string[] = [];
+    const params: any[] = [];
+    let paramIndex = 1;
 
     if (search) {
-      conditions.push(`("originalName" ILIKE '%${search.replace(/'/g, "''")}%' OR "name" ILIKE '%${search.replace(/'/g, "''")}%')`);
+      conditions.push(`("originalName" ILIKE $${paramIndex} OR "name" ILIKE $${paramIndex})`);
+      params.push(`%${search}%`);
+      paramIndex++;
     }
 
     if (category && category !== 'todos') {
-      conditions.push(`"category" = '${category.replace(/'/g, "''")}'`);
+      conditions.push(`"category" = $${paramIndex}`);
+      params.push(category);
+      paramIndex++;
     }
 
-    if (conditions.length > 0) {
-      whereClause = 'WHERE ' + conditions.join(' AND ');
-    }
+    const whereClause = conditions.length > 0 ? 'WHERE ' + conditions.join(' AND ') : '';
 
     let orderClause = '"createdAt" DESC';
     if (sort === 'name') orderClause = '"originalName" ASC';
@@ -44,7 +47,8 @@ export async function GET(request: NextRequest) {
     if (sort === 'downloads') orderClause = '"downloads" DESC';
 
     const { rows: files } = await sql.query(
-      `SELECT * FROM "file_entries" ${whereClause} ORDER BY ${orderClause}`
+      `SELECT * FROM "file_entries" ${whereClause} ORDER BY ${orderClause}`,
+      params
     );
 
     const { rows: statsRows } = await sql`
