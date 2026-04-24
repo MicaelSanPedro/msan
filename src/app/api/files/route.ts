@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
-import { writeFile, mkdir } from 'fs/promises';
-import path from 'path';
-import { existsSync } from 'fs';
-
-const UPLOAD_DIR = path.join(process.cwd(), 'uploads');
+import { put, del, head } from '@vercel/blob';
+import { sql } from '@vercel/postgres';
 
 function getCategoryFromMime(mimeType: string): string {
   if (mimeType.startsWith('image/')) return 'imagens';
@@ -27,33 +23,42 @@ export async function GET(request: NextRequest) {
     const category = searchParams.get('category') || '';
     const sort = searchParams.get('sort') || 'recent';
 
-    const where: any = {};
+    let whereClause = '';
+    const conditions: string[] = [];
 
     if (search) {
-      where.OR = [
-        { originalName: { contains: search } },
-        { name: { contains: search } },
-      ];
+      conditions.push(`("originalName" ILIKE '%${search.replace(/'/g, "''")}%' OR "name" ILIKE '%${search.replace(/'/g, "''")}%')`);
     }
 
     if (category && category !== 'todos') {
-      where.category = category;
+      conditions.push(`"category" = '${category.replace(/'/g, "''")}'`);
     }
 
-    let orderBy: any = { createdAt: 'desc' };
-    if (sort === 'name') orderBy = { originalName: 'asc' };
-    if (sort === 'size') orderBy = { size: 'desc' };
-    if (sort === 'downloads') orderBy = { downloads: 'desc' };
+    if (conditions.length > 0) {
+      whereClause = 'WHERE ' + conditions.join(' AND ');
+    }
 
-    const files = await db.fileEntry.findMany({
-      where,
-      orderBy,
-    });
+    let orderClause = '"createdAt" DESC';
+    if (sort === 'name') orderClause = '"originalName" ASC';
+    if (sort === 'size') orderClause = '"size" DESC';
+    if (sort === 'downloads') orderClause = '"downloads" DESC';
+
+    const { rows: files } = await sql.query(
+      `SELECT * FROM "file_entries" ${whereClause} ORDER BY ${orderClause}`
+    );
+
+    const { rows: statsRows } = await sql`
+      SELECT
+        COUNT(*) as "totalFiles",
+        COALESCE(SUM("downloads"), 0) as "totalDownloads",
+        COALESCE(SUM("size"), 0) as "totalSize"
+      FROM "file_entries"
+    `;
 
     const stats = {
-      totalFiles: await db.fileEntry.count(),
-      totalDownloads: (await db.fileEntry.aggregate({ _sum: { downloads: true } }))._sum.downloads || 0,
-      totalSize: (await db.fileEntry.aggregate({ _sum: { size: true } }))._sum.size || 0,
+      totalFiles: Number(statsRows[0]?.totalFiles || 0),
+      totalDownloads: Number(statsRows[0]?.totalDownloads || 0),
+      totalSize: Number(statsRows[0]?.totalSize || 0),
     };
 
     return NextResponse.json({ files, stats });
@@ -73,35 +78,24 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Nenhum arquivo enviado' }, { status: 400 });
     }
 
-    // Garantir que o diretório de upload existe
-    if (!existsSync(UPLOAD_DIR)) {
-      await mkdir(UPLOAD_DIR, { recursive: true });
-    }
+    // Gerar nome único para o blob
+    const ext = file.name.split('.').pop() || '';
+    const uniqueName = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${ext}`;
 
-    // Gerar nome único para o arquivo
-    const ext = path.extname(file.name);
-    const uniqueName = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}${ext}`;
-    const filePath = path.join(UPLOAD_DIR, uniqueName);
-
-    // Salvar arquivo no disco
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    await writeFile(filePath, buffer);
+    // Upload para Vercel Blob
+    const blob = await put(uniqueName, file, {
+      access: 'public',
+    });
 
     // Determinar categoria
     const category = getCategoryFromMime(file.type);
 
     // Salvar no banco
-    const fileEntry = await db.fileEntry.create({
-      data: {
-        name: uniqueName,
-        originalName: file.name,
-        size: file.size,
-        type: file.type || 'application/octet-stream',
-        category,
-        path: filePath,
-      },
-    });
+    const { rows: [fileEntry] } = await sql`
+      INSERT INTO "file_entries" ("name", "originalName", "size", "type", "category", "blobUrl", "downloads", "createdAt", "updatedAt")
+      VALUES (${uniqueName}, ${file.name}, ${file.size}, ${file.type || 'application/octet-stream'}, ${category}, ${blob.url}, 0, NOW(), NOW())
+      RETURNING *
+    `;
 
     return NextResponse.json({ file: fileEntry }, { status: 201 });
   } catch (error) {
@@ -120,21 +114,25 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'ID não informado' }, { status: 400 });
     }
 
-    const fileEntry = await db.fileEntry.findUnique({ where: { id } });
+    const { rows: [fileEntry] } = await sql`
+      SELECT * FROM "file_entries" WHERE "id" = ${id}
+    `;
+
     if (!fileEntry) {
       return NextResponse.json({ error: 'Arquivo não encontrado' }, { status: 404 });
     }
 
-    // Deletar arquivo do disco
-    const { unlink } = await import('fs/promises');
+    // Deletar do Vercel Blob
     try {
-      await unlink(fileEntry.path);
+      await del(fileEntry.blobUrl);
     } catch {
-      // Arquivo pode já ter sido deletado
+      // Blob pode já ter sido deletado
     }
 
     // Deletar do banco
-    await db.fileEntry.delete({ where: { id } });
+    await sql`
+      DELETE FROM "file_entries" WHERE "id" = ${id}
+    `;
 
     return NextResponse.json({ success: true });
   } catch (error) {

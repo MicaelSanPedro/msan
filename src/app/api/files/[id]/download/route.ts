@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
-import { readFile, stat } from 'fs/promises';
+import { sql } from '@vercel/postgres';
 
 export async function GET(
   request: NextRequest,
@@ -9,32 +8,22 @@ export async function GET(
   try {
     const { id } = await params;
 
-    const fileEntry = await db.fileEntry.findUnique({ where: { id } });
+    const { rows: [fileEntry] } = await sql`
+      SELECT * FROM "file_entries" WHERE "id" = ${id}
+    `;
+
     if (!fileEntry) {
       return NextResponse.json({ error: 'Arquivo não encontrado' }, { status: 404 });
     }
 
-    // Verificar se o arquivo existe no disco
-    let fileBuffer: Buffer;
-    try {
-      fileBuffer = await readFile(fileEntry.path);
-    } catch {
-      return NextResponse.json({ error: 'Arquivo físico não encontrado' }, { status: 404 });
-    }
-
     // Incrementar contador de downloads
-    await db.fileEntry.update({
-      where: { id },
-      data: { downloads: { increment: 1 } },
-    });
+    await sql`
+      UPDATE "file_entries" SET "downloads" = "downloads" + 1, "updatedAt" = NOW()
+      WHERE "id" = ${id}
+    `;
 
-    // Retornar o arquivo com headers de download
-    const response = new NextResponse(fileBuffer);
-    response.headers.set('Content-Type', fileEntry.type);
-    response.headers.set('Content-Disposition', `attachment; filename="${encodeURIComponent(fileEntry.originalName)}"`);
-    response.headers.set('Content-Length', fileEntry.size.toString());
-
-    return response;
+    // Redirecionar para a URL do Vercel Blob (download direto)
+    return NextResponse.redirect(fileEntry.blobUrl);
   } catch (error) {
     console.error('Error downloading file:', error);
     return NextResponse.json({ error: 'Erro ao baixar arquivo' }, { status: 500 });
