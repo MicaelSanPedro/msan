@@ -14,16 +14,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "msan.com — File Sharing",
-  description: "Armazenamento seguro e compartilhamento rápido de arquivos. Upload, organize e baixe seus arquivos com facilidade.",
-  keywords: ["msan", "file sharing", "upload", "download", "armazenamento", "compartilhamento"],
+  title: "msan.com — AI Character Chat",
+  description: "Converse com qualquer personagem de IA. Heróis, vilões, históricos, de anime — você decide quem conversar.",
+  keywords: ["msan", "AI", "chat", "personagem", "character", "IA", "conversa"],
   authors: [{ name: "msan.com" }],
   icons: {
     icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
   },
   openGraph: {
-    title: "msan.com — File Sharing",
-    description: "Armazenamento seguro e compartilhamento rápido de arquivos",
+    title: "msan.com — AI Character Chat",
+    description: "Converse com qualquer personagem de IA",
     siteName: "msan.com",
     type: "website",
   },
