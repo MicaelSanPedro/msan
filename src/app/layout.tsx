@@ -14,16 +14,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "msan.com — AI Character Chat",
-  description: "Converse com qualquer personagem de IA. Heróis, vilões, históricos, de anime — você decide quem conversar.",
-  keywords: ["msan", "AI", "chat", "personagem", "character", "IA", "conversa"],
+  title: "Code Battle — Quiz de Programação | msan.com",
+  description: "Teste seus conhecimentos em programação! Quiz interativo com JavaScript, Python, React, CSS e mais. Ganhe XP, suba de nível e dispute o ranking!",
+  keywords: ["quiz", "programação", "code battle", "javascript", "python", "react", "developer", "msan"],
   authors: [{ name: "msan.com" }],
   icons: {
     icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
   },
   openGraph: {
-    title: "msan.com — AI Character Chat",
-    description: "Converse com qualquer personagem de IA",
+    title: "Code Battle — Quiz de Programação",
+    description: "Teste seus conhecimentos em programação e dispute o ranking!",
     siteName: "msan.com",
     type: "website",
   },
