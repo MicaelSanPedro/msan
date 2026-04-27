@@ -15,15 +15,15 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "NerdVault — O Refúgio dos Nerds | msan.com",
-  description: "Baixe scripts, configs, cheat sheets, dotfiles, templates e tudo que um nerd precisa. Upload e compartilhe seus arquivos!",
-  keywords: ["nerd", "download", "scripts", "configs", "dotfiles", "cheatsheets", "templates", "programação", "msan"],
+  description: "Baixe as melhores ferramentas, linguagens, editores e recursos para nerds. Links de download oficiais curados pela comunidade.",
+  keywords: ["nerd", "download", "dev-tools", "editores", "linguagens", "segurança", "programação", "msan"],
   authors: [{ name: "msan.com" }],
   icons: {
     icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
   },
   openGraph: {
     title: "NerdVault — O Refúgio dos Nerds",
-    description: "Baixe scripts, configs, cheat sheets e tudo que um nerd precisa!",
+    description: "Baixe as melhores ferramentas e recursos para nerds. Links oficiais curados.",
     siteName: "msan.com",
     type: "website",
   },
