@@ -1,6 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
+import { ScrollToTop } from "@/components/scroll-to-top";
+import { ParticleField } from "@/components/particle-field";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,7 +45,15 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} font-[family-name:var(--font-geist-sans)] antialiased noise-overlay`}
       >
-        {children}
+        <div className="relative min-h-screen flex flex-col">
+          <ParticleField />
+          <div className="relative z-10 flex flex-col min-h-screen">
+            <Navbar />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </div>
+          <ScrollToTop />
+        </div>
       </body>
     </html>
   );
