@@ -14,16 +14,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Code Battle — Quiz de Programação | msan.com",
-  description: "Teste seus conhecimentos em programação! Quiz interativo com JavaScript, Python, React, CSS e mais. Ganhe XP, suba de nível e dispute o ranking!",
-  keywords: ["quiz", "programação", "code battle", "javascript", "python", "react", "developer", "msan"],
+  title: "NerdVault — O Refúgio dos Nerds | msan.com",
+  description: "Baixe scripts, configs, cheat sheets, dotfiles, templates e tudo que um nerd precisa. Upload e compartilhe seus arquivos!",
+  keywords: ["nerd", "download", "scripts", "configs", "dotfiles", "cheatsheets", "templates", "programação", "msan"],
   authors: [{ name: "msan.com" }],
   icons: {
     icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
   },
   openGraph: {
-    title: "Code Battle — Quiz de Programação",
-    description: "Teste seus conhecimentos em programação e dispute o ranking!",
+    title: "NerdVault — O Refúgio dos Nerds",
+    description: "Baixe scripts, configs, cheat sheets e tudo que um nerd precisa!",
     siteName: "msan.com",
     type: "website",
   },
