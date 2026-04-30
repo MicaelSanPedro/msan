@@ -2,12 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Menu, X, Search, BookOpen } from 'lucide-react';
 import { categories } from '@/data/articles';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -45,17 +48,29 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Actions */}
-          <div className="hidden lg:flex items-center gap-2">
-            <Link
-              href="/busca"
-              className="p-2 text-text-secondary hover:text-accent transition-colors rounded-md hover:bg-accent-muted"
-              aria-label="Buscar"
+          <div className="hidden lg:flex items-center gap-3">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (searchQuery.trim()) {
+                  router.push(`/busca?q=${encodeURIComponent(searchQuery.trim())}`);
+                  setSearchQuery('');
+                }
+              }}
+              className="relative"
             >
-              <Search className="h-4 w-4" />
-            </Link>
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Buscar artigos, links..."
+                className="w-64 pl-9 pr-4 py-2 text-sm bg-surface border border-border-subtle rounded-lg text-text-primary placeholder:text-text-muted focus:outline-none focus:border-border-accent focus:ring-1 focus:ring-accent/20 transition-all"
+              />
+            </form>
             <Link
               href="/links"
-              className="ml-2 px-4 py-2 text-sm font-medium text-accent border border-border-accent rounded-lg hover:bg-accent-muted transition-colors"
+              className="px-4 py-2 text-sm font-medium text-accent border border-border-accent rounded-lg hover:bg-accent-muted transition-colors"
             >
               Links Úteis
             </Link>
@@ -86,14 +101,28 @@ export default function Navbar() {
                 </Link>
               ))}
               <hr className="border-border-subtle my-2" />
-              <Link
-                href="/busca"
-                onClick={() => setIsOpen(false)}
-                className="px-3 py-2.5 text-sm text-text-secondary hover:text-accent transition-colors rounded-md hover:bg-accent-muted flex items-center gap-2"
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (searchQuery.trim()) {
+                    router.push(`/busca?q=${encodeURIComponent(searchQuery.trim())}`);
+                    setSearchQuery('');
+                    setIsOpen(false);
+                  }
+                }}
+                className="mt-2"
               >
-                <Search className="h-4 w-4" />
-                Buscar
-              </Link>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Buscar artigos, links..."
+                    className="w-full pl-9 pr-4 py-2.5 text-sm bg-surface border border-border-subtle rounded-lg text-text-primary placeholder:text-text-muted focus:outline-none focus:border-border-accent focus:ring-1 focus:ring-accent/20 transition-all"
+                  />
+                </div>
+              </form>
               <Link
                 href="/links"
                 onClick={() => setIsOpen(false)}
