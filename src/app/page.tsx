@@ -48,40 +48,40 @@ export default function HomePage() {
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       {/* Hero Section */}
-      <section className="mb-16">
+      <section className="mb-12 md:mb-16">
         <Link href={`/artigo/${featured[0].id}`} className="group block">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className={`relative overflow-hidden rounded-2xl glass bg-gradient-to-br ${featured[0].coverGradient}`}
+            className={`relative overflow-hidden rounded-xl md:rounded-2xl glass bg-gradient-to-br ${featured[0].coverGradient}`}
           >
-            <div className="relative p-8 md:p-12 lg:p-16 flex flex-col md:flex-row items-start md:items-center gap-8">
+            <div className="relative p-5 md:p-10 lg:p-16 flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8">
               <div className="flex-1 z-10">
-                <span className="inline-block px-3 py-1 text-xs font-medium bg-accent-muted text-accent rounded-md mb-4">
+                <span className="inline-block px-2.5 py-0.5 text-[11px] font-medium bg-accent-muted text-accent rounded-md mb-3">
                   {getCategoryName(featured[0].category)}
                 </span>
-                <h1 className="font-serif text-3xl md:text-5xl lg:text-6xl font-bold text-text-primary tracking-tight leading-tight mb-4 group-hover:text-accent transition-colors">
+                <h1 className="font-serif text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold text-text-primary tracking-tight leading-tight mb-2 md:mb-4 group-hover:text-accent transition-colors">
                   {featured[0].title}
                 </h1>
-                <p className="text-text-secondary text-base md:text-lg leading-relaxed max-w-2xl mb-6">
+                <p className="text-text-secondary text-sm md:text-base leading-relaxed max-w-2xl mb-4 md:mb-6 line-clamp-2">
                   {featured[0].subtitle}
                 </p>
-                <div className="flex items-center gap-4 text-sm text-text-muted">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs md:text-sm text-text-muted">
                   <span>{featured[0].author}</span>
                   <span>•</span>
-                  <span>{new Date(featured[0].date + 'T00:00:00').toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                  <span className="hidden sm:inline">{new Date(featured[0].date + 'T00:00:00').toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
                   <span>•</span>
                   <span className="flex items-center gap-1">
-                    <Clock className="h-3.5 w-3.5" />
-                    {featured[0].readTime} min de leitura
+                    <Clock className="h-3 w-3" />
+                    {featured[0].readTime} min
                   </span>
                 </div>
-                <span className="inline-flex items-center gap-2 mt-6 px-5 py-2.5 bg-accent text-background font-medium text-sm rounded-lg hover:bg-accent-hover transition-colors">
-                  Ler Artigo <ArrowRight className="h-4 w-4" />
+                <span className="inline-flex items-center gap-2 mt-4 md:mt-6 px-4 py-2 md:px-5 md:py-2.5 bg-accent text-background font-medium text-xs md:text-sm rounded-lg hover:bg-accent-hover transition-colors">
+                  Ler Artigo <ArrowRight className="h-3.5 w-3.5" />
                 </span>
               </div>
-              <div className="text-8xl md:text-[10rem] opacity-40 group-hover:opacity-60 transition-opacity select-none">
+              <div className="hidden md:block text-7xl lg:text-[9rem] opacity-30 group-hover:opacity-50 transition-opacity select-none">
                 {featured[0].coverEmoji}
               </div>
             </div>
