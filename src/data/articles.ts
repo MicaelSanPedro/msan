@@ -548,6 +548,88 @@ Outros truques incluem: Recursive Types para estruturas profundas, branded types
     coverGradient: 'from-blue-900/40 to-indigo-900/30',
     coverEmoji: '🔷',
   },
+
+  // === STEAM TOOLS ===
+  {
+    id: 'steam-tools-guia-completo',
+    title: 'Steam Tools: Guia Completo — O Que É, Como Usar e Melhores Features',
+    subtitle: 'Descubra como o Steam Tools pode transformar sua experiência na Steam com customização, estatísticas e ferramentas avançadas.',
+    content: `O Steam Tools é um dos utilitários mais populares entre jogadores de PC que querem ir além do cliente padrão da Steam. Trata-se de uma plataforma que integra diversas funcionalidades que a Valve não inclui nativamente no seu cliente, permitindo que você personalize sua experiência, analise seu perfil de jogador e acesse recursos avançados de gestão de biblioteca.
+
+A instalação é simples e direta: basta baixar o instalador pelo site oficial, executar e seguir o processo padrão. O Steam Tools é compatível com Windows 10/11 e não interfere com o funcionamento do cliente Steam original — ele funciona como uma camada complementar que se integra ao seu perfil e biblioteca existentes.
+
+Entre as features mais usadas, destaca-se o perfil estendido, que mostra estatísticas detalhadas do seu tempo de jogo, conquistas desbloqueadas, comparações com amigos e gráficos de atividade. Você pode ver quantas horas investiu em cada jogo, quais gêneros mais joga, seu padrão de jogo durante a semana e muito mais. Para quem gosta de dados, é um paraíso.
+
+A ferramenta de gestão de biblioteca permite organizar seus jogos em coleções personalizadas com tags, notas e categorias. Diferente das categorias padrão da Steam, o Steam Tools oferece filtros avançados, ordenação por múltiplos critérios e até recomendações baseadas no seu histórico de jogo.
+
+O Steam Tools também oferece um sistema de skins e temas que permitem personalizar a interface do Steam. Existem centenas de temas criados pela comunidade, desde minimalistas até elaborados com efeitos visuais. A instalação é feita com um clique, e você pode alternar entre temas livremente.
+
+Para quem revende ou troca itens, o Steam Tools inclui ferramentas de análise de mercado que mostram tendências de preços, histórico de vendas e alertas de oportunidades. Isso é particularmente útil para quem opera no mercado de cards e skins da Steam.
+
+O Steam Tools é gratuito, recebe atualizações regulares e tem uma comunidade ativa que cria plugins e extensões. Se você é um usuário heavy da Steam, vale muito a pena experimentar.`,
+    category: 'games',
+    author: 'Thiago "Miyazaki" Santos',
+    date: '2026-04-30',
+    readTime: 6,
+    tags: ['Steam', 'Steam Tools', 'Tutorial', 'PC Gaming', 'Customização'],
+    featured: true,
+    coverGradient: 'from-slate-800/40 to-blue-900/30',
+    coverEmoji: '🛠️',
+  },
+  {
+    id: 'millennium-steam-client',
+    title: 'Millennium: O Cliente Steam Que a Valve Devia Ter Feito',
+    subtitle: 'Substitua o client padrão da Steam por algo muito mais bonito, rápido e funcional. Tutorial completo de instalação e configuração.',
+    content: `O Millennium é um client alternativo para a Steam que ganhou uma base de fãs enorme nos últimos anos — e por um bom motivo. Enquanto o client oficial da Steam continua recebendo atualizações que nem sempre melhoram a experiência, o Millennium se propõe a ser tudo que a Steam deveria ser: bonito, rápido e funcional.
+
+A instalação é straightforward. Acesse o site oficial do Millennium, baixe o instalador correspondente ao seu sistema operacional (Windows ou Linux) e execute-o. Durante a instalação, o Millennium detecta automaticamente sua instalação da Steam e configura tudo. Não é necessário criar uma conta nova ou fazer login novamente — ele usa as credenciais da Steam diretamente.
+
+O primeiro impacto visual é imediato. O Millennium usa uma interface moderna baseada em web technologies que é significativamente mais rápida que o client oficial da Valve. Os carregamentos são instantâneos, as transições são suaves e o design é limpo e intuitivo. Você pode escolher entre vários temas, incluindo opções escuras, claras e personalizadas pela comunidade.
+
+As funcionalidades principais incluem: navegação por abas fluida, página inicial personalizada com widgets configuráveis, loja aprimorada com filtros melhores e uma biblioteca redeseñada com capas em alta resolução e organização avançada. O Millennium também adiciona features que a Steam não tem nativamente, como estatísticas detalhadas de tempo de jogo, integração com Discord enriched e um sistema de perfis expandidos.
+
+Para quem gosta de customização, o Millennium suporta plugins e extensões criados pela comunidade. Existem plugins para integrar HowLongToBeat, mostrar preços históricos, adicionar atalhos personalizados e muito mais. O ecossistema de plugins está crescendo rapidamente e já conta com centenas de opções.
+
+O Millennium é open source, gratuito e seguro. Como ele usa as APIs oficiais da Steam, não há risco de banimento. O projeto é mantido por desenvolvedores independentes e o código está disponível no GitHub para auditoria. Atualizações são lançadas regularmente com correções e novas features.
+
+Se você está cansado da interface pesada e lenta do client oficial da Steam, o Millennium é sem dúvida a melhor alternativa disponível. A experiência de uso é superior em praticamente todos os aspectos, e a transição é tão suave que você vai se perguntar por que não mudou antes.`,
+    category: 'games',
+    author: 'Rafael "D20" Mendes',
+    date: '2026-04-29',
+    readTime: 7,
+    tags: ['Steam', 'Millennium', 'Client', 'Tutorial', 'Customização'],
+    coverGradient: 'from-cyan-900/30 to-blue-900/40',
+    coverEmoji: '🔮',
+  },
+  {
+    id: 'lua-tools-steam',
+    title: 'Lua Tools: Tutorial Completo — Como Configurar e Usar no Steam',
+    subtitle: 'Aprenda a instalar e configurar o Lua Tools, a ferramenta essencial para gerenciar e organizar sua biblioteca Steam.',
+    content: `O Lua Tools é uma ferramenta de gestão para a Steam que se tornou indispensável para muitos jogadores de PC. Com ele, você pode gerenciar sua biblioteca de jogos de forma muito mais eficiente do que usando apenas o client padrão, com recursos avançados de organização, automação e personalização.
+
+O processo de instalação é simples. Acesse o site oficial do Lua Tools e baixe a versão mais recente. O instalador é leve — menos de 50MB — e a configuração inicial leva menos de dois minutos. Após instalar, abra o Lua Tools e ele vai solicitar acesso à sua conta Steam. O login é feito de forma segura usando os servidores oficiais da Valve, e o Lua Tools não armazena suas credenciais localmente.
+
+A tela principal do Lua Tools mostra sua biblioteca completa de jogos, mas com uma diferença significativa: você pode organizar tudo de forma muito mais granular. Crie categorias personalizadas, adicione tags detalhadas, defina prioridades de instalação e configure atalhos globais que funcionam mesmo com a Steam fechada.
+
+Um dos recursos mais úteis é o gerenciador de espaço em disco. O Lua Tools mostra exatamente quanto cada jogo ocupa, permite ordenar por tamanho, identificar jogos que você não abre há meses e sugere desinstalações baseadas no seu padrão de uso. Para quem tem SSD com espaço limitado, isso é ouro.
+
+O sistema de automação permite configurar ações para eventos específicos: atualizar automaticamente determinados jogos, fazer backup de saves em intervalos regulares, e até fechar aplicativos que consomem recursos antes de iniciar um jogo pesado. Esses scripts são criados usando uma interface visual simples, sem precisar programar.
+
+O Lua Tools também oferece integração com o Steam Workshop, permitindo gerenciar mods de forma centralizada. Você pode ver quais mods estão instalados em cada jogo, atualizar todos de uma vez e receber notificações quando mods favoritos são atualizados pelos criadores.
+
+A configuração de performance é outra feature forte. O Lua Tools pode otimizar automaticamente as configurações gráficas dos seus jogos baseado no hardware do seu PC, garantindo o melhor equilíbrio entre qualidade visual e FPS. Ele também monitora a temperatura e o uso de recursos enquanto você joga, com alertas se algo estiver fora do normal.
+
+O Lua Tools é gratuito para uso pessoal, com uma versão premium que adiciona features avançadas como sincronização entre PCs, backup na nuvem e suporte prioritário. Para a maioria dos jogadores, a versão gratuita é mais do que suficiente.
+
+Se você quer ter controle total sobre sua experiência Steam, o Lua Tools é uma das melhores ferramentas disponíveis. A combinação de organização, automação e performance em um único pacote faz dele um must-have para qualquer gamer de PC.`,
+    category: 'games',
+    author: 'Thiago "Miyazaki" Santos',
+    date: '2026-04-28',
+    readTime: 6,
+    tags: ['Steam', 'Lua Tools', 'Tutorial', 'PC Gaming', 'Ferramentas'],
+    coverGradient: 'from-emerald-900/30 to-teal-900/30',
+    coverEmoji: '🌙',
+  },
 ];
 
 export function getArticleBySlug(id: string): Article | undefined {
