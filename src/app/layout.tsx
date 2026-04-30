@@ -30,10 +30,18 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={`${inter.variable} ${newsreader.variable}`}>
       <body className="min-h-screen flex flex-col antialiased">
+        {/* Ambient orbs — give glassmorphism something to blur */}
+        <div className="ambient-orbs" aria-hidden="true">
+          <div className="ambient-orb ambient-orb-1" />
+          <div className="ambient-orb ambient-orb-2" />
+          <div className="ambient-orb ambient-orb-3" />
+        </div>
         <ReadingProgress />
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <div className="relative z-10 flex flex-col min-h-screen">
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </div>
       </body>
     </html>
   );

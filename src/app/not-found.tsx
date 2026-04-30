@@ -4,7 +4,7 @@ import { Home } from 'lucide-react';
 export default function NotFound() {
   return (
     <div className="min-h-[60vh] flex items-center justify-center px-4">
-      <div className="text-center max-w-md">
+      <div className="text-center max-w-md glass rounded-2xl p-10">
         <div className="text-8xl mb-6">🌌</div>
         <h1 className="font-serif text-4xl md:text-5xl font-bold text-text-primary mb-4">
           404

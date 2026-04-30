@@ -44,7 +44,7 @@ export default function LinksPage() {
           className={`px-4 py-2 text-sm rounded-lg transition-colors ${
             activeCategory === 'all'
               ? 'bg-accent text-background font-medium'
-              : 'bg-surface border border-border-subtle text-text-secondary hover:text-accent hover:border-accent/20'
+              : 'glass text-text-secondary hover:text-accent'
           }`}
         >
           Todos
@@ -56,7 +56,7 @@ export default function LinksPage() {
             className={`px-4 py-2 text-sm rounded-lg transition-colors ${
               activeCategory === cat.id
                 ? 'bg-accent text-background font-medium'
-                : 'bg-surface border border-border-subtle text-text-secondary hover:text-accent hover:border-accent/20'
+                : 'glass text-text-secondary hover:text-accent'
             }`}
           >
             {cat.name}
@@ -72,7 +72,7 @@ export default function LinksPage() {
       </div>
 
       {filteredLinks.length === 0 && (
-        <p className="text-text-muted text-center py-12 bg-surface rounded-xl border border-border-subtle">
+        <p className="text-text-muted text-center py-12 glass rounded-xl">
           Nenhum link encontrado nesta categoria.
         </p>
       )}

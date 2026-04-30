@@ -38,7 +38,7 @@ export default function HomePage() {
     return (
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
         {/* Hero skeleton */}
-        <div className="h-64 md:h-80 bg-surface rounded-xl animate-pulse mb-12" />
+        <div className="h-64 md:h-80 glass rounded-xl animate-pulse mb-12" />
         {/* Grid skeleton */}
         <SkeletonGrid count={6} />
       </div>
@@ -54,7 +54,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${featured[0].coverGradient} border border-border-subtle`}
+            className={`relative overflow-hidden rounded-2xl glass bg-gradient-to-br ${featured[0].coverGradient}`}
           >
             <div className="relative p-8 md:p-12 lg:p-16 flex flex-col md:flex-row items-start md:items-center gap-8">
               <div className="flex-1 z-10">

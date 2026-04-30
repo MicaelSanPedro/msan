@@ -4,7 +4,7 @@ import { categories } from '@/data/articles';
 
 export default function Footer() {
   return (
-    <footer className="mt-auto border-t border-border-subtle bg-background">
+    <footer className="mt-auto glass-strong border-t border-white/[0.06]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand */}
@@ -48,7 +48,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 pt-6 border-t border-border-subtle text-center">
+        <div className="mt-10 pt-6 border-t border-white/[0.06] text-center">
           <p className="text-sm text-text-muted">
             Feito com ☕ por nerds, para nerds — {new Date().getFullYear()}
           </p>

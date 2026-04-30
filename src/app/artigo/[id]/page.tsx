@@ -78,7 +78,7 @@ export default async function ArticlePage({ params }: Props) {
             {article.tags.map((tag) => (
               <span
                 key={tag}
-                className="inline-flex items-center gap-1 px-2.5 py-1 text-xs bg-surface border border-border-subtle text-text-secondary rounded-md"
+                className="inline-flex items-center gap-1 px-2.5 py-1 text-xs glass text-text-secondary rounded-md"
               >
                 <Tag className="h-2.5 w-2.5" />
                 {tag}
@@ -88,7 +88,7 @@ export default async function ArticlePage({ params }: Props) {
         </header>
 
         {/* Cover */}
-        <div className={`rounded-xl bg-gradient-to-br ${article.coverGradient} h-48 md:h-64 flex items-center justify-center mb-10`}>
+        <div className={`glass rounded-xl bg-gradient-to-br ${article.coverGradient} h-48 md:h-64 flex items-center justify-center mb-10`}>
           <span className="text-7xl md:text-8xl">{article.coverEmoji}</span>
         </div>
 

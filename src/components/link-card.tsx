@@ -34,7 +34,7 @@ export default function LinkCard({ link }: LinkCardProps) {
       href={link.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group flex items-start gap-4 bg-surface border border-border-subtle rounded-xl p-4 transition-all duration-200 hover:translate-y-[-1px] hover:border-accent/20 hover:shadow-md"
+      className="group flex items-start gap-4 glass-card rounded-xl p-4 transition-all duration-300 hover:translate-y-[-2px]"
     >
       <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-accent-muted flex items-center justify-center">
         <IconComponent className="h-5 w-5 text-accent" />

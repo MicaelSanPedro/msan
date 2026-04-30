@@ -46,7 +46,7 @@ export default function CategoryCard({ category }: { category: typeof categories
       <motion.div
         whileHover={{ scale: 1.02 }}
         transition={{ duration: 0.2 }}
-        className={`group bg-gradient-to-br ${gradient} border rounded-xl p-6 transition-all duration-200 hover:shadow-lg cursor-pointer ${glow}`}
+        className={`group bg-gradient-to-br ${gradient} glass rounded-xl p-6 transition-all duration-300 hover:shadow-lg cursor-pointer ${glow}`}
       >
         <Icon className="h-8 w-8 text-text-secondary group-hover:text-accent transition-colors mb-3" />
         <h3 className="font-serif text-lg font-bold text-text-primary group-hover:text-accent transition-colors mb-1">

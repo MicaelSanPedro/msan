@@ -98,7 +98,7 @@ export default function CategoryPage() {
             ))}
           </div>
         ) : (
-          <p className="text-text-muted text-center py-12 bg-surface rounded-xl border border-border-subtle">
+          <p className="text-text-muted text-center py-12 glass rounded-xl">
             Nenhum artigo nesta categoria ainda. Em breve!
           </p>
         )}

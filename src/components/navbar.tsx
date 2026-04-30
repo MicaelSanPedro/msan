@@ -20,8 +20,8 @@ export default function Navbar() {
 
   return (
     <header
-      className={`w-full border-b border-border-subtle bg-background/95 backdrop-blur-sm sticky top-0 z-50 transition-colors ${
-        scrolled ? 'bg-background' : ''
+      className={`w-full sticky top-0 z-50 transition-all duration-300 glass-nav ${
+        scrolled ? 'shadow-[0_4px_24px_rgba(0,0,0,0.3)]' : ''
       }`}
     >
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -65,7 +65,7 @@ export default function Navbar() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Buscar artigos, links..."
-                className="w-64 pl-9 pr-4 py-2 text-sm bg-surface border border-border-subtle rounded-lg text-text-primary placeholder:text-text-muted focus:outline-none focus:border-border-accent focus:ring-1 focus:ring-accent/20 transition-all"
+                className="w-64 pl-9 pr-4 py-2 text-sm glass-input rounded-lg text-text-primary placeholder:text-text-muted focus:outline-none transition-all"
               />
             </form>
             <Link
@@ -119,7 +119,7 @@ export default function Navbar() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Buscar artigos, links..."
-                    className="w-full pl-9 pr-4 py-2.5 text-sm bg-surface border border-border-subtle rounded-lg text-text-primary placeholder:text-text-muted focus:outline-none focus:border-border-accent focus:ring-1 focus:ring-accent/20 transition-all"
+                    className="w-full pl-9 pr-4 py-2.5 text-sm glass-input rounded-lg text-text-primary placeholder:text-text-muted focus:outline-none transition-all"
                   />
                 </div>
               </form>

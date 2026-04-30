@@ -50,7 +50,7 @@ export default function SearchPage({ searchParams }: Props) {
 
       {/* No query */}
       {!query && (
-        <div className="text-center py-16 bg-surface rounded-xl border border-border-subtle">
+        <div className="text-center py-16 glass rounded-xl">
           <Search className="h-12 w-12 text-text-muted mx-auto mb-4" />
           <p className="text-text-secondary mb-2">Nenhuma busca realizada</p>
           <p className="text-sm text-text-muted">
@@ -61,7 +61,7 @@ export default function SearchPage({ searchParams }: Props) {
 
       {/* Results */}
       {query && totalResults === 0 && (
-        <div className="text-center py-16 bg-surface rounded-xl border border-border-subtle">
+        <div className="text-center py-16 glass rounded-xl">
           <Search className="h-12 w-12 text-text-muted mx-auto mb-4" />
           <p className="text-text-secondary mb-2">Nenhum resultado encontrado</p>
           <p className="text-sm text-text-muted">

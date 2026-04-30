@@ -16,7 +16,7 @@ export default function ArticleCard({ article }: ArticleCardProps) {
 
   return (
     <Link href={`/artigo/${article.id}`} className="group block">
-      <article className="bg-surface border border-border-subtle rounded-xl overflow-hidden transition-all duration-200 hover:translate-y-[-2px] hover:shadow-lg hover:border-accent/20">
+      <article className="glass-card rounded-xl overflow-hidden transition-all duration-300 hover:translate-y-[-3px]">
         {/* Cover */}
         <div className={`h-40 bg-gradient-to-br ${article.coverGradient} flex items-center justify-center relative`}>
           <span className="text-5xl">{article.coverEmoji}</span>
