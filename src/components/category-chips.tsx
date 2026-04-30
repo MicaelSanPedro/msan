@@ -1,60 +1,57 @@
-"use client";
+'use client';
 
-export interface CategoryFilter {
-  id: string;
-  name: string;
-  emoji: string;
-  type: "category" | "tag";
-}
-
-const categoryFilters: CategoryFilter[] = [
-  { id: "all", name: "Todos", emoji: " Apps", type: "category" },
-  { id: "jogos", name: "Jogos", emoji: " Jogos", type: "category" },
-  { id: "softwares", name: "Softwares", emoji: " Softwares", type: "category" },
-  { id: "outros", name: "Utilitarios", emoji: " Utilitarios", type: "category" },
-  { id: "Design", name: "Design", emoji: " Design", type: "tag" },
-  { id: "Ferramentas", name: "Ferramentas", emoji: " Ferramentas", type: "tag" },
-  { id: "Midia", name: "Midia", emoji: " Midia", type: "tag" },
-  { id: "Seguranca", name: "Seguranca", emoji: " Seguranca", type: "tag" },
-  { id: "Produtividade", name: "Produtividade", emoji: " Produtividade", type: "tag" },
-];
+import { motion } from 'framer-motion';
+import {
+  Gamepad2,
+  Cpu,
+  Package,
+  Palette,
+  Wrench,
+  Music,
+  Shield,
+  BarChart3,
+} from 'lucide-react';
 
 interface CategoryChipsProps {
-  activeCategory: string;
-  onCategoryChange: (category: string) => void;
-  activeType?: "category" | "tag";
+  active: string;
+  onChange: (cat: string) => void;
 }
 
-export function CategoryChips({
-  activeCategory,
-  onCategoryChange,
-  activeType,
-}: CategoryChipsProps) {
-  return (
-    <div className="w-full overflow-x-auto scrollbar-hide pb-2 -mb-2">
-      <div className="flex items-center gap-2 min-w-max sm:flex-wrap sm:min-w-0">
-        {categoryFilters.map((filter) => {
-          const isActive =
-            activeCategory === filter.id &&
-            (activeType === undefined || activeType === filter.type);
+const categories = [
+  { id: 'all', label: 'Todos', icon: Package },
+  { id: 'jogos', label: 'Jogos', icon: Gamepad2 },
+  { id: 'softwares', label: 'Softwares', icon: Cpu },
+  { id: 'outros', label: 'Outros', icon: Palette },
+  { id: 'utilitarios', label: 'Utilitários', icon: Wrench },
+  { id: 'design', label: 'Design', icon: Palette },
+  { id: 'ferramentas', label: 'Ferramentas', icon: Wrench },
+  { id: 'midia', label: 'Mídia', icon: Music },
+  { id: 'seguranca', label: 'Segurança', icon: Shield },
+  { id: 'produtividade', label: 'Produtividade', icon: BarChart3 },
+];
 
-          return (
-            <button
-              key={filter.id}
-              onClick={() => onCategoryChange(filter.id)}
-              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap border transition-all duration-200 focus-ring ${
-                isActive
-                  ? "bg-violet-600/20 border-violet-500/30 text-violet-300"
-                  : "bg-white/5 border-white/[0.06] text-zinc-400 hover:bg-white/10 hover:text-zinc-200"
-              }`}
-            >
-              {filter.name}
-            </button>
-          );
-        })}
-      </div>
+export function CategoryChips({ active, onChange }: CategoryChipsProps) {
+  return (
+    <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
+      {categories.map((cat) => {
+        const isActive = active === cat.id;
+        const Icon = cat.icon;
+        return (
+          <motion.button
+            key={cat.id}
+            onClick={() => onChange(cat.id)}
+            whileTap={{ scale: 0.95 }}
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors cursor-pointer ${
+              isActive
+                ? 'bg-violet-600/20 border border-violet-500/30 text-violet-300'
+                : 'bg-white/[0.04] border border-white/[0.06] text-zinc-400 hover:bg-white/[0.08] hover:text-zinc-300'
+            }`}
+          >
+            <Icon className="w-3.5 h-3.5" />
+            {cat.label}
+          </motion.button>
+        );
+      })}
     </div>
   );
 }
-
-export { categoryFilters };

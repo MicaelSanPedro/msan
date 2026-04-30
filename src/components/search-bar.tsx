@@ -1,46 +1,41 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Search } from "lucide-react";
+import { Search } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useState } from 'react';
 
 interface SearchBarProps {
   value: string;
-  onChange: (value: string) => void;
+  onChange: (q: string) => void;
   placeholder?: string;
 }
 
-export function SearchBar({
-  value,
-  onChange,
-  placeholder = "Buscar apps...",
-}: SearchBarProps) {
-  const [isFocused, setIsFocused] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (value.trim()) {
-      window.location.href = `/busca?q=${encodeURIComponent(value.trim())}`;
-    }
-  };
+export function SearchBar({ value, onChange, placeholder = 'Buscar apps...' }: SearchBarProps) {
+  const [focused, setFocused] = useState(false);
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-lg">
-      <div className="relative group">
-        <Search
-          className={`absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${
-            isFocused ? "text-violet-400" : "text-zinc-500"
-          }`}
-        />
+    <motion.div
+      animate={{ scale: focused ? 1.02 : 1 }}
+      transition={{ duration: 0.2 }}
+    >
+      <div
+        className={`relative flex items-center gap-2 rounded-full px-4 py-2.5 transition-all duration-200 ${
+          focused
+            ? 'bg-white/[0.06] border border-violet-500/30 shadow-[0_0_20px_rgba(139,92,246,0.15)]'
+            : 'bg-white/[0.04] border border-white/[0.08]'
+        }`}
+      >
+        <Search className="w-4 h-4 text-zinc-500 flex-shrink-0" />
         <input
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
           placeholder={placeholder}
-          className="w-full bg-white/5 border border-white/10 rounded-full pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-violet-500/50 focus:bg-white/[0.07] transition-all"
+          className="bg-transparent outline-none text-sm text-white placeholder-zinc-500 w-full"
         />
       </div>
-    </form>
+    </motion.div>
   );
 }

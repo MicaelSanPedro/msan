@@ -1,82 +1,108 @@
-"use client";
+'use client';
+
+import { useState, useRef, useCallback } from 'react';
+import { motion } from 'framer-motion';
 
 export function HeroSection() {
+  const btnRef = useRef<HTMLButtonElement>(null);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMousePos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  }, []);
+
+  const stats = [
+    { value: '300+', label: 'Apps' },
+    { value: '2.4M', label: 'Downloads' },
+    { value: '850K', label: 'Usuários' },
+  ];
+
   return (
-    <section className="relative pt-24 pb-12 sm:pt-32 sm:pb-16 lg:pt-36">
-      {/* Background gradient mesh */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden>
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-violet-600/[0.07] blur-[120px]" />
-        <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] rounded-full bg-cyan-500/[0.05] blur-[100px]" />
-      </div>
-
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.04] border border-white/[0.06] mb-8 animate-fade-in">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="text-xs font-medium text-zinc-400">
-            Todos os apps sao gratuitos
-          </span>
-        </div>
-
+    <section className="relative min-h-[80vh] flex flex-col items-center justify-center px-4 pt-24 pb-12">
+      <motion.div
+        className="text-center max-w-4xl mx-auto"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: 'easeOut' }}
+      >
         {/* Title */}
-        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] mb-6 animate-slide-up">
-          Descubra os{" "}
-          <span className="gradient-text-subtle">Melhores Apps</span>
+        <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter mb-6 gradient-text leading-[1.1]">
+          Descubra os Melhores Apps
         </h1>
 
         {/* Subtitle */}
-        <p className="max-w-2xl mx-auto text-base sm:text-lg text-zinc-400 mb-10 leading-relaxed animate-slide-up" style={{ animationDelay: "0.1s" }}>
+        <motion.p
+          className="text-[15px] md:text-base text-zinc-400 leading-relaxed max-w-xl mx-auto mb-10"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.15 }}
+        >
           Downloads seguros e verificados para Windows e Android. Tudo gratuito,
           sempre atualizado.
-        </p>
+        </motion.p>
 
-        {/* CTA Button */}
-        <a
-          href="#apps"
-          className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-gradient-to-r from-violet-600 to-cyan-600 text-white font-medium text-sm hover:from-violet-500 hover:to-cyan-500 transition-all animate-pulse-subtle animate-slide-up"
-          style={{ animationDelay: "0.2s" }}
+        {/* CTA Button with mouse glow */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.3 }}
+          className="mb-14"
         >
-          Explorar Apps
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
+          <button
+            ref={btnRef}
+            onMouseMove={handleMouseMove}
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
+            onClick={() => {
+              document.getElementById('todos-apps')?.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="relative rounded-full px-8 py-4 text-base font-semibold text-white overflow-hidden animate-pulse-subtle cursor-pointer"
+            style={{
+              background: 'linear-gradient(135deg, #8b5cf6, #22d3ee)',
+            }}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
-        </a>
+            {/* Mouse-following glow */}
+            {isHovering && (
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: `radial-gradient(200px circle at ${mousePos.x}px ${mousePos.y}px, rgba(255,255,255,0.25), transparent 60%)`,
+                }}
+              />
+            )}
+            <span className="relative z-10">Explorar Apps</span>
+          </button>
+        </motion.div>
 
-        {/* Stats Bar */}
-        <div
-          className="mt-16 flex flex-wrap items-center justify-center gap-6 sm:gap-10 animate-slide-up"
-          style={{ animationDelay: "0.3s" }}
+        {/* Stats bar */}
+        <motion.div
+          className="flex items-center justify-center gap-3 md:gap-6 flex-wrap"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
         >
-          <div className="flex items-center gap-2">
-            <span className="text-lg sm:text-xl font-semibold text-white">300+</span>
-            <span className="text-sm text-zinc-500">Apps</span>
-          </div>
-          <div className="w-px h-5 bg-white/10 hidden sm:block" />
-          <div className="flex items-center gap-2">
-            <span className="text-lg sm:text-xl font-semibold text-white">
-              2.4M
-            </span>
-            <span className="text-sm text-zinc-500">Downloads</span>
-          </div>
-          <div className="w-px h-5 bg-white/10 hidden sm:block" />
-          <div className="flex items-center gap-2">
-            <span className="text-lg sm:text-xl font-semibold text-white">
-              850K
-            </span>
-            <span className="text-sm text-zinc-500">Usuarios</span>
-          </div>
-        </div>
-      </div>
+          {stats.map((stat, i) => (
+            <motion.div
+              key={stat.label}
+              className="flex items-center gap-2"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 + i * 0.1 }}
+            >
+              <span className="text-lg md:text-xl font-bold text-white">{stat.value}</span>
+              <span className="text-sm text-zinc-500">{stat.label}</span>
+              {i < stats.length - 1 && (
+                <span className="ml-2 w-1 h-1 rounded-full bg-zinc-600 hidden md:block" />
+              )}
+            </motion.div>
+          ))}
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

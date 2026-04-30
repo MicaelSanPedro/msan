@@ -1,126 +1,151 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useMemo } from "react";
-import { Navbar } from "@/components/navbar";
-import { HeroSection } from "@/components/hero-section";
-import { AppCard } from "@/components/app-card";
-import { CategoryChips } from "@/components/category-chips";
-import { FeaturedCarousel } from "@/components/featured-carousel";
-import { SkeletonGrid } from "@/components/skeleton-grid";
-import { downloads } from "@/data/downloads";
-import type { DownloadItem } from "@/data/downloads";
+import { useState, useEffect, useMemo } from 'react';
+import { motion } from 'framer-motion';
+import { downloads } from '@/data/downloads';
+import { HeroSection } from '@/components/hero-section';
+import { CategoryChips } from '@/components/category-chips';
+import { FeaturedCarousel } from '@/components/featured-carousel';
+import { BentoGrid } from '@/components/bento-grid';
+import { SkeletonGrid } from '@/components/skeleton-grid';
+import { SearchBar } from '@/components/search-bar';
+import { OsToggle } from '@/components/os-toggle';
+import { Package } from 'lucide-react';
 
 export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeCategory, setActiveCategory] = useState("all");
-  const [platformFilter, setPlatformFilter] = useState("all");
+  const [activeCategory, setActiveCategory] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [platformFilter, setPlatformFilter] = useState('all');
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 1500);
     return () => clearTimeout(timer);
   }, []);
 
-  const filteredApps = useMemo(() => {
-    let result: DownloadItem[] = [...downloads];
+  const featuredItems = useMemo(
+    () => downloads.filter((d) => d.featured),
+    []
+  );
 
-    // Platform filter
-    if (platformFilter !== "all") {
-      result = result.filter((item) =>
-        item.platform.includes(platformFilter)
-      );
-    }
-
-    // Category/tag filter
-    if (activeCategory !== "all") {
-      const isCategory = ["jogos", "softwares", "outros"].includes(
-        activeCategory
-      );
-      if (isCategory) {
-        result = result.filter(
-          (item) => item.category === activeCategory
+  const filteredItems = useMemo(() => {
+    return downloads.filter((item) => {
+      // Category filter
+      if (activeCategory !== 'all') {
+        const catMatch = item.category === activeCategory;
+        // Also check tags for non-standard categories
+        const tagMatch = item.tags.some(
+          (t) => t.toLowerCase().replace(/[íã]/g, (m) => m === 'í' ? 'i' : 'a').replace(/ã/g, 'a') === activeCategory.toLowerCase().replace(/[íã]/g, (m) => m === 'í' ? 'i' : 'a').replace(/ã/g, 'a')
         );
-      } else {
-        result = result.filter((item) =>
-          item.tags.some(
-            (tag) => tag.toLowerCase() === activeCategory.toLowerCase()
-          )
-        );
+        if (!catMatch && !tagMatch) return false;
       }
-    }
 
-    // Search filter
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      result = result.filter(
-        (item) =>
+      // Platform filter
+      if (platformFilter !== 'all') {
+        const hasPlatform = item.platform.some((p) => {
+          if (platformFilter === 'windows') {
+            return ['Windows', 'Mac', 'Linux'].includes(p);
+          }
+          if (platformFilter === 'android') {
+            return ['Mobile', 'Console'].includes(p);
+          }
+          return true;
+        });
+        if (!hasPlatform) return false;
+      }
+
+      // Search filter
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        return (
           item.name.toLowerCase().includes(q) ||
           item.description.toLowerCase().includes(q) ||
-          item.tags.some((tag) => tag.toLowerCase().includes(q))
-      );
-    }
+          item.tags.some((t) => t.toLowerCase().includes(q))
+        );
+      }
 
-    return result;
-  }, [searchQuery, activeCategory, platformFilter]);
+      return true;
+    });
+  }, [activeCategory, searchQuery, platformFilter]);
+
+  if (isLoading) {
+    return (
+      <div className="max-w-6xl mx-auto px-4 pt-28 pb-16">
+        <SkeletonGrid />
+      </div>
+    );
+  }
 
   return (
     <>
-      <Navbar
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        platformFilter={platformFilter}
-        onPlatformChange={setPlatformFilter}
-        isHome
-      />
-
       <HeroSection />
-      <CategoryChips
-        activeCategory={activeCategory}
-        onCategoryChange={setActiveCategory}
-      />
-      <FeaturedCarousel />
 
-      {/* All Apps Section */}
-      <section id="apps" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl sm:text-2xl font-bold text-white">
-            {activeCategory === "all"
-              ? "Todos os Apps"
-              : activeCategory === "jogos"
-                ? "Jogos"
-                : activeCategory === "softwares"
-                  ? "Softwares"
-                  : activeCategory === "outros"
-                    ? "Utilitarios"
-                    : activeCategory}
-          </h2>
-          <span className="text-sm text-zinc-500">
-            {filteredApps.length} {filteredApps.length === 1 ? "app" : "apps"}
-          </span>
-        </div>
+      <div className="max-w-6xl mx-auto px-4 pb-20 space-y-14">
+        {/* Category + Search + OS Filter */}
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="space-y-4"
+        >
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <CategoryChips active={activeCategory} onChange={setActiveCategory} />
+          </div>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+            <SearchBar value={searchQuery} onChange={setSearchQuery} />
+            <OsToggle platform={platformFilter} onPlatformChange={setPlatformFilter} />
+          </div>
+        </motion.section>
 
-        {isLoading ? (
-          <SkeletonGrid />
-        ) : filteredApps.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 stagger-children">
-            {filteredApps.map((item) => (
-              <AppCard key={item.id} item={item} />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-20">
-            <div className="text-4xl mb-4 opacity-30">
-              <svg className="w-12 h-12 mx-auto text-zinc-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <p className="text-zinc-400 font-medium">Nenhum app encontrado</p>
-            <p className="text-sm text-zinc-500 mt-1">
-              Tente ajustar os filtros ou a busca
-            </p>
-          </div>
+        {/* Featured Carousel */}
+        {activeCategory === 'all' && !searchQuery && (
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="space-y-4"
+          >
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-white">
+              Apps em Destaque
+            </h2>
+            <FeaturedCarousel items={featuredItems} />
+          </motion.section>
         )}
-      </section>
+
+        {/* All Apps Grid */}
+        <motion.section
+          id="todos-apps"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="space-y-4"
+        >
+          <div className="flex items-center gap-3">
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-white">
+              Todos os Apps
+            </h2>
+            <span className="text-sm text-zinc-500 bg-white/[0.04] px-2.5 py-0.5 rounded-full">
+              {filteredItems.length}
+            </span>
+          </div>
+
+          {filteredItems.length > 0 ? (
+            <BentoGrid items={filteredItems} />
+          ) : (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex flex-col items-center justify-center py-20 text-center"
+            >
+              <Package className="w-12 h-12 text-zinc-700 mb-4" />
+              <p className="text-zinc-400 text-base">Nenhum app encontrado</p>
+              <p className="text-zinc-600 text-sm mt-1">
+                Tente ajustar os filtros ou buscar por outro termo
+              </p>
+            </motion.div>
+          )}
+        </motion.section>
+      </div>
     </>
   );
 }

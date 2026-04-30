@@ -1,147 +1,127 @@
-"use client";
+'use client';
 
-import { useState, useMemo } from "react";
-import Link from "next/link";
-import { ChevronRight } from "lucide-react";
-import { Navbar } from "@/components/navbar";
-import { AppCard } from "@/components/app-card";
-import { CategoryChips } from "@/components/category-chips";
-import { SkeletonGrid } from "@/components/skeleton-grid";
-import { downloads, categories } from "@/data/downloads";
+import { useState, useMemo } from 'react';
+import { useParams } from 'next/navigation';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { downloads } from '@/data/downloads';
+import { CategoryChips } from '@/components/category-chips';
+import { BentoGrid } from '@/components/bento-grid';
+import { SearchBar } from '@/components/search-bar';
+import { OsToggle } from '@/components/os-toggle';
+import { ChevronRight, Package } from 'lucide-react';
 
-const validCategories: string[] = categories.map((c) => c.id);
+const validCategories = ['jogos', 'softwares', 'outros'];
 
-const categoryNames: Record<string, string> = {
-  jogos: "Jogos",
-  softwares: "Softwares",
-  outros: "Utilitarios",
-};
+export default function CategoryPage() {
+  const params = useParams();
+  const category = params.category as string;
+  const [searchQuery, setSearchQuery] = useState('');
+  const [platformFilter, setPlatformFilter] = useState('all');
 
-interface CategoryPageProps {
-  params: Promise<{ category: string }>;
-}
+  const categoryInfo = downloads.find(
+    (d) => d.category === category
+  );
+  const categoryItems = useMemo(() => {
+    return downloads.filter((item) => {
+      if (item.category !== category) return false;
 
-export default function CategoryPage({ params }: CategoryPageProps) {
-  const [activeCategory, setActiveCategory] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [platformFilter, setPlatformFilter] = useState("all");
-  const [category, setCategory] = useState<string | null>(null);
+      if (platformFilter !== 'all') {
+        const hasPlatform = item.platform.some((p) => {
+          if (platformFilter === 'windows') {
+            return ['Windows', 'Mac', 'Linux'].includes(p);
+          }
+          if (platformFilter === 'android') {
+            return ['Mobile', 'Console'].includes(p);
+          }
+          return true;
+        });
+        if (!hasPlatform) return false;
+      }
 
-  // Resolve params
-  params.then((p) => setCategory(p.category));
-
-  const categoryApps = useMemo(() => {
-    if (!category) return [];
-    return downloads.filter((item) => item.category === category);
-  }, [category]);
-
-  const filteredApps = useMemo(() => {
-    let result = [...categoryApps];
-
-    if (platformFilter !== "all") {
-      result = result.filter((item) =>
-        item.platform.includes(platformFilter)
-      );
-    }
-
-    // Tag filter within category
-    if (activeCategory !== "all") {
-      result = result.filter((item) =>
-        item.tags.some(
-          (tag) => tag.toLowerCase() === activeCategory.toLowerCase()
-        )
-      );
-    }
-
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      result = result.filter(
-        (item) =>
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        return (
           item.name.toLowerCase().includes(q) ||
           item.description.toLowerCase().includes(q)
-      );
-    }
+        );
+      }
 
-    return result;
-  }, [categoryApps, activeCategory, searchQuery, platformFilter]);
+      return true;
+    });
+  }, [category, platformFilter, searchQuery]);
 
-  if (category && !validCategories.includes(category)) {
+  if (!validCategories.includes(category)) {
     return (
-      <>
-        <Navbar platformFilter={platformFilter} onPlatformChange={setPlatformFilter} />
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <h1 className="text-6xl font-bold gradient-text mb-4">404</h1>
-            <p className="text-zinc-400 mb-6">Categoria nao encontrada</p>
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-violet-600 text-white text-sm font-medium hover:bg-violet-500 transition-colors"
-            >
-              Voltar ao inicio
-            </Link>
-          </div>
-        </div>
-      </>
+      <div className="max-w-6xl mx-auto px-4 pt-32 pb-20 text-center">
+        <h1 className="text-6xl font-extrabold gradient-text mb-4">404</h1>
+        <p className="text-zinc-400 mb-6">Categoria não encontrada</p>
+        <Link href="/" className="text-sm text-violet-400 hover:text-violet-300">
+          Voltar para o início
+        </Link>
+      </div>
     );
   }
 
+  const categoryLabel = category.charAt(0).toUpperCase() + category.slice(1);
+  const emoji = category === 'jogos' ? '🎮' : category === 'softwares' ? '💻' : '📦';
+
   return (
-    <>
-      <Navbar
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        platformFilter={platformFilter}
-        onPlatformChange={setPlatformFilter}
-      />
+    <div className="max-w-6xl mx-auto px-4 pt-28 pb-20">
+      {/* Breadcrumb */}
+      <nav className="flex items-center gap-1.5 text-sm text-zinc-500 mb-8">
+        <Link href="/" className="hover:text-zinc-300 transition-colors">
+          Início
+        </Link>
+        <ChevronRight className="w-3.5 h-3.5" />
+        <span className="text-zinc-300">{categoryLabel}</span>
+      </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12">
-        {/* Breadcrumb */}
-        <nav className="flex items-center gap-1.5 text-sm text-zinc-500 mb-8">
-          <Link href="/" className="hover:text-zinc-300 transition-colors">
-            Inicio
-          </Link>
-          <ChevronRight className="w-3.5 h-3.5" />
-          <span className="text-zinc-300">
-            {category ? categoryNames[category] || category : "..."}
-          </span>
-        </nav>
-
-        {/* Category Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">
-            {category ? categoryNames[category] || category : "..."}
+      {/* Category Header */}
+      <motion.div
+        className="mb-8"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
+        <div className="flex items-center gap-3 mb-2">
+          <span className="text-3xl">{emoji}</span>
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-white">
+            {categoryLabel}
           </h1>
-          <p className="text-zinc-400">
-            {categoryApps.length}{" "}
-            {categoryApps.length === 1 ? "app disponivel" : "apps disponiveis"}
-          </p>
+          <span className="text-sm text-zinc-500 bg-white/[0.04] px-2.5 py-0.5 rounded-full">
+            {categoryItems.length} apps
+          </span>
         </div>
+      </motion.div>
 
-        <CategoryChips
-          activeCategory={activeCategory}
-          onCategoryChange={setActiveCategory}
-          activeType="tag"
-        />
-
-        <div className="mt-8">
-          {filteredApps.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 stagger-children">
-              {filteredApps.map((item) => (
-                <AppCard key={item.id} item={item} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-20">
-              <p className="text-zinc-400 font-medium">
-                Nenhum app encontrado
-              </p>
-              <p className="text-sm text-zinc-500 mt-1">
-                Tente ajustar os filtros
-              </p>
-            </div>
-          )}
-        </div>
+      {/* Filters */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-8">
+        <CategoryChips active={category} onChange={(cat) => {
+          if (cat !== 'all') {
+            window.location.href = `/${cat}`;
+          } else {
+            window.location.href = '/';
+          }
+        }} />
       </div>
-    </>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-8">
+        <SearchBar value={searchQuery} onChange={setSearchQuery} />
+        <OsToggle platform={platformFilter} onPlatformChange={setPlatformFilter} />
+      </div>
+
+      {/* Grid */}
+      {categoryItems.length > 0 ? (
+        <BentoGrid items={categoryItems} />
+      ) : (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex flex-col items-center justify-center py-20 text-center"
+        >
+          <Package className="w-12 h-12 text-zinc-700 mb-4" />
+          <p className="text-zinc-400">Nenhum app encontrado nesta categoria</p>
+        </motion.div>
+      )}
+    </div>
   );
 }

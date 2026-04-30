@@ -1,102 +1,125 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Download, Check } from "lucide-react";
-import { StarRating } from "@/components/star-rating";
-import type { DownloadItem } from "@/data/downloads";
+import { useState, useRef, useCallback } from 'react';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { Monitor, Smartphone } from 'lucide-react';
+import { type DownloadItem } from '@/data/downloads';
+import { StarRating } from '@/components/star-rating';
+import { MagneticButton } from '@/components/magnetic-button';
 
 interface AppCardProps {
   item: DownloadItem;
+  featured?: boolean;
 }
 
-export function AppCard({ item }: AppCardProps) {
-  const [downloaded, setDownloaded] = useState(false);
-  const rating = item.id % 2 === 0 ? 4.5 : 5;
+export function AppCard({ item, featured = false }: AppCardProps) {
+  const [mouseX, setMouseX] = useState(0);
+  const [mouseY, setMouseY] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
 
-  const handleDownload = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (downloaded) return;
-    setDownloaded(true);
-  };
-
-  const isWindows = item.platform.includes("Windows");
-  const isMobile = item.platform.includes("Mobile");
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMouseX(e.clientX - rect.left);
+    setMouseY(e.clientY - rect.top);
+  }, []);
 
   return (
-    <a
-      href={`/${item.category}/${item.id}`}
-      className="group block bg-white/[0.03] backdrop-blur-xl border border-white/[0.06] rounded-2xl p-5 transition-all duration-300 hover:scale-[1.02] hover:border-violet-500/30 hover:shadow-[0_0_30px_-5px_rgba(139,92,246,0.15)] hover:bg-white/[0.05] focus-ring"
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className={`group relative bg-white/[0.04] backdrop-blur-[24px] rounded-2xl border border-white/[0.08] overflow-hidden transition-all duration-300 hover:border-white/[0.15] hover:shadow-[0_8px_32px_rgba(0,0,0,0.4)] hover:scale-[1.01] ${
+        featured ? 'md:col-span-2' : ''
+      }`}
     >
-      {/* Top: Icon + Badges */}
-      <div className="flex items-start gap-4 mb-4">
-        {/* Squircle Icon */}
+      {/* Spotlight effect */}
+      {isHovered && (
         <div
-          className={`shrink-0 w-14 h-14 rounded-[20%] bg-gradient-to-br ${item.gradient} flex items-center justify-center text-2xl shadow-lg`}
-        >
-          {item.emoji}
-        </div>
-        <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-white text-lg truncate leading-tight">
-            {item.name}
-          </h3>
-          <p className="text-sm text-zinc-400 truncate mt-0.5">
+          className="absolute inset-0 pointer-events-none z-0 transition-opacity duration-150"
+          style={{
+            background: `radial-gradient(300px circle at ${mouseX}px ${mouseY}px, rgba(139,92,246,0.08), transparent 60%)`,
+          }}
+        />
+      )}
+
+      <Link href={`/${item.category}/${item.id}`} className="block relative z-10">
+        <div className={`p-4 md:p-5 ${featured ? 'md:flex md:gap-5' : ''}`}>
+          {/* Top section: icon, name, badge */}
+          <div className="flex items-start gap-3 mb-3">
+            <div
+              className={`flex items-center justify-center bg-gradient-to-br ${item.gradient} rounded-[20%] text-2xl md:text-3xl flex-shrink-0 ${
+                featured ? 'w-16 h-16 md:w-20 md:h-20' : 'w-12 h-12 md:w-14 md:h-14'
+              }`}
+            >
+              {item.emoji}
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-sm md:text-base font-semibold text-white truncate">
+                {item.name}
+              </h3>
+              <div className="flex items-center gap-2 mt-0.5">
+                <span className="text-xs text-zinc-500 capitalize">
+                  {item.category}
+                </span>
+                {item.featured && (
+                  <span className="text-[10px] font-medium text-amber-400 bg-amber-400/10 px-1.5 py-0.5 rounded-full">
+                    Destaque
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Middle: description + tags */}
+          <p className="text-[13px] text-zinc-400 leading-relaxed mb-3 line-clamp-2">
             {item.description}
           </p>
+
+          {featured && (
+            <div className="flex flex-wrap gap-1.5 mb-3">
+              {item.tags.slice(0, 4).map((tag) => (
+                <span
+                  key={tag}
+                  className="text-[11px] text-zinc-400 bg-white/[0.06] px-2 py-0.5 rounded-full"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* Bottom: metadata */}
+          <div className="flex items-center justify-between gap-2 flex-wrap">
+            <div className="flex items-center gap-3 text-xs text-zinc-500">
+              <div className="flex items-center gap-1">
+                {item.platform.map((p) => (
+                  <span key={p} className="flex items-center gap-0.5">
+                    {p.includes('indows') || p.includes('Mac') || p.includes('Linux') ? (
+                      <Monitor className="w-3 h-3" />
+                    ) : (
+                      <Smartphone className="w-3 h-3" />
+                    )}
+                  </span>
+                ))}
+              </div>
+              <span>v{item.version}</span>
+              <span>{item.size}</span>
+            </div>
+            <StarRating id={item.id} />
+          </div>
+        </div>
+      </Link>
+
+      {/* Download button - outside Link to avoid navigation */}
+      <div className="relative z-20 px-4 md:px-5 pb-4 md:pb-5 pt-0">
+        <div onClick={(e) => e.stopPropagation()}>
+          <MagneticButton size={featured ? 'md' : 'sm'} />
         </div>
       </div>
-
-      {/* Rating */}
-      <div className="mb-3">
-        <StarRating rating={rating} size={14} />
-      </div>
-
-      {/* Platform badges + metadata */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-1.5">
-          {isWindows && (
-            <span className="inline-flex items-center gap-1 bg-white/5 rounded-full px-2 py-0.5 text-[10px] text-zinc-400 font-medium">
-              <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M3 12V6.75l8-1.25V12H3zm10-6.75L21 4v8h-8V5.25zM3 13h8v6.5l-8-1.25V13zm10 0h8v7.5l-8-1.25V13z"/>
-              </svg>
-              Win
-            </span>
-          )}
-          {isMobile && (
-            <span className="inline-flex items-center gap-1 bg-white/5 rounded-full px-2 py-0.5 text-[10px] text-zinc-400 font-medium">
-              <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17 1H7a2 2 0 0 0-2 2v18a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm-2 18H9v-1h6v1zm2-3H7V4h10v12z"/>
-              </svg>
-              Android
-            </span>
-          )}
-        </div>
-        <span className="text-xs text-zinc-500">
-          v{item.version} &middot; {item.size}
-        </span>
-      </div>
-
-      {/* Download Button */}
-      <button
-        onClick={handleDownload}
-        disabled={downloaded}
-        className={`w-full flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-300 ${
-          downloaded
-            ? "bg-emerald-600/20 text-emerald-400 border border-emerald-500/20"
-            : "bg-violet-600 hover:bg-violet-500 text-white active:scale-[0.98]"
-        }`}
-      >
-        {downloaded ? (
-          <>
-            <Check className="w-4 h-4" />
-            Baixado!
-          </>
-        ) : (
-          <>
-            <Download className="w-4 h-4" />
-            Baixar
-          </>
-        )}
-      </button>
-    </a>
+    </motion.div>
   );
 }

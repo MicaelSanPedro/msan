@@ -2,16 +2,15 @@
 
 /* ─── CSS Variables ────────────────────────────── */
 :root {
-  --bg-primary: #0A0A0B;
-  --bg-card: rgba(255, 255, 255, 0.03);
-  --bg-card-hover: rgba(255, 255, 255, 0.05);
-  --text-primary: #FAFAFA;
-  --text-secondary: #A1A1AA;
-  --text-muted: #52525B;
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-hover: rgba(139, 92, 246, 0.3);
-  --accent-violet: #8B5CF6;
-  --accent-cyan: #06B6D4;
+  --bg-primary: #0a0a0b;
+  --bg-secondary: #1a1a2e;
+  --text-primary: #fafafa;
+  --text-secondary: #a1a1aa;
+  --text-muted: #52525b;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(255, 255, 255, 0.15);
+  --accent-violet: #8b5cf6;
+  --accent-cyan: #22d3ee;
 }
 
 /* ─── Base ─────────────────────────────────────── */
@@ -22,9 +21,11 @@ html {
 }
 
 body {
-  background: var(--bg-primary);
+  background: radial-gradient(at top left, #1a1a2e 0%, #0a0a0b 100%);
+  background-attachment: fixed;
   color: var(--text-primary);
   overflow-x: hidden;
+  min-height: 100vh;
 }
 
 /* ─── Selection ────────────────────────────────── */
@@ -36,7 +37,7 @@ body {
 /* ─── Scrollbar ────────────────────────────────── */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+  scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
 }
 
 *::-webkit-scrollbar {
@@ -49,15 +50,15 @@ body {
 }
 
 *::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 999px;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.15);
 }
 
-/* ─── Hide scrollbar for category chips ────────── */
+/* ─── Hide scrollbar utility ───────────────────── */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
@@ -67,156 +68,28 @@ body {
   scrollbar-width: none;
 }
 
-/* ─── Glassmorphism Utilities ──────────────────── */
-.glass {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.glass-strong {
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
 /* ─── Gradient Text ────────────────────────────── */
 .gradient-text {
-  background: linear-gradient(135deg, #8B5CF6 0%, #06B6D4 50%, #8B5CF6 100%);
+  background: linear-gradient(to right, #a78bfa, #22d3ee, #a78bfa);
+  background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-.gradient-text-subtle {
-  background: linear-gradient(to right, #c4b5fd, #67e8f9, #c4b5fd);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* ─── Gradient Border ──────────────────────────── */
-.gradient-border {
-  position: relative;
-}
-
-.gradient-border::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(135deg, #8B5CF6, #06B6D4);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.gradient-border:hover::before {
-  opacity: 1;
-}
-
-/* ─── Animations ───────────────────────────────── */
+/* ─── Pulse subtle ─────────────────────────────── */
 @keyframes pulse-subtle {
   0%, 100% {
     box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.4);
   }
   50% {
-    box-shadow: 0 0 0 8px rgba(139, 92, 246, 0);
-  }
-}
-
-@keyframes shimmer-loading {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-@keyframes float-gentle {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
-}
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+    box-shadow: 0 0 0 12px rgba(139, 92, 246, 0);
   }
 }
 
 .animate-pulse-subtle {
   animation: pulse-subtle 2.5s ease-in-out infinite;
 }
-
-.animate-shimmer {
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0.03) 25%,
-    rgba(255, 255, 255, 0.08) 50%,
-    rgba(255, 255, 255, 0.03) 75%
-  );
-  background-size: 200% 100%;
-  animation: shimmer-loading 1.5s ease-in-out infinite;
-}
-
-.animate-float-gentle {
-  animation: float-gentle 4s ease-in-out infinite;
-}
-
-.animate-fade-in {
-  animation: fade-in 0.5s ease-out forwards;
-}
-
-.animate-slide-up {
-  animation: slide-up 0.6s ease-out forwards;
-}
-
-/* ─── Stagger children animation ───────────────── */
-.stagger-children > * {
-  opacity: 0;
-  animation: fade-in 0.4s ease-out forwards;
-}
-
-.stagger-children > *:nth-child(1) { animation-delay: 0.05s; }
-.stagger-children > *:nth-child(2) { animation-delay: 0.1s; }
-.stagger-children > *:nth-child(3) { animation-delay: 0.15s; }
-.stagger-children > *:nth-child(4) { animation-delay: 0.2s; }
-.stagger-children > *:nth-child(5) { animation-delay: 0.25s; }
-.stagger-children > *:nth-child(6) { animation-delay: 0.3s; }
-.stagger-children > *:nth-child(7) { animation-delay: 0.35s; }
-.stagger-children > *:nth-child(8) { animation-delay: 0.4s; }
-.stagger-children > *:nth-child(9) { animation-delay: 0.45s; }
-.stagger-children > *:nth-child(10) { animation-delay: 0.5s; }
-.stagger-children > *:nth-child(11) { animation-delay: 0.55s; }
-.stagger-children > *:nth-child(12) { animation-delay: 0.6s; }
 
 /* ─── Carousel snap ────────────────────────────── */
 .snap-x-mandatory {

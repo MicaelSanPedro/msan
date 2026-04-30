@@ -4,6 +4,7 @@ import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { ScrollToTop } from "@/components/scroll-to-top";
+import { MeshGradient } from "@/components/mesh-gradient";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -12,7 +13,7 @@ const inter = Inter({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#0A0A0B",
+  themeColor: "#0a0a0b",
 };
 
 export const metadata: Metadata = {
@@ -32,9 +33,12 @@ export default function RootLayout({
         className={`${inter.variable} font-sans antialiased min-h-screen flex flex-col`}
         style={{ fontFamily: "var(--font-inter), system-ui, sans-serif" }}
       >
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <MeshGradient />
+        <div className="relative z-10 flex flex-col min-h-screen">
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </div>
         <ScrollToTop />
       </body>
     </html>
