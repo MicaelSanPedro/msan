@@ -1,126 +1,121 @@
 'use client';
 
-import { useState, useMemo } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { downloads } from '@/data/downloads';
-import { CategoryChips } from '@/components/category-chips';
-import { BentoGrid } from '@/components/bento-grid';
-import { SearchBar } from '@/components/search-bar';
-import { OsToggle } from '@/components/os-toggle';
-import { ChevronRight, Package } from 'lucide-react';
+import { ChevronRight, Home } from 'lucide-react';
+import {
+  Gamepad2, Film, Code2, BookOpen, Microscope, Dices,
+} from 'lucide-react';
+import ArticleCard from '@/components/article-card';
+import LinkCard from '@/components/link-card';
+import { articles, categories, getArticlesByCategory, getCategoryName, type CategoryType } from '@/data/articles';
+import { getLinksByCategory, links as allLinks } from '@/data/links';
 
-const validCategories = ['jogos', 'softwares', 'outros'];
+const iconMap: Record<CategoryType, React.ComponentType<{ className?: string }>> = {
+  games: Gamepad2,
+  'filmes-series': Film,
+  'dev-tech': Code2,
+  'comics-mangas': BookOpen,
+  ciencia: Microscope,
+  'cultura-geek': Dices,
+};
+
+const descriptionMap: Record<CategoryType, string> = {
+  games: 'Reviews, análises e novidades do mundo dos games.',
+  'filmes-series': 'Cinema, anime, séries e tudo sobre tela.',
+  'dev-tech': 'Programação, ferramentas e tecnologia.',
+  'comics-mangas': 'Quadrinhos, mangás e cultura pop visual.',
+  ciencia: 'Descobertas, pesquisas e curiosidades científicas.',
+  'cultura-geek': 'RPG, board games, cosplay e tudo que é nerd.',
+};
 
 export default function CategoryPage() {
   const params = useParams();
-  const category = params.category as string;
-  const [searchQuery, setSearchQuery] = useState('');
-  const [platformFilter, setPlatformFilter] = useState('all');
+  const slug = params.category as string;
+  const category = categories.find((c) => c.id === slug);
 
-  const categoryInfo = downloads.find(
-    (d) => d.category === category
-  );
-  const categoryItems = useMemo(() => {
-    return downloads.filter((item) => {
-      if (item.category !== category) return false;
-
-      if (platformFilter !== 'all') {
-        const hasPlatform = item.platform.some((p) => {
-          if (platformFilter === 'windows') {
-            return ['Windows', 'Mac', 'Linux'].includes(p);
-          }
-          if (platformFilter === 'android') {
-            return ['Mobile', 'Console'].includes(p);
-          }
-          return true;
-        });
-        if (!hasPlatform) return false;
-      }
-
-      if (searchQuery) {
-        const q = searchQuery.toLowerCase();
-        return (
-          item.name.toLowerCase().includes(q) ||
-          item.description.toLowerCase().includes(q)
-        );
-      }
-
-      return true;
-    });
-  }, [category, platformFilter, searchQuery]);
-
-  if (!validCategories.includes(category)) {
+  if (!category) {
     return (
-      <div className="max-w-6xl mx-auto px-4 pt-32 pb-20 text-center">
-        <h1 className="text-6xl font-extrabold gradient-text mb-4">404</h1>
-        <p className="text-zinc-400 mb-6">Categoria não encontrada</p>
-        <Link href="/" className="text-sm text-violet-400 hover:text-violet-300">
-          Voltar para o início
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 text-center">
+        <h1 className="font-serif text-4xl font-bold text-text-primary mb-4">
+          Categoria não encontrada
+        </h1>
+        <p className="text-text-secondary mb-6">
+          Essa categoria não existe. Volte para a página inicial.
+        </p>
+        <Link href="/" className="text-accent hover:text-accent-hover transition-colors">
+          ← Voltar ao Início
         </Link>
       </div>
     );
   }
 
-  const categoryLabel = category.charAt(0).toUpperCase() + category.slice(1);
-  const emoji = category === 'jogos' ? '🎮' : category === 'softwares' ? '💻' : '📦';
+  const catArticles = getArticlesByCategory(category.id);
+  const catLinks = getLinksByCategory(category.id);
+  const Icon = iconMap[category.id];
 
   return (
-    <div className="max-w-6xl mx-auto px-4 pt-28 pb-20">
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-1.5 text-sm text-zinc-500 mb-8">
-        <Link href="/" className="hover:text-zinc-300 transition-colors">
-          Início
+      <nav className="flex items-center gap-1.5 text-sm text-text-muted mb-8">
+        <Link href="/" className="hover:text-accent transition-colors flex items-center gap-1">
+          <Home className="h-3.5 w-3.5" /> Início
         </Link>
-        <ChevronRight className="w-3.5 h-3.5" />
-        <span className="text-zinc-300">{categoryLabel}</span>
+        <ChevronRight className="h-3 w-3" />
+        <span className="text-text-primary">{category.name}</span>
       </nav>
 
-      {/* Category Header */}
+      {/* Header */}
       <motion.div
-        className="mb-8"
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="mb-10"
       >
-        <div className="flex items-center gap-3 mb-2">
-          <span className="text-3xl">{emoji}</span>
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-white">
-            {categoryLabel}
-          </h1>
-          <span className="text-sm text-zinc-500 bg-white/[0.04] px-2.5 py-0.5 rounded-full">
-            {categoryItems.length} apps
-          </span>
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-12 h-12 rounded-xl bg-accent-muted flex items-center justify-center">
+            <Icon className="h-6 w-6 text-accent" />
+          </div>
+          <div>
+            <h1 className="font-serif text-3xl md:text-4xl font-bold text-text-primary tracking-tight">
+              {category.name}
+            </h1>
+          </div>
         </div>
+        <p className="text-text-secondary text-base">{descriptionMap[category.id]}</p>
       </motion.div>
 
-      {/* Filters */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-8">
-        <CategoryChips active={category} onChange={(cat) => {
-          if (cat !== 'all') {
-            window.location.href = `/${cat}`;
-          } else {
-            window.location.href = '/';
-          }
-        }} />
-      </div>
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-8">
-        <SearchBar value={searchQuery} onChange={setSearchQuery} />
-        <OsToggle platform={platformFilter} onPlatformChange={setPlatformFilter} />
-      </div>
+      {/* Articles */}
+      <section className="mb-16">
+        <h2 className="font-serif text-xl font-bold text-text-primary mb-6">
+          Artigos ({catArticles.length})
+        </h2>
+        {catArticles.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {catArticles.map((article) => (
+              <ArticleCard key={article.id} article={article} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-text-muted text-center py-12 bg-surface rounded-xl border border-border-subtle">
+            Nenhum artigo nesta categoria ainda. Em breve!
+          </p>
+        )}
+      </section>
 
-      {/* Grid */}
-      {categoryItems.length > 0 ? (
-        <BentoGrid items={categoryItems} />
-      ) : (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="flex flex-col items-center justify-center py-20 text-center"
-        >
-          <Package className="w-12 h-12 text-zinc-700 mb-4" />
-          <p className="text-zinc-400">Nenhum app encontrado nesta categoria</p>
-        </motion.div>
+      {/* Links */}
+      {catLinks.length > 0 && (
+        <section>
+          <h2 className="font-serif text-xl font-bold text-text-primary mb-6">
+            Links Recomendados
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {catLinks.map((link) => (
+              <LinkCard key={link.id} link={link} />
+            ))}
+          </div>
+        </section>
       )}
     </div>
   );

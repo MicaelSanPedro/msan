@@ -2,129 +2,109 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Search } from 'lucide-react';
+import { Menu, X, Search, BookOpen } from 'lucide-react';
+import { categories } from '@/data/articles';
 
-const navLinks = [
-  { href: '/', label: 'Início' },
-  { href: '/jogos', label: 'Jogos' },
-  { href: '/softwares', label: 'Softwares' },
-  { href: '/outros', label: 'Outros' },
-];
-
-export function Navbar() {
+export default function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
+    const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
-    <>
-      <motion.header
-        className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-4xl transition-colors duration-300 ${
-          scrolled
-            ? 'bg-black/40 border-white/[0.08]'
-            : 'bg-transparent border-transparent'
-        }`}
-        animate={{
-          boxShadow: scrolled
-            ? '0 8px 32px rgba(0,0,0,0.4)'
-            : '0 0px 0px rgba(0,0,0,0)',
-        }}
-        style={{
-          borderRadius: '1rem',
-          border: '1px solid',
-          backdropFilter: scrolled ? 'blur(24px)' : 'blur(0px)',
-          WebkitBackdropFilter: scrolled ? 'blur(24px)' : 'blur(0px)',
-        }}
-        transition={{ duration: 0.3 }}
-      >
-        <div className="flex items-center justify-between px-5 py-3">
-          {/* Logo */}
-          <Link href="/" className="text-xl font-extrabold tracking-tighter gradient-text">
-            MSAN
+    <header
+      className={`w-full border-b border-border-subtle bg-background/95 backdrop-blur-sm sticky top-0 z-50 transition-colors ${
+        scrolled ? 'bg-background' : ''
+      }`}
+    >
+      <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
+          {/* Brand */}
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <BookOpen className="h-5 w-5 text-accent" />
+            <span className="font-serif text-xl font-bold text-text-primary tracking-tight">
+              O Refúgio
+            </span>
           </Link>
 
-          {/* Desktop nav links */}
-          <nav className="hidden md:flex items-center gap-1">
-            {navLinks.map((link) => (
+          {/* Desktop Nav */}
+          <div className="hidden lg:flex items-center gap-1">
+            {categories.map((cat) => (
               <Link
-                key={link.href}
-                href={link.href}
-                className="px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors rounded-xl hover:bg-white/[0.06]"
+                key={cat.id}
+                href={`/${cat.id}`}
+                className="px-3 py-2 text-sm text-text-secondary hover:text-accent transition-colors rounded-md hover:bg-accent-muted"
               >
-                {link.label}
+                {cat.name}
               </Link>
             ))}
-          </nav>
+          </div>
 
-          {/* Right side */}
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => {
-                const q = prompt('Buscar apps...');
-                if (q) window.location.href = `/busca?q=${encodeURIComponent(q)}`;
-              }}
-              className="p-2 text-zinc-400 hover:text-white transition-colors rounded-xl hover:bg-white/[0.06]"
+          {/* Desktop Actions */}
+          <div className="hidden lg:flex items-center gap-2">
+            <Link
+              href="/busca"
+              className="p-2 text-text-secondary hover:text-accent transition-colors rounded-md hover:bg-accent-muted"
               aria-label="Buscar"
             >
-              <Search className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden p-2 text-zinc-400 hover:text-white transition-colors rounded-xl hover:bg-white/[0.06]"
-              aria-label="Menu"
+              <Search className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/links"
+              className="ml-2 px-4 py-2 text-sm font-medium text-accent border border-border-accent rounded-lg hover:bg-accent-muted transition-colors"
             >
-              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
+              Links Úteis
+            </Link>
           </div>
-        </div>
-      </motion.header>
 
-      {/* Mobile overlay menu */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            className="fixed inset-0 z-40 md:hidden"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="lg:hidden p-2 text-text-secondary hover:text-accent transition-colors"
+            aria-label="Menu"
           >
-            <div
-              className="absolute inset-0 bg-black/60"
-              onClick={() => setMobileOpen(false)}
-            />
-            <motion.nav
-              className="absolute top-20 left-4 right-4 bg-black/50 backdrop-blur-[24px] border border-white/[0.08] rounded-2xl p-4 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
-              initial={{ opacity: 0, y: -20, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -20, scale: 0.95 }}
-              transition={{ duration: 0.2 }}
-            >
-              {navLinks.map((link, i) => (
-                <motion.div
-                  key={link.href}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
+            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
+
+        {/* Mobile Menu */}
+        {isOpen && (
+          <div className="lg:hidden border-t border-border-subtle py-4 animate-fade-in">
+            <div className="flex flex-col gap-1">
+              {categories.map((cat) => (
+                <Link
+                  key={cat.id}
+                  href={`/${cat.id}`}
+                  onClick={() => setIsOpen(false)}
+                  className="px-3 py-2.5 text-sm text-text-secondary hover:text-accent transition-colors rounded-md hover:bg-accent-muted"
                 >
-                  <Link
-                    href={link.href}
-                    onClick={() => setMobileOpen(false)}
-                    className="block px-4 py-3 text-base font-medium text-zinc-300 hover:text-white hover:bg-white/[0.06] rounded-xl transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </motion.div>
+                  {cat.name}
+                </Link>
               ))}
-            </motion.nav>
-          </motion.div>
+              <hr className="border-border-subtle my-2" />
+              <Link
+                href="/busca"
+                onClick={() => setIsOpen(false)}
+                className="px-3 py-2.5 text-sm text-text-secondary hover:text-accent transition-colors rounded-md hover:bg-accent-muted flex items-center gap-2"
+              >
+                <Search className="h-4 w-4" />
+                Buscar
+              </Link>
+              <Link
+                href="/links"
+                onClick={() => setIsOpen(false)}
+                className="px-3 py-2.5 text-sm text-accent hover:bg-accent-muted transition-colors rounded-md"
+              >
+                Links Úteis
+              </Link>
+            </div>
+          </div>
         )}
-      </AnimatePresence>
-    </>
+      </nav>
+    </header>
   );
 }
