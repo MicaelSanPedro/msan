@@ -1,59 +1,41 @@
 import type { Metadata, Viewport } from "next";
-import { Geist } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { ScrollToTop } from "@/components/scroll-to-top";
-import { ParticleField } from "@/components/particle-field";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
   subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
 });
 
 export const viewport: Viewport = {
-  width: "device-width",
-  initialScale: 1,
-  themeColor: "#050508",
+  themeColor: "#0A0A0B",
 };
 
 export const metadata: Metadata = {
-  title: "MSAN - Downloads | Jogos, Softwares e Muito Mais",
+  title: "MSAN Downloads — Apps para Windows e Android",
   description:
-    "Baixe jogos, softwares e utilitários de graça. O melhor site de downloads com links verificados e atualizados.",
-  keywords: [
-    "downloads",
-    "jogos",
-    "softwares",
-    "grátis",
-    "free",
-    "games",
-    "apps",
-  ],
-  icons: {
-    icon: "/favicon.png",
-  },
+    "Downloads seguros e verificados para Windows e Android. Tudo gratuito, sempre atualizado.",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="pt-BR" className="dark">
       <body
-        className={`${geistSans.variable} font-[family-name:var(--font-geist-sans)] antialiased noise-overlay`}
+        className={`${inter.variable} font-sans antialiased min-h-screen flex flex-col`}
+        style={{ fontFamily: "var(--font-inter), system-ui, sans-serif" }}
       >
-        <div className="relative min-h-screen flex flex-col">
-          <ParticleField />
-          <div className="relative z-10 flex flex-col min-h-screen">
-            <Navbar />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
-          <ScrollToTop />
-        </div>
+        <Navbar />
+        <main className="flex-1">{children}</main>
+        <Footer />
+        <ScrollToTop />
       </body>
     </html>
   );

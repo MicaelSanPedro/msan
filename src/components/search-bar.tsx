@@ -1,54 +1,45 @@
 "use client";
 
 import { useState } from "react";
-import { Search, X } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Search } from "lucide-react";
 
 interface SearchBarProps {
-  defaultValue?: string;
+  value: string;
+  onChange: (value: string) => void;
   placeholder?: string;
-  className?: string;
-  category?: string;
 }
 
 export function SearchBar({
-  defaultValue = "",
-  placeholder = "Buscar jogos, softwares, ferramentas...",
-  className = "",
-  category,
+  value,
+  onChange,
+  placeholder = "Buscar apps...",
 }: SearchBarProps) {
-  const [query, setQuery] = useState(defaultValue);
-  const router = useRouter();
+  const [isFocused, setIsFocused] = useState(false);
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (query.trim()) {
-      router.push(
-        `/busca?q=${encodeURIComponent(query.trim())}${category ? `&cat=${category}` : ""}`
-      );
+    if (value.trim()) {
+      window.location.href = `/busca?q=${encodeURIComponent(value.trim())}`;
     }
   };
 
   return (
-    <form onSubmit={handleSearch} className={`relative ${className}`}>
-      <div className="search-glow relative flex items-center gap-2 glass rounded-2xl px-4 sm:px-5 py-3 sm:py-4 transition-all duration-300 border border-white/[0.06]">
-        <Search className="w-5 h-5 text-white/30 shrink-0" />
+    <form onSubmit={handleSubmit} className="w-full max-w-lg">
+      <div className="relative group">
+        <Search
+          className={`absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${
+            isFocused ? "text-violet-400" : "text-zinc-500"
+          }`}
+        />
         <input
           type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="flex-1 bg-transparent border-none outline-none text-sm sm:text-base text-white/90 placeholder:text-white/25"
+          className="w-full bg-white/5 border border-white/10 rounded-full pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-violet-500/50 focus:bg-white/[0.07] transition-all"
         />
-        {query && (
-          <button
-            type="button"
-            onClick={() => setQuery("")}
-            className="p-1 rounded-lg hover:bg-white/5 transition-colors"
-          >
-            <X className="w-4 h-4 text-white/40" />
-          </button>
-        )}
       </div>
     </form>
   );

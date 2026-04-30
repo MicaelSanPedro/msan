@@ -1,276 +1,194 @@
-import { notFound } from "next/navigation";
 import Link from "next/link";
-import {
-  Download,
-  ExternalLink,
-  ArrowLeft,
-  HardDrive,
-  Tag,
-  Monitor,
-  Star,
-  Share2,
-  Gamepad2,
-  Package,
-  Clock,
-} from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { BreadcrumbNav } from "@/components/breadcrumb-nav";
-import { DownloadCard } from "@/components/download-card";
+import { notFound } from "next/navigation";
+import { ChevronRight, Download, ArrowLeft } from "lucide-react";
+import { StarRating } from "@/components/star-rating";
+import { AppCard } from "@/components/app-card";
 import { downloads } from "@/data/downloads";
-import { DetailShareButton } from "./share-button";
+import type { DownloadItem } from "@/data/downloads";
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
+import { ScrollToTop } from "@/components/scroll-to-top";
 
-/* Server Component – lê dados estaticamente */
-
-const categoryMeta: Record<
-  string,
-  { name: string; emoji: string; gradient: string }
-> = {
-  jogos: { name: "Jogos", emoji: "🎮", gradient: "from-rose-500 to-orange-500" },
-  softwares: { name: "Softwares", emoji: "💻", gradient: "from-cyan-500 to-blue-500" },
-  outros: { name: "Outros", emoji: "📦", gradient: "from-emerald-500 to-teal-500" },
+const categoryNames: Record<string, string> = {
+  jogos: "Jogos",
+  softwares: "Softwares",
+  outros: "Utilitarios",
 };
 
-const categoryColors: Record<string, string> = {
-  jogos: "text-rose-400 bg-rose-500/10 border-rose-500/20",
-  softwares: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20",
-  outros: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
-};
-
-const categoryLabels: Record<string, string> = {
-  jogos: "Jogo",
-  softwares: "Software",
-  outros: "Outro",
-};
-
-function platformIcon(platform: string) {
-  const p = platform.toLowerCase();
-  if (p === "windows") return "🪟";
-  if (p === "mac" || p === "macos") return "🍎";
-  if (p === "linux") return "🐧";
-  if (p === "mobile" || p === "android" || p === "ios") return "📱";
-  if (p === "console") return "🎮";
-  return "💻";
+interface DetailPageProps {
+  params: Promise<{ category: string; id: string }>;
 }
 
-export default async function DownloadDetailPage({
-  params,
-}: {
-  params: Promise<{ category: string; id: string }>;
-}) {
-  const { category, id } = await params;
-  const item = downloads.find(
-    (d) => d.category === category && d.id === Number(id)
+function PlatformIcon({ platform }: { platform: string }) {
+  if (platform === "Windows") {
+    return (
+      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M3 12V6.75l8-1.25V12H3zm10-6.75L21 4v8h-8V5.25zM3 13h8v6.5l-8-1.25V13zm10 0h8v7.5l-8-1.25V13z" />
+      </svg>
+    );
+  }
+  if (platform === "Mobile") {
+    return (
+      <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M17 1H7a2 2 0 0 0-2 2v18a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2zm-2 18H9v-1h6v1zm2-3H7V4h10v12z" />
+      </svg>
+    );
+  }
+  return (
+    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+      <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+      <line x1="8" y1="21" x2="16" y2="21" />
+      <line x1="12" y1="17" x2="12" y2="21" />
+    </svg>
   );
+}
 
-  if (!item) {
+export default async function DetailPage({ params }: DetailPageProps) {
+  const { category, id } = await params;
+  const numericId = parseInt(id, 10);
+  const item = downloads.find((d) => d.id === numericId);
+
+  if (!item || item.category !== category) {
     notFound();
   }
 
-  const meta = categoryMeta[category];
-  const relatedItems = downloads
-    .filter((d) => d.category === category && d.id !== item.id)
+  const rating = item.id % 2 === 0 ? 4.5 : 5;
+  const relatedApps = downloads
+    .filter((d) => d.category === item.category && d.id !== item.id)
     .slice(0, 4);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-      {/* Breadcrumb */}
-      <BreadcrumbNav
-        items={[
-          { label: "Início", href: "/" },
-          { label: meta?.name || category, href: `/${category}` },
-          { label: item.name },
-        ]}
-      />
+    <>
+      <Navbar />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
+        {/* Breadcrumb */}
+        <nav className="flex items-center gap-1.5 text-sm text-zinc-500 mb-8 flex-wrap">
+          <Link href="/" className="hover:text-zinc-300 transition-colors">
+            Inicio
+          </Link>
+          <ChevronRight className="w-3.5 h-3.5 shrink-0" />
+          <Link
+            href={`/${item.category}`}
+            className="hover:text-zinc-300 transition-colors"
+          >
+            {categoryNames[item.category] || item.category}
+          </Link>
+          <ChevronRight className="w-3.5 h-3.5 shrink-0" />
+          <span className="text-zinc-300 truncate max-w-[200px]">
+            {item.name}
+          </span>
+        </nav>
 
-      {/* Back button */}
-      <Link
-        href={`/${category}`}
-        className="inline-flex items-center gap-2 text-sm text-white/40 hover:text-white transition-colors mb-6 sm:mb-8"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Voltar para {meta?.name || category}
-      </Link>
-
-      {/* Main content */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 mb-12 sm:mb-16">
-        {/* Left column - main info */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Hero card */}
-          <div className="relative glass rounded-2xl sm:rounded-3xl overflow-hidden border border-white/[0.06]">
-            {/* Gradient background */}
-            <div
-              className={`absolute inset-0 bg-gradient-to-br ${item.gradient} opacity-[0.08]`}
-            />
-            <div
-              className={`absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r ${item.gradient}`}
-            />
-
-            <div className="relative p-6 sm:p-8 md:p-10">
-              <div className="flex flex-col sm:flex-row items-start gap-6">
-                {/* Big emoji */}
-                <div
-                  className={`w-20 h-20 sm:w-24 sm:h-24 rounded-2xl sm:rounded-3xl bg-gradient-to-br ${item.gradient} flex items-center justify-center shadow-xl shrink-0`}
-                >
-                  <span className="text-4xl sm:text-5xl">{item.emoji}</span>
-                </div>
-
-                <div className="flex-1 min-w-0">
-                  <div className="flex flex-wrap items-center gap-2 mb-3">
-                    <span
-                      className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-lg border ${categoryColors[item.category]}`}
-                    >
-                      {categoryLabels[item.category]}
-                    </span>
-                    {item.featured && (
-                      <span className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                        <Star className="w-3 h-3 fill-amber-400" />
-                        Destaque
-                      </span>
-                    )}
-                  </div>
-
-                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 leading-tight">
-                    {item.name}
-                  </h1>
-
-                  <p className="text-sm sm:text-base text-white/50 leading-relaxed max-w-2xl">
-                    {item.description}
-                  </p>
-                </div>
-              </div>
+        {/* App Header */}
+        <div className="flex flex-col sm:flex-row items-start gap-6 mb-12">
+          {/* Squircle Icon */}
+          <div
+            className={`shrink-0 w-20 h-20 sm:w-24 sm:h-24 rounded-[20%] bg-gradient-to-br ${item.gradient} flex items-center justify-center text-4xl sm:text-5xl shadow-xl`}
+          >
+            {item.emoji}
+          </div>
+          <div className="flex-1 min-w-0">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">
+              {item.name}
+            </h1>
+            <p className="text-zinc-400 text-base sm:text-lg leading-relaxed mb-4">
+              {item.description}
+            </p>
+            <div className="flex flex-wrap items-center gap-3">
+              <StarRating rating={rating} size={16} />
+              <span className="text-sm text-zinc-500">{rating}/5</span>
+              <span className="text-zinc-700">|</span>
+              <span className="text-sm text-zinc-400">v{item.version}</span>
+              <span className="text-zinc-700">|</span>
+              <span className="text-sm text-zinc-400">{item.size}</span>
             </div>
           </div>
+        </div>
 
-          {/* Tags */}
-          <div className="glass rounded-2xl p-5 sm:p-6 border border-white/[0.06]">
-            <h3 className="text-sm font-semibold text-white/60 mb-3 flex items-center gap-2">
-              <Tag className="w-4 h-4" />
-              Tags
-            </h3>
+        {/* Info Cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10">
+          <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-4">
+            <p className="text-xs text-zinc-500 mb-1">Plataformas</p>
             <div className="flex flex-wrap gap-2">
-              {item.tags.map((tag) => (
-                <Badge
-                  key={tag}
-                  variant="outline"
-                  className="text-xs bg-white/[0.04] text-white/40 border-white/[0.08] rounded-lg px-3 py-1"
+              {item.platform.map((p) => (
+                <span
+                  key={p}
+                  className="inline-flex items-center gap-1 text-sm text-zinc-300"
                 >
-                  {tag}
-                </Badge>
+                  <PlatformIcon platform={p} />
+                  {p}
+                </span>
               ))}
             </div>
           </div>
-        </div>
-
-        {/* Right column - sidebar info */}
-        <div className="space-y-6">
-          {/* Info card */}
-          <div className="glass rounded-2xl sm:rounded-3xl p-5 sm:p-6 border border-white/[0.06] sticky top-24">
-            <h3 className="text-sm font-semibold text-white/60 mb-4">
-              Informações
-            </h3>
-
-            <div className="space-y-4">
-              {/* Size */}
-              <div className="flex items-center justify-between py-2 border-b border-white/[0.04]">
-                <span className="text-sm text-white/40 flex items-center gap-2">
-                  <HardDrive className="w-4 h-4" />
-                  Tamanho
-                </span>
-                <span className="text-sm font-medium text-white">
-                  {item.size}
-                </span>
-              </div>
-
-              {/* Version */}
-              <div className="flex items-center justify-between py-2 border-b border-white/[0.04]">
-                <span className="text-sm text-white/40 flex items-center gap-2">
-                  <Tag className="w-4 h-4" />
-                  Versão
-                </span>
-                <span className="text-sm font-medium text-white">
-                  v{item.version}
-                </span>
-              </div>
-
-              {/* Category */}
-              <div className="flex items-center justify-between py-2 border-b border-white/[0.04]">
-                <span className="text-sm text-white/40 flex items-center gap-2">
-                  {category === "jogos" ? (
-                    <Gamepad2 className="w-4 h-4" />
-                  ) : category === "softwares" ? (
-                    <Monitor className="w-4 h-4" />
-                  ) : (
-                    <Package className="w-4 h-4" />
-                  )}
-                  Categoria
-                </span>
-                <span className="text-sm font-medium text-white">
-                  {meta?.name || category}
-                </span>
-              </div>
-            </div>
-
-            {/* Platforms */}
-            <div className="mt-5">
-              <h4 className="text-xs font-semibold text-white/40 mb-2.5 uppercase tracking-wider">
-                Plataformas
-              </h4>
-              <div className="flex flex-wrap gap-2">
-                {item.platform.map((p) => (
-                  <span
-                    key={p}
-                    className="inline-flex items-center gap-1.5 text-xs font-medium text-white/50 bg-white/[0.04] rounded-lg px-3 py-1.5 border border-white/[0.06]"
-                  >
-                    <span>{platformIcon(p)}</span>
-                    {p}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Download button */}
-            <a
-              href={item.downloadUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="download-btn flex items-center justify-center gap-2 w-full py-3.5 rounded-xl sm:rounded-2xl bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-bold text-base sm:text-lg transition-all duration-300 shadow-lg shadow-purple-500/20 hover:shadow-purple-500/35 mt-6"
-            >
-              <Download className="w-5 h-5 sm:w-6 sm:h-6" />
-              Baixar Agora
-              <ExternalLink className="w-4 h-4 opacity-50" />
-            </a>
-
-            {/* Share button */}
-            <DetailShareButton name={item.name} />
+          <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-4">
+            <p className="text-xs text-zinc-500 mb-1">Versao</p>
+            <p className="text-lg font-semibold text-white">{item.version}</p>
+          </div>
+          <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-4">
+            <p className="text-xs text-zinc-500 mb-1">Tamanho</p>
+            <p className="text-lg font-semibold text-white">{item.size}</p>
+          </div>
+          <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-4">
+            <p className="text-xs text-zinc-500 mb-1">Avaliacao</p>
+            <p className="text-lg font-semibold text-white">{rating}/5</p>
           </div>
         </div>
+
+        {/* Tags */}
+        {item.tags.length > 0 && (
+          <div className="mb-10">
+            <h3 className="text-sm font-semibold text-zinc-300 mb-3">Tags</h3>
+            <div className="flex flex-wrap gap-2">
+              {item.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="inline-flex items-center px-3 py-1 rounded-full bg-white/5 border border-white/[0.06] text-sm text-zinc-400"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Download Button */}
+        <a
+          href={item.downloadUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-gradient-to-r from-violet-600 to-cyan-600 text-white font-medium text-sm hover:from-violet-500 hover:to-cyan-500 transition-all animate-pulse-subtle mb-16"
+        >
+          <Download className="w-5 h-5" />
+          Baixar {item.name}
+        </a>
+
+        {/* Back button */}
+        <div className="mb-8">
+          <Link
+            href={`/${item.category}`}
+            className="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-zinc-300 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Voltar para{" "}
+            {categoryNames[item.category] || item.category}
+          </Link>
+        </div>
+
+        {/* Related Apps */}
+        {relatedApps.length > 0 && (
+          <section>
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-6">
+              Apps Relacionados
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 stagger-children">
+              {relatedApps.map((related) => (
+                <AppCard key={related.id} item={related} />
+              ))}
+            </div>
+          </section>
+        )}
       </div>
-
-      {/* Related downloads */}
-      {relatedItems.length > 0 && (
-        <section>
-          <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl glass flex items-center justify-center text-xl sm:text-2xl">
-              {meta?.emoji || "📦"}
-            </div>
-            <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-white">
-                Outros downloads
-              </h2>
-              <p className="text-xs sm:text-sm text-white/30">
-                Mais {meta?.name?.toLowerCase() || category} para você explorar
-              </p>
-            </div>
-            <div className="flex-1 h-px bg-gradient-to-r from-white/10 to-transparent ml-4 hidden sm:block" />
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
-            {relatedItems.map((related, i) => (
-              <DownloadCard key={related.id} item={related} index={i} />
-            ))}
-          </div>
-        </section>
-      )}
-    </div>
+    </>
   );
 }
