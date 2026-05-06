@@ -521,8 +521,8 @@ function AppsView({
           )}
         </p>
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+        {/* App List */}
+        <div className="flex flex-col gap-3">
           {filteredApps.map((app, i) => (
             <AppCard
               key={app.id}

@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { DynamicIcon } from "@/components/DynamicIcon";
+import { Star, Download, ChevronRight } from "lucide-react";
 import type { App } from "@/data/apps";
 
 interface AppCardProps {
@@ -12,66 +13,67 @@ interface AppCardProps {
 }
 
 export function AppCard({ app, index, onClick }: AppCardProps) {
-  const firstCommand = Object.values(app.commands)[0];
-
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ delay: Math.min(index * 0.06, 0.3), duration: 0.5 }}
+      initial={{ opacity: 0, x: -20 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true, margin: "-30px" }}
+      transition={{ delay: Math.min(index * 0.04, 0.2), duration: 0.4 }}
     >
       <button
         onClick={onClick}
-        className="w-full text-left group relative h-full glass-card card-shine card-glow-hover rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+        className="w-full text-left group glass-card card-shine card-glow-hover rounded-2xl overflow-hidden hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
       >
-        {/* Top glow line */}
-        <div className="h-0.5 bg-gradient-to-r from-green-500 via-emerald-500 to-lime-500 opacity-60 group-hover:opacity-100 transition-opacity duration-300" />
+        {/* Left glow accent */}
+        <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-gradient-to-b from-green-500 via-emerald-500 to-lime-500 opacity-60 group-hover:opacity-100 transition-opacity duration-300" />
 
-        <div className="p-4 sm:p-5 flex flex-col h-full">
-          {/* Header */}
-          <div className="flex items-start gap-3.5 mb-3">
-            <div className={`relative w-12 h-12 sm:w-14 sm:h-14 rounded-xl ${app.iconColor} flex items-center justify-center shadow-lg transition-transform duration-300 group-hover:scale-110 shrink-0`}>
-              <DynamicIcon name={app.icon} className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
-            </div>
-            <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-4 sm:gap-5 p-4 sm:p-5">
+          {/* App Icon */}
+          <div className={`relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl ${app.iconColor} flex items-center justify-center shadow-lg transition-transform duration-300 group-hover:scale-105 shrink-0`}>
+            <DynamicIcon name={app.icon} className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
+          </div>
+
+          {/* Info */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1">
               <h3 className="font-bold text-sm sm:text-base text-white group-hover:text-green-300 transition-colors truncate">
                 {app.name}
               </h3>
               <Badge
                 variant="outline"
-                className="mt-1 text-[10px] sm:text-xs bg-green-500/10 text-green-400 border-green-500/20 rounded-md font-normal"
+                className="hidden sm:inline-flex text-[10px] bg-green-500/10 text-green-400 border-green-500/20 rounded-md font-normal shrink-0"
               >
                 {app.category}
               </Badge>
             </div>
+            <p className="text-xs sm:text-sm text-white/40 leading-relaxed line-clamp-1 mb-1.5">
+              {app.description}
+            </p>
+            <div className="flex items-center gap-3">
+              <span className="flex items-center gap-1 text-xs text-amber-400/70">
+                <Star className="w-3 h-3 fill-amber-400/70" />
+                {app.rating}
+              </span>
+              <span className="flex items-center gap-1 text-xs text-white/25">
+                <Download className="w-3 h-3" />
+                {app.downloads}
+              </span>
+              <div className="hidden sm:flex items-center gap-1.5">
+                {Object.keys(app.commands).map((pm) => (
+                  <span
+                    key={pm}
+                    className="text-[10px] font-medium text-white/20 bg-white/[0.03] rounded px-1.5 py-0.5"
+                  >
+                    {pm}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
 
-          {/* Description */}
-          <p className="text-xs sm:text-sm text-white/40 leading-relaxed mb-3 line-clamp-2 flex-1">
-            {app.description}
-          </p>
-
-          {/* Command preview */}
-          {firstCommand && (
-            <div className="bg-black/40 border border-white/5 rounded-lg px-3 py-2 mb-3 overflow-hidden">
-              <code className="text-[10px] sm:text-xs text-green-400/70 font-mono truncate block">
-                <span className="text-white/30">$ </span>
-                {firstCommand.length > 50 ? firstCommand.substring(0, 50) + "..." : firstCommand}
-              </code>
-            </div>
-          )}
-
-          {/* Tags */}
-          <div className="flex flex-wrap gap-1.5">
-            {app.tags.slice(0, 3).map((tag) => (
-              <span
-                key={tag}
-                className="text-[10px] font-medium text-white/25 bg-white/[0.03] rounded-md px-2 py-0.5 border border-white/[0.04]"
-              >
-                {tag}
-              </span>
-            ))}
+          {/* Arrow */}
+          <div className="shrink-0 p-2 rounded-xl bg-white/[0.03] group-hover:bg-green-500/10 transition-colors duration-300">
+            <ChevronRight className="w-4 h-4 text-white/30 group-hover:text-green-400 transition-colors" />
           </div>
         </div>
       </button>
