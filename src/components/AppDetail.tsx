@@ -70,13 +70,19 @@ export function AppDetail({ app, isOpen, onClose }: AppDetailProps) {
 
           {/* Modal */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 100 }}
             transition={{ type: "spring", bounce: 0.15, duration: 0.5 }}
-            className="fixed inset-4 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 z-[70] sm:max-w-2xl sm:w-full sm:max-h-[85vh] overflow-hidden"
+            className="fixed inset-x-0 bottom-0 z-[70] sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:bottom-auto sm:max-w-2xl sm:w-full sm:max-h-[85vh] sm:rounded-2xl"
           >
-            <div className="h-full glass-card rounded-2xl border border-white/10 shadow-2xl shadow-green-500/10 flex flex-col">
+            <div className="h-full max-h-[90vh] sm:max-h-[85vh] bg-[#0d1412]/95 backdrop-blur-3xl rounded-t-3xl sm:rounded-2xl border border-white/10 border-b-0 sm:border-b border-green-500/10 shadow-2xl shadow-green-500/10 flex flex-col sm:overflow-hidden">
+
+              {/* Mobile drag handle */}
+              <div className="sm:hidden flex justify-center pt-3 pb-1">
+                <div className="w-10 h-1 rounded-full bg-white/20" />
+              </div>
+
               {/* Header */}
               <div className="p-5 sm:p-6 border-b border-white/[0.06] shrink-0">
                 <div className="flex items-start justify-between">
@@ -130,8 +136,8 @@ export function AppDetail({ app, isOpen, onClose }: AppDetailProps) {
                 </div>
               </div>
 
-              {/* Content */}
-              <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-6">
+              {/* Scrollable Content */}
+              <div className="flex-1 overflow-y-auto overscroll-contain p-5 sm:p-6 space-y-6 -webkit-overflow-scrolling-touch">
                 {/* Install Commands */}
                 <div>
                   <h3 className="text-base font-semibold text-white mb-4 flex items-center gap-2">
@@ -171,7 +177,7 @@ export function AppDetail({ app, isOpen, onClose }: AppDetailProps) {
                 )}
 
                 {/* Tags */}
-                <div>
+                <div className="pb-4 sm:pb-2">
                   <h3 className="text-base font-semibold text-white mb-3">Tags</h3>
                   <div className="flex flex-wrap gap-2">
                     {app.tags.map((tag) => (
