@@ -76,7 +76,7 @@ export function AppDetail({ app, isOpen, onClose }: AppDetailProps) {
             transition={{ type: "spring", bounce: 0.15, duration: 0.5 }}
             className="fixed inset-x-0 bottom-0 z-[70] sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:bottom-auto sm:max-w-2xl sm:w-full sm:max-h-[85vh] sm:rounded-2xl"
           >
-            <div className="h-full max-h-[90vh] sm:max-h-[85vh] bg-[#0d1412]/95 backdrop-blur-3xl rounded-t-3xl sm:rounded-2xl border border-white/10 border-b-0 sm:border-b border-green-500/10 shadow-2xl shadow-green-500/10 flex flex-col sm:overflow-hidden">
+            <div className="h-full max-h-[90vh] sm:max-h-[85vh] bg-[#0d1412]/95 backdrop-blur-3xl rounded-t-3xl sm:rounded-2xl border border-white/10 border-b-0 sm:border-b border-green-500/10 shadow-2xl shadow-green-500/10 flex flex-col overflow-hidden">
 
               {/* Mobile drag handle */}
               <div className="sm:hidden flex justify-center pt-3 pb-1">
