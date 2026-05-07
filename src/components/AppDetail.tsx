@@ -75,6 +75,7 @@ export function AppDetail({ app, isOpen, onClose }: AppDetailProps) {
             exit={{ opacity: 0, y: 100 }}
             transition={{ type: "spring", bounce: 0.15, duration: 0.5 }}
             className="fixed inset-x-0 bottom-0 z-[70] sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:bottom-auto sm:max-w-2xl sm:w-full sm:max-h-[85vh] sm:rounded-2xl"
+            style={{ touchAction: 'none' }}
           >
             <div className="h-full max-h-[90vh] sm:max-h-[85vh] bg-[#0d1412]/95 backdrop-blur-3xl rounded-t-3xl sm:rounded-2xl border border-white/10 border-b-0 sm:border-b border-green-500/10 shadow-2xl shadow-green-500/10 flex flex-col overflow-hidden">
 
@@ -137,7 +138,17 @@ export function AppDetail({ app, isOpen, onClose }: AppDetailProps) {
               </div>
 
               {/* Scrollable Content */}
-              <div className="flex-1 overflow-y-auto overscroll-contain p-5 sm:p-6 space-y-6 -webkit-overflow-scrolling-touch">
+              <div
+                className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-6"
+                style={{
+                  WebkitOverflowScrolling: 'touch',
+                  overscrollBehavior: 'contain',
+                  touchAction: 'pan-y',
+                  minHeight: 0,
+                }}
+                onTouchStart={(e) => e.stopPropagation()}
+                onTouchMove={(e) => e.stopPropagation()}
+              >
                 {/* Install Commands */}
                 <div>
                   <h3 className="text-base font-semibold text-white mb-4 flex items-center gap-2">
