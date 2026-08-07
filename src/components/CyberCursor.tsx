@@ -20,8 +20,8 @@ export function CyberCursor() {
 
     /* ─── Cursor: use the exact image ─── */
     /* Image is 54x46, tip hotspot at ~(4, 5) */
-    const CURSOR_W = 38;
-    const CURSOR_H = 32;
+    const CURSOR_W = 16;
+    const CURSOR_H = 16;
     const HOTSPOT_X = 3;
     const HOTSPOT_Y = 3;
 
