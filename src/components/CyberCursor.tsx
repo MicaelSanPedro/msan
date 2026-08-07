@@ -10,11 +10,10 @@ export function CyberCursor() {
     if (typeof window === "undefined") return;
     initialized.current = true;
 
-    /* ─── Detect touch device ─── */
-    const isTouch =
-      "ontouchstart" in window ||
-      navigator.maxTouchPoints > 0;
-    if (isTouch) return;
+    /* ─── Detect primary touch device (phone/tablet, NOT touchscreen laptop) ─── */
+    const hasFinePointer = window.matchMedia("(pointer: fine)").matches;
+    const hasHover = window.matchMedia("(hover: hover)").matches;
+    if (!hasFinePointer || !hasHover) return;
 
     /* ─── Colors (Dicas card style: cyan/teal) ─── */
     const DOT_COLOR = "rgba(103, 232, 249, 1)";          /* cyan-300 */
