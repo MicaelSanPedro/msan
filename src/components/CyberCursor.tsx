@@ -17,25 +17,42 @@ export function CyberCursor() {
 
     /* ─── Colors ─── */
     const CYAN = "#67e8f9";
-    const CYAN_RGBA = "rgba(103, 232, 249, 1)";
-    const CYAN_GLOW = "rgba(103, 232, 249, 0.6)";
+    const CYAN_GLOW = "rgba(103, 232, 249, 0.55)";
     const CYAN_DIM = "rgba(103, 232, 249, 0.7)";
 
-    /* ─── SVG: futuristic wireframe arrow cursor ─── */
-    const arrowSVG = `<svg width="18" height="22" viewBox="0 0 18 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter:drop-shadow(0 0 3px ${CYAN_GLOW}) drop-shadow(0 0 8px rgba(34,211,238,0.25))">
-      <path d="M1 1L1 18L6 13L11 20L13.5 18.5L8.5 11.5L15 11L1 1Z" 
-            stroke="${CYAN}" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"
-            fill="none"/>
-    </svg>`;
+    /* ─── SVG: wireframe arrow cursor with inner chevron cutout ─── */
+    const arrowSVG = `
+<svg width="22" height="24" viewBox="0 0 24 26" fill="none" xmlns="http://www.w3.org/2000/svg"
+     style="filter:drop-shadow(0 0 3px ${CYAN_GLOW}) drop-shadow(0 0 8px rgba(34,211,238,0.2))">
+  <path fill-rule="evenodd" d="
+    M 1.5 1.5
+    L 1.5 24
+    C 1.5 24, 8 18.5, 8.5 17.5
+    L 13.5 24.5
+    C 13.5 24.5, 16 22, 14.5 20
+    L 9.5 14.5
+    L 17 16
+    C 17 16, 17 13.5, 14 13.5
+    L 1.5 1.5 Z
+    M 4.5 7.5
+    L 4.5 15
+    L 10 13.5
+    L 13 17
+    C 13 17, 12 16, 11.5 15.5
+    L 8.5 12
+    L 4.5 15
+    L 4.5 7.5 Z
+  " fill="${CYAN}" opacity="0.9"/>
+</svg>`;
 
-    /* ─── Create cursor arrow element ─── */
+    /* ─── Create cursor element ─── */
     const cursor = document.createElement("div");
     cursor.id = "cyber-cursor";
     cursor.innerHTML = arrowSVG;
     Object.assign(cursor.style, {
       position: "fixed",
-      width: "18px",
-      height: "22px",
+      width: "22px",
+      height: "24px",
       pointerEvents: "none",
       zIndex: "9999999",
       top: "0",
@@ -46,13 +63,13 @@ export function CyberCursor() {
     });
     document.body.appendChild(cursor);
 
-    /* ─── Create circle (for interactive elements) ─── */
+    /* ─── Create circle (smaller than cursor, for interactive elements) ─── */
     const circle = document.createElement("div");
     circle.id = "cyber-circle";
     Object.assign(circle.style, {
       position: "fixed",
-      width: "26px",
-      height: "26px",
+      width: "14px",
+      height: "14px",
       borderRadius: "50%",
       pointerEvents: "none",
       zIndex: "9999998",
@@ -61,7 +78,7 @@ export function CyberCursor() {
       willChange: "transform, opacity",
       transform: "translate3d(-100px,-100px,0) translate(-50%,-50%)",
       border: `1.5px solid ${CYAN_DIM}`,
-      boxShadow: `0 0 6px 1px rgba(103,232,249,0.15)`,
+      boxShadow: `0 0 5px 1px rgba(103,232,249,0.15)`,
       background: "transparent",
       opacity: "0",
       transition: "opacity 0.15s ease",
@@ -93,7 +110,6 @@ export function CyberCursor() {
     const mouse = { x: -100, y: -100 };
     const orbPos = { x: -100, y: -100 };
     let rafId = 0;
-    let isHovering = false;
     let isVisible = false;
     let cursorHidden = false;
 
@@ -119,10 +135,8 @@ export function CyberCursor() {
     const handleMove = (e: MouseEvent) => {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
-      /* Cursor + circle: instant, zero delay */
-      cursor.style.transform = `translate3d(${mouse.x - 1}px,${mouse.y - 1}px,0)`;
+      cursor.style.transform = `translate3d(${mouse.x}px,${mouse.y}px,0)`;
       circle.style.transform = `translate3d(${mouse.x}px,${mouse.y}px,0) translate(-50%,-50%)`;
-
       if (!isVisible) {
         isVisible = true;
         orbPos.x = mouse.x;
@@ -141,7 +155,7 @@ export function CyberCursor() {
     const handleEnter = (e: MouseEvent) => {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
-      cursor.style.transform = `translate3d(${mouse.x - 1}px,${mouse.y - 1}px,0)`;
+      cursor.style.transform = `translate3d(${mouse.x}px,${mouse.y}px,0)`;
       orbPos.x = mouse.x;
       orbPos.y = mouse.y;
       isVisible = true;
@@ -150,27 +164,23 @@ export function CyberCursor() {
     };
 
     /* ─── Hover detection ─── */
-    const interactiveSelector = "a, button, [role=\"button\"], input, textarea, select, summary, [onclick], [tabindex]";
+    const sel = "a, button, [role=\"button\"], input, textarea, select, summary, [onclick], [tabindex]";
 
     const handleOver = (e: MouseEvent) => {
-      const t = (e.target as HTMLElement).closest(interactiveSelector);
-      if (t) {
-        isHovering = true;
+      if ((e.target as HTMLElement).closest(sel)) {
         cursor.style.opacity = "0";
         circle.style.opacity = "1";
       }
     };
 
     const handleOut = (e: MouseEvent) => {
-      const t = (e.target as HTMLElement).closest(interactiveSelector);
-      if (t) {
-        isHovering = false;
+      if ((e.target as HTMLElement).closest(sel)) {
         cursor.style.opacity = "1";
         circle.style.opacity = "0";
       }
     };
 
-    /* ─── Animation loop (orb only) ─── */
+    /* ─── Animation loop (orb only, with delay) ─── */
     const animate = () => {
       orbPos.x += (mouse.x - orbPos.x) * 0.06;
       orbPos.y += (mouse.y - orbPos.y) * 0.06;
