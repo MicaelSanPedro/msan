@@ -168,7 +168,7 @@ export default async function PostPage({ params }: PostPageProps) {
             )}
           </header>
 
-          {/* Cover image */
+          {/* Cover image */}
           {hasCover && (
             <CoverImageZoom
               src={frontmatter.coverImage}
