@@ -1179,6 +1179,80 @@ html:not(.dark) .liquid-glass-mobile-menu a[class*="shadow-"] {
 }
 * { scrollbar-width: thin; scrollbar-color: rgba(249, 189, 24, 0.5) transparent; }
 
+/* ─── Search bar (desktop) ───────────── */
+.searchbar-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 280px;
+  padding: 0.55rem 0.75rem 0.55rem 1rem;
+  border-radius: 0.75rem;
+  position: relative;
+  overflow: hidden;
+  backdrop-blur: blur(40px);
+  saturate: 200%;
+  brightness: 105%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+  border: 1px solid rgba(249, 189, 24, 0.2);
+  box-shadow: 0 4px 20px -4px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08);
+  animation: searchbar-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes searchbar-in {
+  from { opacity: 0; transform: scaleX(0.85) scaleY(0.9); transform-origin: right center; }
+  to { opacity: 1; transform: scaleX(1) scaleY(1); transform-origin: right center; }
+}
+.searchbar-input-wrap:focus-within {
+  box-shadow: 0 0 0 3px rgba(249, 189, 24, 0.15), 0 8px 32px -8px rgba(249, 189, 24, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border-color: rgba(249, 189, 24, 0.4);
+}
+.searchbar-input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  font-size: 0.875rem;
+  color: white;
+  outline: none;
+}
+.searchbar-input::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
+.searchbar-dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  left: 0;
+  width: 340px;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  z-index: 50;
+  backdrop-filter: blur(40px);
+  saturate: 200%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 20px 60px -12px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
+  animation: searchbar-drop-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes searchbar-drop-in {
+  from { opacity: 0; transform: translateY(-6px) scaleY(0.96); }
+  to { opacity: 1; transform: translateY(0) scaleY(1); }
+}
+.searchbar-result {
+  width: 100%;
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  color: rgba(255,255,255,0.8);
+  transition: background 0.15s ease;
+}
+.searchbar-result:hover,
+.searchbar-result-active {
+  background: rgba(249, 189, 24, 0.1);
+  backdrop-filter: blur(10px);
+}
+
 /* ─── Search (liquid glass) ────────────────── */
 .search-glow:focus-within {
   box-shadow:

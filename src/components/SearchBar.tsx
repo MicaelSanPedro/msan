@@ -7,7 +7,6 @@ import type { PostSummary } from "@/lib/posts";
 
 interface SearchBarProps {
   allPosts: PostSummary[];
-  /** If true, the search input is always shown (no collapsed button) */
   alwaysOpen?: boolean;
 }
 
@@ -26,7 +25,6 @@ export function SearchBar({ allPosts, alwaysOpen = false }: SearchBarProps) {
       setSelectedIndex(-1);
       return;
     }
-
     const q = query.toLowerCase();
     const filtered = allPosts.filter(
       (post) =>
@@ -64,7 +62,6 @@ export function SearchBar({ allPosts, alwaysOpen = false }: SearchBarProps) {
     }
   }, [isOpen, alwaysOpen]);
 
-  // Auto-focus when alwaysOpen mode (mobile inline)
   useEffect(() => {
     if (alwaysOpen && inputRef.current) {
       inputRef.current.focus();
@@ -90,7 +87,6 @@ export function SearchBar({ allPosts, alwaysOpen = false }: SearchBarProps) {
 
   function handleKeyDown(e: React.KeyboardEvent) {
     if (results.length === 0) return;
-
     if (e.key === "ArrowDown") {
       e.preventDefault();
       setSelectedIndex((prev) => (prev < results.length - 1 ? prev + 1 : 0));
@@ -117,7 +113,6 @@ export function SearchBar({ allPosts, alwaysOpen = false }: SearchBarProps) {
         aria-label="Buscar artigos"
         type="button"
       >
-        {/* Specular highlight */}
         <span className="absolute top-0 left-[15%] right-[15%] h-px bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none" />
         <Search className="w-4 h-4" />
         <span className="hidden lg:inline">Buscar...</span>
@@ -129,15 +124,9 @@ export function SearchBar({ allPosts, alwaysOpen = false }: SearchBarProps) {
   }
 
   return (
-    <div ref={containerRef} className="relative w-full max-w-xl">
-      {/* Input — liquid glass with amber tint */}
-      <div className="flex items-center gap-2 px-3.5 sm:px-4 py-2.5 rounded-xl
-                  backdrop-blur-[40px] saturate-[200%] brightness-[105%]
-                  bg-gradient-to-b from-white/[0.08] to-white/[0.02]
-                  border border-amber-500/20
-                  shadow-[0_4px_20px_-4px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.08)]
-                  search-glow relative overflow-hidden">
-        {/* Specular highlight */}
+    <div ref={containerRef} className="relative">
+      {/* Input */}
+      <div className="searchbar-input-wrap">
         <span className="absolute top-0 left-[8%] right-[8%] h-px bg-gradient-to-r from-transparent via-amber-300/30 to-transparent pointer-events-none z-[2]" />
         <Search className="w-4 h-4 text-amber-400 shrink-0" />
         <input
@@ -147,72 +136,61 @@ export function SearchBar({ allPosts, alwaysOpen = false }: SearchBarProps) {
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Buscar artigos, tags..."
-          className="flex-1 min-w-0 bg-transparent text-sm text-white placeholder:text-white/25 outline-none"
+          className="searchbar-input"
         />
-        {query && (
-          <button
-            onClick={() => { setQuery(""); inputRef.current?.focus(); }}
-            className="p-1 rounded hover:bg-white/10 transition-colors shrink-0"
-            type="button"
-            aria-label="Limpar"
-          >
-            <X className="w-3.5 h-3.5 text-white/40" />
-          </button>
-        )}
-        <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-white/[0.05] text-[10px] text-white/25 font-mono shrink-0">
-          ESC
-        </kbd>
+        <button
+          onClick={() => { setIsOpen(false); setQuery(""); }}
+          className="p-1 rounded-lg hover:bg-white/10 transition-colors duration-150 shrink-0"
+          type="button"
+          aria-label="Fechar busca"
+        >
+          <X className="w-3.5 h-3.5 text-white/40" />
+        </button>
       </div>
 
-      {/* Results dropdown — liquid glass panel */}
-      {results.length > 0 && query.trim().length >= 2 && (
-        <div className="absolute top-full mt-2 left-0 right-0 liquid-glass-panel rounded-xl overflow-hidden z-50">
-          {/* Specular top highlight */}
-          <div className="absolute top-0 left-[5%] right-[5%] h-px bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none z-[3]" />
-          <div className="p-1 max-h-[60vh] overflow-y-auto">
-            {results.map((post, i) => (
-              <button
-                key={post.slug}
-                onClick={() => handleSelect(post.slug)}
-                className={`w-full text-left px-3 py-2.5 rounded-lg flex items-start gap-3 transition-colors duration-100 ${
-                  i === selectedIndex
-                    ? "bg-amber-500/10 backdrop-blur-[10px]"
-                    : "hover:bg-white/[0.05] active:bg-white/[0.06]"
-                }`}
-                type="button"
-              >
-                <span className="text-amber-400 mt-0.5 shrink-0">
-                  <Search className="w-3.5 h-3.5" />
-                </span>
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm text-white font-medium truncate">
-                    {post.frontmatter.title}
-                  </p>
-                  <p className="text-xs text-white/30 truncate mt-0.5">
-                    {post.frontmatter.category} &middot; {post.frontmatter.readTime} de leitura
-                  </p>
-                </div>
-              </button>
-            ))}
-          </div>
-          <div className="px-3 py-2 border-t border-white/[0.04]">
-            <p className="text-[11px] text-white/20">
-              {results.length} resultado{results.length !== 1 ? "s" : ""} &middot; <span className="hidden sm:inline">Use setas para navegar &middot; </span>Enter para abrir
-            </p>
-          </div>
-        </div>
-      )}
+      {/* Results dropdown */}
+      <div className="searchbar-dropdown">
+        {results.length > 0 && query.trim().length >= 2 && (
+          <>
+            <div className="absolute top-0 left-[5%] right-[5%] h-px bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none z-[3]" />
+            <div className="p-1 max-h-[60vh] overflow-y-auto">
+              {results.map((post, i) => (
+                <button
+                  key={post.slug}
+                  onClick={() => handleSelect(post.slug)}
+                  className={`searchbar-result ${i === selectedIndex ? "searchbar-result-active" : ""}`}
+                  type="button"
+                >
+                  <span className="text-amber-400 mt-0.5 shrink-0">
+                    <Search className="w-3.5 h-3.5" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm text-white font-medium truncate">
+                      {post.frontmatter.title}
+                    </p>
+                    <p className="text-xs text-white/30 truncate mt-0.5">
+                      {post.frontmatter.category} · {post.frontmatter.readTime} de leitura
+                    </p>
+                  </div>
+                </button>
+              ))}
+            </div>
+            <div className="px-3 py-2 border-t border-white/[0.04]">
+              <p className="text-[11px] text-white/20">
+                {results.length} resultado{results.length !== 1 ? "s" : ""} · Enter para abrir
+              </p>
+            </div>
+          </>
+        )}
 
-      {/* No results — liquid glass panel */}
-      {query.trim().length >= 2 && results.length === 0 && (
-        <div className="absolute top-full mt-2 left-0 right-0 liquid-glass-panel rounded-xl overflow-hidden z-50">
+        {query.trim().length >= 2 && results.length === 0 && (
           <div className="px-4 py-8 text-center">
             <p className="text-sm text-white/30">
               Nenhum resultado para &quot;{query}&quot;
             </p>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
