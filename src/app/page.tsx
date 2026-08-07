@@ -274,7 +274,7 @@ export default function HomePage() {
                 </p>
                 <p>
                   E foi assim que nasceu o <span className="text-amber-300 font-semibold">TechMate</span> —
-                  um blog sem firula, sem fluff, sem &ldquo;10 maneiras de você ser mais produtivo!&rdquo;.
+                  um blog sem firula, sem &ldquo;10 maneiras de você ser mais produtivo!&rdquo;.
                   Só tutorial honesto, dica que funciona e opinião quando precisa ter.
                 </p>
                 <p>

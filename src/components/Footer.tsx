@@ -69,7 +69,7 @@ export function Footer() {
               </span>
             </Link>
             <p className="text-xs sm:text-sm text-white/40 leading-relaxed max-w-xs text-pretty">
-              Tech blog brasileiro sobre Linux, Windows, dev, gaming e segurança. Tutoriais honestos e dicas práticas, sem fluff.
+              Tech blog brasileiro sobre Linux, Windows, dev, gaming e segurança. Tutoriais honestos e dicas práticas.
             </p>
 
             {/* Social icons */}

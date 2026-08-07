@@ -42,7 +42,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "TechMate — Seu parceiro em tech",
   description:
-    "Tutoriais, dicas e guias sobre Linux, Windows, desenvolvimento, segurança e gaming. Conteúdo honesto e prático, sem fluff.",
+    "Tutoriais, dicas e guias sobre Linux, Windows, desenvolvimento, segurança e gaming. Conteúdo honesto e prático, direto ao ponto.",
   keywords: [
     "tech",
     "tecnologia",

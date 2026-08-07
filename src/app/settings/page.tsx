@@ -919,7 +919,7 @@ export default function SettingsPage() {
             <p className="text-xs text-white/25 leading-relaxed">
               TechMate é um blog independente focado em conteúdo técnico honesto e prático.
               Tutoriais sobre Linux, Windows, desenvolvimento, segurança e gaming.
-              Sem fluff, sem enrolação.
+              Sem enrolação, direto ao ponto.
             </p>
           </div>
         </section>
