@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import {
   Share2,
   Link2,
@@ -20,6 +21,9 @@ interface ShareButtonsProps {
 export function ShareButtons({ url, title, className = "" }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
   const [open, setOpen] = useState(false);
+  const [menuPos, setMenuPos] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const encodedUrl = encodeURIComponent(url);
   const encodedTitle = encodeURIComponent(title);
@@ -57,7 +61,6 @@ export function ShareButtons({ url, title, className = "" }: ShareButtonsProps) 
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // Fallback for older browsers
       const textarea = document.createElement("textarea");
       textarea.value = url;
       textarea.style.position = "fixed";
@@ -71,60 +74,57 @@ export function ShareButtons({ url, title, className = "" }: ShareButtonsProps) 
     }
   }, [url]);
 
-  const nativeShare = useCallback(async () => {
+  const toggleMenu = useCallback(() => {
     if (navigator.share) {
-      try {
-        await navigator.share({ title, url });
-      } catch {
-        // User cancelled or error — do nothing
-      }
-    } else {
-      setOpen(!open);
+      navigator.share({ title, url }).catch(() => {});
+      return;
     }
+    if (open) {
+      setOpen(false);
+      return;
+    }
+    if (triggerRef.current) {
+      const rect = triggerRef.current.getBoundingClientRect();
+      setMenuPos({
+        top: rect.bottom + 8,
+        left: Math.max(8, rect.right - 190),
+      });
+    }
+    setOpen(true);
   }, [title, url, open]);
 
-  return (
-    <div className={`relative ${className}`}>
-      {/* Trigger button */}
-      <button
-        onClick={nativeShare}
-        className="inline-flex items-center gap-2 text-xs text-white/45 hover:text-amber-300 transition-colors cursor-pointer group"
-        aria-label="Compartilhar"
-        type="button"
-      >
-        <Share2 className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
-        <span>Compartilhar</span>
-      </button>
+  /* Close on outside mousedown */
+  useEffect(() => {
+    if (!open) return;
+    const handle = (e: MouseEvent) => {
+      const t = e.target as Node;
+      if (menuRef.current && !menuRef.current.contains(t) && triggerRef.current && !triggerRef.current.contains(t)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handle);
+    return () => document.removeEventListener("mousedown", handle);
+  }, [open]);
 
-      {/* Dropdown — only shown when Web Share API is unavailable */}
-      {open && (
+  const dropdown = open
+    ? createPortal(
         <>
-          {/* Backdrop to close */}
+          <div className="fixed inset-0 z-[9998]" onClick={() => setOpen(false)} />
           <div
-            className="fixed inset-0 z-40"
-            onClick={() => setOpen(false)}
-          />
-
-          {/* Share menu */}
-          <div className="absolute right-0 top-full mt-2 z-50 animate-fade-in">
+            ref={menuRef}
+            className="fixed z-[9999] animate-fade-in"
+            style={{ top: menuPos.top, left: menuPos.left }}
+          >
             <div className="flex flex-col gap-1 p-1.5 rounded-xl bg-neutral-900/95 border border-white/[0.08] shadow-[0_16px_48px_-12px_rgba(0,0,0,0.7)] backdrop-blur-xl min-w-[180px]">
-              {/* Copy link */}
               <button
                 onClick={copyLink}
-                className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-xs text-white/70 hover:bg-amber-500/10 hover:text-amber-300 transition-all cursor-pointer"
+                className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-xs text-white/70 hover:bg-amber-500/10 hover:text-amber-300 transition-all"
                 type="button"
               >
-                {copied ? (
-                  <Check className="w-4 h-4 text-emerald-400" />
-                ) : (
-                  <Link2 className="w-4 h-4" />
-                )}
+                {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Link2 className="w-4 h-4" />}
                 {copied ? "Link copiado!" : "Copiar link"}
               </button>
-
               <div className="h-px bg-white/[0.06] mx-1 my-0.5" />
-
-              {/* Social links */}
               {shareLinks.map((link) => (
                 <a
                   key={link.label}
@@ -140,8 +140,24 @@ export function ShareButtons({ url, title, className = "" }: ShareButtonsProps) 
               ))}
             </div>
           </div>
-        </>
-      )}
+        </>,
+        document.body
+      )
+    : null;
+
+  return (
+    <div className={`relative ${className}`}>
+      <button
+        ref={triggerRef}
+        onClick={toggleMenu}
+        className="inline-flex items-center gap-2 text-xs text-white/45 hover:text-amber-300 transition-colors group"
+        aria-label="Compartilhar"
+        type="button"
+      >
+        <Share2 className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
+        <span>Compartilhar</span>
+      </button>
+      {dropdown}
     </div>
   );
 }

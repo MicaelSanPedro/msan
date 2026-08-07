@@ -1366,10 +1366,10 @@ html:not(.dark) .liquid-glass-mobile-menu a[class*="shadow-"] {
 .prose-custom h2 {
   font-size: 1.6rem;
   padding-bottom: 0.5em;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(249, 189, 24, 0.15);
 }
-.prose-custom h3 { font-size: 1.3rem; }
-.prose-custom h4 { font-size: 1.1rem; }
+.prose-custom h3 { font-size: 1.3rem; font-style: italic; }
+.prose-custom h4 { font-size: 1.1rem; font-style: italic; }
 .prose-custom p {
   margin-bottom: 1.25em;
   color: rgba(236, 232, 223, 0.78);
@@ -1561,7 +1561,6 @@ html:not(.dark) .liquid-glass-mobile-menu a[class*="shadow-"] {
   border-spacing: 0;
   margin: 1.5em -0.5rem;
   font-size: 0.8rem;
-  display: block;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -1592,6 +1591,7 @@ html:not(.dark) .liquid-glass-mobile-menu a[class*="shadow-"] {
   color: rgba(236, 232, 223, 0.78);
   text-align: center;
   font-size: 0.8rem;
+  word-break: break-word;
 }
 .prose-custom td:first-child, .prose-custom th:first-child {
   text-align: left;

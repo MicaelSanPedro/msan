@@ -20,9 +20,6 @@ export function CyberCursor() {
     const CURSOR_CORE = "rgba(129, 140, 248, 1)";       /* indigo-400 */
     const CURSOR_GLOW = "rgba(129, 140, 248, 0.5)";
     const RING_COLOR = "rgba(167, 139, 250, 0.7)";       /* violet-400 */
-    const ORB_COLOR_1 = "rgba(99, 102, 241, 0.18)";      /* indigo-500 */
-    const ORB_COLOR_2 = "rgba(139, 92, 246, 0.10)";      /* violet-500 */
-    const ORB_COLOR_3 = "rgba(99, 102, 241, 0.04)";
 
     /* ─── Create cursor dot ─── */
     const dot = document.createElement("div");
@@ -50,17 +47,16 @@ export function CyberCursor() {
       "transition: width 0.25s cubic-bezier(0.23,1,0.32,1), height 0.25s cubic-bezier(0.23,1,0.32,1), opacity 0.2s ease, border-color 0.2s ease, background 0.2s ease;";
     document.body.appendChild(ring);
 
-    /* ─── Create blurred orb ─── */
+    /* ─── Create spotlight orb (Dicas card style) ─── */
     const orb = document.createElement("div");
     orb.id = "cyber-orb";
     orb.style.cssText =
-      "position:fixed;width:200px;height:200px;border-radius:50%;" +
+      "position:fixed;width:500px;height:500px;border-radius:50%;" +
       "pointer-events:none;z-index:999990;" +
       "transform:translate3d(-200px,-200px,0) translate(-50%,-50%);" +
       "will-change:transform;top:0;left:0;opacity:0;" +
-      "transition: opacity 0.5s ease;" +
-      `background:radial-gradient(circle, ${ORB_COLOR_1} 0%, ${ORB_COLOR_2} 40%, ${ORB_COLOR_3} 65%, transparent 80%);` +
-      `filter:blur(30px);`;
+      "transition: opacity 0.6s ease;" +
+      `background:radial-gradient(circle at 50% 50%, rgba(129, 140, 248, 0.12) 0%, rgba(167, 139, 250, 0.06) 30%, rgba(139, 92, 246, 0.02) 55%, transparent 70%);`;
     document.body.appendChild(orb);
 
     /* ─── State ─── */
@@ -163,9 +159,9 @@ export function CyberCursor() {
       ring.style.transform =
         `translate3d(${ringPos.x}px,${ringPos.y}px,0) translate(-50%,-50%)`;
 
-      /* Orb: slow follow (big delay for that dreamy feel) */
-      orbPos.x = lerp(orbPos.x, mouse.x, 0.06);
-      orbPos.y = lerp(orbPos.y, mouse.y, 0.06);
+      /* Orb: slow follow (spotlight delay) */
+      orbPos.x = lerp(orbPos.x, mouse.x, 0.08);
+      orbPos.y = lerp(orbPos.y, mouse.y, 0.08);
       orb.style.transform =
         `translate3d(${orbPos.x}px,${orbPos.y}px,0) translate(-50%,-50%)`;
 

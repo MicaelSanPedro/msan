@@ -6,7 +6,7 @@ import remarkGfm from "remark-gfm";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
 import rehypeSlug from "rehype-slug";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
+
 import { codeToHtml } from "shiki";
 
 // @ts-ignore
@@ -116,7 +116,6 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
     .use(remarkGfm)
     .use(remarkRehype)
     .use(rehypeSlug)
-    .use(rehypeAutolinkHeadings, { behavior: "append" })
     .use(rehypeStringify)
     .process(content);
   

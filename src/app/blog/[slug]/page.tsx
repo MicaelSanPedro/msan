@@ -15,7 +15,6 @@ import { ShareButtons } from "@/components/ShareButtons";
 import { ProseEnhancer } from "@/components/ProseEnhancer";
 import { Comments } from "@/components/Comments";
 import { ReadingProgressBar } from "@/components/ReadingProgressBar";
-import { TableOfContents } from "@/components/TableOfContents";
 import { ImageZoomHandler } from "@/components/ImageZoomHandler";
 import { Newsletter } from "@/components/Newsletter";
 import type { Metadata } from "next";
@@ -93,12 +92,11 @@ export default async function PostPage({ params }: PostPageProps) {
     .slice(0, 3);
 
   return (
-    <div className="pt-24 sm:pt-28 pb-20 sm:pb-24 px-4 overflow-x-clip">
+    <div className="pt-24 sm:pt-28 pb-20 sm:pb-24 px-4">
       <ReadingProgressBar />
       <ImageZoomHandler />
-      
-      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-12 overflow-x-clip">
-        <article className="max-w-3xl mx-auto lg:mx-0 flex-1 min-w-0 w-full break-words">
+
+      <article className="max-w-3xl mx-auto">
           {/* Back link */}
           <Link
             href="/blog"
@@ -242,11 +240,7 @@ export default async function PostPage({ params }: PostPageProps) {
           </div>
         </article>
 
-        {/* Sidebar */}
-        <aside className="hidden lg:block w-64 shrink-0">
-          <TableOfContents />
-        </aside>
-      </div>
+
 
       {/* Related posts */}
       {related.length > 0 && (
