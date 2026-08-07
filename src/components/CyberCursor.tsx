@@ -16,59 +16,100 @@ export function CyberCursor() {
       navigator.maxTouchPoints > 0;
     if (isTouch) return;
 
-    /* ─── Colors ─── */
-    const CURSOR_CORE = "rgba(129, 140, 248, 1)";       /* indigo-400 */
-    const CURSOR_GLOW = "rgba(129, 140, 248, 0.5)";
-    const RING_COLOR = "rgba(167, 139, 250, 0.7)";       /* violet-400 */
+    /* ─── Colors (Dicas card style: cyan/teal) ─── */
+    const DOT_COLOR = "rgba(103, 232, 249, 1)";          /* cyan-300 */
+    const DOT_GLOW = "rgba(103, 232, 249, 0.6)";
+    const RING_COLOR = "rgba(34, 211, 238, 0.6)";        /* cyan-400 */
 
-    /* ─── Create cursor dot ─── */
+    /* ─── Create cursor dot (small, snappy) ─── */
     const dot = document.createElement("div");
     dot.id = "cyber-dot";
-    dot.style.cssText =
-      "position:fixed;width:8px;height:8px;border-radius:50%;" +
-      "pointer-events:none;z-index:9999999;" +
-      "transform:translate3d(-200px,-200px,0) translate(-50%,-50%);" +
-      "will-change:transform;top:0;left:0;" +
-      `background:${CURSOR_CORE};` +
-      `box-shadow:0 0 6px 2px ${CURSOR_GLOW}, 0 0 16px 4px rgba(129,140,248,0.2);` +
-      "transition: width 0.2s ease, height 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;";
+    Object.assign(dot.style, {
+      position: "fixed",
+      width: "6px",
+      height: "6px",
+      borderRadius: "50%",
+      pointerEvents: "none",
+      zIndex: "9999999",
+      top: "0",
+      left: "0",
+      willChange: "transform",
+      transform: "translate3d(-100px,-100px,0) translate(-50%,-50%)",
+      background: DOT_COLOR,
+      boxShadow: `0 0 6px 2px ${DOT_GLOW}, 0 0 14px 4px rgba(103,232,249,0.25)`,
+      transition: "width 0.2s ease, height 0.2s ease, background 0.2s ease, box-shadow 0.2s ease",
+    });
     document.body.appendChild(dot);
 
-    /* ─── Create ring (link cursor) ─── */
+    /* ─── Create ring (link/button cursor) ─── */
     const ring = document.createElement("div");
     ring.id = "cyber-ring";
-    ring.style.cssText =
-      "position:fixed;width:36px;height:36px;border-radius:50%;" +
-      "pointer-events:none;z-index:9999998;" +
-      "transform:translate3d(-200px,-200px,0) translate(-50%,-50%);" +
-      "will-change:transform,opacity,border-color,top:0;left:0;" +
-      `border:1.5px solid ${RING_COLOR};` +
-      "opacity:0;" +
-      "transition: width 0.25s cubic-bezier(0.23,1,0.32,1), height 0.25s cubic-bezier(0.23,1,0.32,1), opacity 0.2s ease, border-color 0.2s ease, background 0.2s ease;";
+    Object.assign(ring.style, {
+      position: "fixed",
+      width: "32px",
+      height: "32px",
+      borderRadius: "50%",
+      pointerEvents: "none",
+      zIndex: "9999998",
+      top: "0",
+      left: "0",
+      willChange: "transform, opacity",
+      transform: "translate3d(-100px,-100px,0) translate(-50%,-50%)",
+      border: `1.5px solid ${RING_COLOR}`,
+      opacity: "0",
+      transition: "width 0.25s cubic-bezier(0.23,1,0.32,1), height 0.25s cubic-bezier(0.23,1,0.32,1), opacity 0.2s ease, border-color 0.2s ease, background 0.2s ease",
+    });
     document.body.appendChild(ring);
 
-    /* ─── Create spotlight orb (Dicas card style) ─── */
+    /* ─── Create spotlight orb (Dicas card hover style) ─── */
     const orb = document.createElement("div");
     orb.id = "cyber-orb";
-    orb.style.cssText =
-      "position:fixed;width:500px;height:500px;border-radius:50%;" +
-      "pointer-events:none;z-index:999990;" +
-      "transform:translate3d(-200px,-200px,0) translate(-50%,-50%);" +
-      "will-change:transform;top:0;left:0;opacity:0;" +
-      "transition: opacity 0.6s ease;" +
-      `background:radial-gradient(circle at 50% 50%, rgba(129, 140, 248, 0.12) 0%, rgba(167, 139, 250, 0.06) 30%, rgba(139, 92, 246, 0.02) 55%, transparent 70%);`;
+    Object.assign(orb.style, {
+      position: "fixed",
+      width: "400px",
+      height: "400px",
+      borderRadius: "50%",
+      pointerEvents: "none",
+      zIndex: "1",
+      top: "0",
+      left: "0",
+      willChange: "transform, opacity",
+      transform: "translate3d(-100px,-100px,0) translate(-50%,-50%)",
+      opacity: "0",
+      transition: "opacity 0.8s ease",
+      background:
+        "radial-gradient(circle at 50% 50%, rgba(103, 232, 249, 0.08) 0%, rgba(34, 211, 238, 0.04) 30%, rgba(103, 232, 249, 0.015) 50%, transparent 70%)",
+    });
     document.body.appendChild(orb);
 
     /* ─── State ─── */
-    const mouse = { x: -200, y: -200 };
-    const dotPos = { x: -200, y: -200 };
-    const ringPos = { x: -200, y: -200 };
-    const orbPos = { x: -200, y: -200 };
+    const mouse = { x: -100, y: -100 };
+    const dotPos = { x: -100, y: -100 };
+    const ringPos = { x: -100, y: -100 };
+    const orbPos = { x: -100, y: -100 };
     let rafId = 0;
     let isHovering = false;
     let isVisible = false;
+    let cursorHidden = false;
 
     const lerp = (a: number, b: number, n: number) => (1 - n) * a + n * b;
+
+    /* ─── Show/hide default cursor ONLY on document element ─── */
+    /* This is safer than cursor:none on * because if JS fails,
+       the default cursor still works everywhere */
+    const hideNativeCursor = () => {
+      if (cursorHidden) return;
+      cursorHidden = true;
+      document.documentElement.style.cursor = "none";
+      document.body.style.cursor = "none";
+    };
+
+    const showNativeCursor = () => {
+      if (!cursorHidden) return;
+      cursorHidden = false;
+      document.documentElement.style.cursor = "";
+      document.body.style.cursor = "";
+    };
 
     /* ─── Mouse events ─── */
     const handleMove = (e: MouseEvent) => {
@@ -83,12 +124,14 @@ export function CyberCursor() {
         orbPos.x = mouse.x;
         orbPos.y = mouse.y;
         orb.style.opacity = "1";
+        hideNativeCursor();
       }
     };
 
     const handleLeave = () => {
       isVisible = false;
       orb.style.opacity = "0";
+      showNativeCursor();
     };
 
     const handleEnter = (e: MouseEvent) => {
@@ -102,68 +145,58 @@ export function CyberCursor() {
       orbPos.y = mouse.y;
       isVisible = true;
       orb.style.opacity = "1";
+      hideNativeCursor();
     };
 
     /* ─── Link hover detection via event delegation ─── */
+    const interactiveSelector = "a, button, [role=\"button\"], input, textarea, select, summary, [onclick], [tabindex]";
+
     const handleOver = (e: MouseEvent) => {
-      const t = (e.target as HTMLElement).closest("a, button, [role=\"button\"], input, textarea, select, summary, [onclick]");
+      const t = (e.target as HTMLElement).closest(interactiveSelector);
       if (t) {
         isHovering = true;
-        dot.style.width = "4px";
-        dot.style.height = "4px";
-        dot.style.background = "rgba(167, 139, 250, 1)";
-        dot.style.boxShadow = "0 0 8px 3px rgba(167,139,250,0.5), 0 0 20px 6px rgba(167,139,250,0.2)";
+        dot.style.width = "3px";
+        dot.style.height = "3px";
+        dot.style.background = "rgba(34, 211, 238, 1)";
+        dot.style.boxShadow = "0 0 8px 3px rgba(34,211,238,0.5), 0 0 18px 5px rgba(34,211,238,0.2)";
         ring.style.opacity = "1";
-        ring.style.width = "44px";
-        ring.style.height = "44px";
-        ring.style.borderColor = "rgba(167, 139, 250, 0.6)";
-        ring.style.background = "rgba(139, 92, 246, 0.06)";
+        ring.style.width = "40px";
+        ring.style.height = "40px";
+        ring.style.borderColor = "rgba(34, 211, 238, 0.5)";
+        ring.style.background = "rgba(103, 232, 249, 0.04)";
       }
     };
 
     const handleOut = (e: MouseEvent) => {
-      const t = (e.target as HTMLElement).closest("a, button, [role=\"button\"], input, textarea, select, summary, [onclick]");
+      const t = (e.target as HTMLElement).closest(interactiveSelector);
       if (t) {
         isHovering = false;
-        dot.style.width = "8px";
-        dot.style.height = "8px";
-        dot.style.background = CURSOR_CORE;
-        dot.style.boxShadow = `0 0 6px 2px ${CURSOR_GLOW}, 0 0 16px 4px rgba(129,140,248,0.2)`;
+        dot.style.width = "6px";
+        dot.style.height = "6px";
+        dot.style.background = DOT_COLOR;
+        dot.style.boxShadow = `0 0 6px 2px ${DOT_GLOW}, 0 0 14px 4px rgba(103,232,249,0.25)`;
         ring.style.opacity = "0";
         ring.style.background = "transparent";
       }
     };
 
-    /* ─── Hide default cursor globally ─── */
-    const style = document.createElement("style");
-    style.id = "cyber-cursor-style";
-    style.textContent = `
-      *, *::before, *::after {
-        cursor: none !important;
-      }
-    `;
-    document.head.appendChild(style);
-
     /* ─── Animation loop ─── */
     const animate = () => {
       /* Dot: fast follow (snappy) */
-      dotPos.x = lerp(dotPos.x, mouse.x, 0.35);
-      dotPos.y = lerp(dotPos.y, mouse.y, 0.35);
-      dot.style.transform =
-        `translate3d(${dotPos.x}px,${dotPos.y}px,0) translate(-50%,-50%)`;
+      dotPos.x = lerp(dotPos.x, mouse.x, 0.4);
+      dotPos.y = lerp(dotPos.y, mouse.y, 0.4);
+      dot.style.transform = `translate3d(${dotPos.x}px,${dotPos.y}px,0) translate(-50%,-50%)`;
 
       /* Ring: medium follow (slight delay) */
-      const ringLerp = isHovering ? 0.2 : 0.15;
+      const ringLerp = isHovering ? 0.22 : 0.18;
       ringPos.x = lerp(ringPos.x, mouse.x, ringLerp);
       ringPos.y = lerp(ringPos.y, mouse.y, ringLerp);
-      ring.style.transform =
-        `translate3d(${ringPos.x}px,${ringPos.y}px,0) translate(-50%,-50%)`;
+      ring.style.transform = `translate3d(${ringPos.x}px,${ringPos.y}px,0) translate(-50%,-50%)`;
 
       /* Orb: slow follow (spotlight delay) */
-      orbPos.x = lerp(orbPos.x, mouse.x, 0.08);
-      orbPos.y = lerp(orbPos.y, mouse.y, 0.08);
-      orb.style.transform =
-        `translate3d(${orbPos.x}px,${orbPos.y}px,0) translate(-50%,-50%)`;
+      orbPos.x = lerp(orbPos.x, mouse.x, 0.07);
+      orbPos.y = lerp(orbPos.y, mouse.y, 0.07);
+      orb.style.transform = `translate3d(${orbPos.x}px,${orbPos.y}px,0) translate(-50%,-50%)`;
 
       rafId = requestAnimationFrame(animate);
     };
@@ -185,7 +218,7 @@ export function CyberCursor() {
       dot.remove();
       ring.remove();
       orb.remove();
-      style.remove();
+      showNativeCursor();
     };
   }, []);
 
