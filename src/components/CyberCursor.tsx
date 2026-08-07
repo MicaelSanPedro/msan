@@ -93,21 +93,23 @@ export function CyberCursor() {
 
     const lerp = (a: number, b: number, n: number) => (1 - n) * a + n * b;
 
-    /* ─── Show/hide default cursor ONLY on document element ─── */
-    /* This is safer than cursor:none on * because if JS fails,
-       the default cursor still works everywhere */
+    /* ─── Inject style to hide native cursor everywhere ─── */
+    /* Uses a <style> tag so cursor:pointer on links is also overridden */
+    const styleEl = document.createElement("style");
+    styleEl.id = "cyber-cursor-hide";
+    styleEl.textContent = `.cyber-cursor-active, .cyber-cursor-active *, .cyber-cursor-active *::before, .cyber-cursor-active *::after { cursor: none !important; }`;
+    document.head.appendChild(styleEl);
+
     const hideNativeCursor = () => {
       if (cursorHidden) return;
       cursorHidden = true;
-      document.documentElement.style.cursor = "none";
-      document.body.style.cursor = "none";
+      document.documentElement.classList.add("cyber-cursor-active");
     };
 
     const showNativeCursor = () => {
       if (!cursorHidden) return;
       cursorHidden = false;
-      document.documentElement.style.cursor = "";
-      document.body.style.cursor = "";
+      document.documentElement.classList.remove("cyber-cursor-active");
     };
 
     /* ─── Mouse events ─── */
@@ -217,6 +219,7 @@ export function CyberCursor() {
       dot.remove();
       ring.remove();
       orb.remove();
+      styleEl.remove();
       showNativeCursor();
     };
   }, []);
