@@ -1597,7 +1597,7 @@ html:not(.dark) .liquid-glass-mobile-menu a[class*="shadow-"] {
 .cover-lightbox-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 200;
+  z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1613,7 +1613,7 @@ html:not(.dark) .liquid-glass-mobile-menu a[class*="shadow-"] {
   position: fixed;
   top: 1.25rem;
   right: 1.25rem;
-  z-index: 201;
+  z-index: 10000;
   display: flex;
   align-items: center;
   justify-content: center;
