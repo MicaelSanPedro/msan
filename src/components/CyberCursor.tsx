@@ -19,7 +19,6 @@ export function CyberCursor() {
     const CYAN_DIM = "rgba(103, 232, 249, 0.7)";
 
     /* ─── Cursor: use the exact image ─── */
-    /* Image is 54x46, tip hotspot at ~(4, 5) */
     const CURSOR_W = 22;
     const CURSOR_H = 22;
     const HOTSPOT_X = 3;
@@ -45,7 +44,7 @@ export function CyberCursor() {
     });
     document.body.appendChild(cursor);
 
-    /* ─── Circle (smaller than cursor, for interactive elements) ─── */
+    /* ─── Circle (for interactive elements) ─── */
     const circle = document.createElement("div");
     circle.id = "cyber-circle";
     Object.assign(circle.style, {
@@ -67,31 +66,8 @@ export function CyberCursor() {
     });
     document.body.appendChild(circle);
 
-    /* ─── Spotlight orb ─── */
-    const orb = document.createElement("div");
-    orb.id = "cyber-orb";
-    Object.assign(orb.style, {
-      position: "fixed",
-      width: "500px",
-      height: "500px",
-      borderRadius: "50%",
-      pointerEvents: "none",
-      zIndex: "1",
-      top: "0",
-      left: "0",
-      willChange: "transform, opacity",
-      transform: "translate3d(-100px,-100px,0) translate(-50%,-50%)",
-      opacity: "0",
-      transition: "opacity 0.8s ease",
-      background:
-        "radial-gradient(circle at 50% 50%, rgba(103, 232, 249, 0.12) 0%, rgba(34, 211, 238, 0.06) 25%, rgba(103, 232, 249, 0.03) 45%, transparent 65%)",
-    });
-    document.body.appendChild(orb);
-
     /* ─── State ─── */
     const mouse = { x: -100, y: -100 };
-    const orbPos = { x: -100, y: -100 };
-    let rafId = 0;
     let isVisible = false;
     let cursorHidden = false;
 
@@ -121,16 +97,12 @@ export function CyberCursor() {
       circle.style.transform = `translate3d(${mouse.x}px,${mouse.y}px,0) translate(-50%,-50%)`;
       if (!isVisible) {
         isVisible = true;
-        orbPos.x = mouse.x;
-        orbPos.y = mouse.y;
-        orb.style.opacity = "1";
         hideNativeCursor();
       }
     };
 
     const handleLeave = () => {
       isVisible = false;
-      orb.style.opacity = "0";
       showNativeCursor();
     };
 
@@ -138,10 +110,7 @@ export function CyberCursor() {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
       cursor.style.transform = `translate3d(${mouse.x - HOTSPOT_X}px,${mouse.y - HOTSPOT_Y}px,0)`;
-      orbPos.x = mouse.x;
-      orbPos.y = mouse.y;
       isVisible = true;
-      orb.style.opacity = "1";
       hideNativeCursor();
     };
 
@@ -162,20 +131,11 @@ export function CyberCursor() {
       }
     };
 
-    /* ─── Animation loop (orb only, with delay) ─── */
-    const animate = () => {
-      orbPos.x += (mouse.x - orbPos.x) * 0.06;
-      orbPos.y += (mouse.y - orbPos.y) * 0.06;
-      orb.style.transform = `translate3d(${orbPos.x}px,${orbPos.y}px,0) translate(-50%,-50%)`;
-      rafId = requestAnimationFrame(animate);
-    };
-
     window.addEventListener("mousemove", handleMove, { passive: true });
     document.documentElement.addEventListener("mouseleave", handleLeave);
     document.documentElement.addEventListener("mouseenter", handleEnter);
     document.addEventListener("mouseover", handleOver, { passive: true });
     document.addEventListener("mouseout", handleOut, { passive: true });
-    rafId = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener("mousemove", handleMove);
@@ -183,10 +143,8 @@ export function CyberCursor() {
       document.documentElement.removeEventListener("mouseenter", handleEnter);
       document.removeEventListener("mouseover", handleOver);
       document.removeEventListener("mouseout", handleOut);
-      cancelAnimationFrame(rafId);
       cursor.remove();
       circle.remove();
-      orb.remove();
       styleEl.remove();
       showNativeCursor();
     };
