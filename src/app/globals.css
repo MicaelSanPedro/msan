@@ -1631,19 +1631,18 @@ html:not(.dark) .liquid-glass-mobile-menu a[class*="shadow-"] {
   color: white;
 }
 .cover-lightbox-container {
-  max-width: 92vw;
-  max-height: 88vh;
+  position: relative;
+  width: 92vw;
+  height: 88vh;
   animation: lb-scale-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 @keyframes lb-scale-in {
   from { opacity: 0; transform: scale(0.92); }
   to { opacity: 1; transform: scale(1); }
 }
-.cover-lightbox-img {
-  max-width: 92vw;
-  max-height: 88vh;
-  object-fit: contain;
-  border-radius: 0.75rem;
+.cover-lightbox-img-next {
+  object-fit: contain !important;
+  border-radius: 0.75rem !important;
   box-shadow: 0 0 100px rgba(0, 0, 0, 0.8);
 }
 .prose-custom hr {

@@ -2,11 +2,34 @@
 
 import { useState, useCallback, useEffect } from "react";
 import Image from "next/image";
-import { Maximize2, X } from "lucide-react";
+import { X } from "lucide-react";
 
 interface CoverImageZoomProps {
   src: string;
   alt: string;
+}
+
+function ExpandIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      {/* Top-left arrow */}
+      <polyline points="7 2 2 2 2 7" />
+      {/* Top-right arrow */}
+      <polyline points="17 2 22 2 22 7" />
+      {/* Bottom-left arrow */}
+      <polyline points="2 17 2 22 7 22" />
+      {/* Bottom-right arrow */}
+      <polyline points="22 17 22 22 17 22" />
+    </svg>
+  );
 }
 
 export function CoverImageZoom({ src, alt }: CoverImageZoomProps) {
@@ -50,7 +73,7 @@ export function CoverImageZoom({ src, alt }: CoverImageZoomProps) {
           priority
         />
         <div className="cover-zoom-overlay">
-          <Maximize2 className="cover-zoom-icon" />
+          <ExpandIcon className="cover-zoom-icon" />
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
       </div>
@@ -72,8 +95,15 @@ export function CoverImageZoom({ src, alt }: CoverImageZoomProps) {
             className="cover-lightbox-container"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={src} alt={alt} className="cover-lightbox-img" />
+            <Image
+              src={src}
+              alt={alt}
+              fill
+              className="cover-lightbox-img-next"
+              sizes="100vw"
+              priority
+              unoptimized
+            />
           </div>
         </div>
       )}
