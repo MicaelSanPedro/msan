@@ -20,13 +20,9 @@ function ExpandIcon({ className }: { className?: string }) {
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      {/* Top-left arrow */}
       <polyline points="7 2 2 2 2 7" />
-      {/* Top-right arrow */}
       <polyline points="17 2 22 2 22 7" />
-      {/* Bottom-left arrow */}
       <polyline points="2 17 2 22 7 22" />
-      {/* Bottom-right arrow */}
       <polyline points="22 17 22 22 17 22" />
     </svg>
   );
@@ -34,8 +30,12 @@ function ExpandIcon({ className }: { className?: string }) {
 
 export function CoverImageZoom({ src, alt }: CoverImageZoomProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [imgSrc, setImgSrc] = useState("");
 
-  const openLightbox = useCallback(() => setIsOpen(true), []);
+  const openLightbox = useCallback(() => {
+    setImgSrc(src.startsWith("/") ? `${window.location.origin}${src}` : src);
+    setIsOpen(true);
+  }, [src]);
   const closeLightbox = useCallback(() => setIsOpen(false), []);
 
   useEffect(() => {
@@ -95,14 +95,11 @@ export function CoverImageZoom({ src, alt }: CoverImageZoomProps) {
             className="cover-lightbox-container"
             onClick={(e) => e.stopPropagation()}
           >
-            <Image
-              src={src}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={imgSrc}
               alt={alt}
-              fill
-              className="cover-lightbox-img-next"
-              sizes="100vw"
-              priority
-              unoptimized
+              className="cover-lightbox-img"
             />
           </div>
         </div>
