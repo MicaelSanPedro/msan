@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Search, X } from "lucide-react";
 import type { PostSummary } from "@/lib/posts";
@@ -13,11 +13,25 @@ interface SearchBarProps {
 export function SearchBar({ allPosts, alwaysOpen = false }: SearchBarProps) {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(alwaysOpen);
+  const [isClosing, setIsClosing] = useState(false);
   const [results, setResults] = useState<PostSummary[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+
+  const closeSearch = useCallback(() => {
+    if (alwaysOpen) {
+      setQuery("");
+      return;
+    }
+    setIsClosing(true);
+    setTimeout(() => {
+      setIsOpen(false);
+      setIsClosing(false);
+      setQuery("");
+    }, 200);
+  }, [alwaysOpen]);
 
   useEffect(() => {
     if (query.trim().length < 2) {
@@ -41,20 +55,16 @@ export function SearchBar({ allPosts, alwaysOpen = false }: SearchBarProps) {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
+        if (isClosing) return;
         setIsOpen(true);
       }
       if (e.key === "Escape") {
-        if (alwaysOpen) {
-          setQuery("");
-        } else {
-          setIsOpen(false);
-          setQuery("");
-        }
+        closeSearch();
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [alwaysOpen]);
+  }, [alwaysOpen, isClosing, closeSearch]);
 
   useEffect(() => {
     if (isOpen && inputRef.current && !alwaysOpen) {
@@ -70,17 +80,23 @@ export function SearchBar({ allPosts, alwaysOpen = false }: SearchBarProps) {
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (alwaysOpen) return;
+      if (alwaysOpen || isClosing) return;
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
+        closeSearch();
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [alwaysOpen]);
+  }, [alwaysOpen, isClosing, closeSearch]);
 
   function handleSelect(slug: string) {
-    if (!alwaysOpen) setIsOpen(false);
+    if (!alwaysOpen) {
+      setIsClosing(true);
+      setTimeout(() => {
+        setIsOpen(false);
+        setIsClosing(false);
+      }, 200);
+    }
     setQuery("");
     router.push(`/blog/${slug}`);
   }
@@ -99,7 +115,7 @@ export function SearchBar({ allPosts, alwaysOpen = false }: SearchBarProps) {
     }
   }
 
-  if (!isOpen && !alwaysOpen) {
+  if (!isOpen && !isClosing && !alwaysOpen) {
     return (
       <button
         onClick={() => setIsOpen(true)}
@@ -124,9 +140,9 @@ export function SearchBar({ allPosts, alwaysOpen = false }: SearchBarProps) {
   }
 
   return (
-    <div ref={containerRef} className="relative">
+    <div ref={containerRef} className={`relative ${isClosing ? 'searchbar-closing' : ''}`}>
       {/* Input */}
-      <div className="searchbar-input-wrap">
+      <div className={`searchbar-input-wrap ${isClosing ? 'searchbar-input-closing' : ''}`}>
         <span className="absolute top-0 left-[8%] right-[8%] h-px bg-gradient-to-r from-transparent via-amber-300/30 to-transparent pointer-events-none z-[2]" />
         <Search className="w-4 h-4 text-amber-400 shrink-0" />
         <input
@@ -139,7 +155,7 @@ export function SearchBar({ allPosts, alwaysOpen = false }: SearchBarProps) {
           className="searchbar-input"
         />
         <button
-          onClick={() => { setIsOpen(false); setQuery(""); }}
+          onClick={closeSearch}
           className="p-1 rounded-lg hover:bg-white/10 transition-colors duration-150 shrink-0"
           type="button"
           aria-label="Fechar busca"

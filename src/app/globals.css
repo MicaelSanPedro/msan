@@ -1197,9 +1197,16 @@ html:not(.dark) .liquid-glass-mobile-menu a[class*="shadow-"] {
   box-shadow: 0 4px 20px -4px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08);
   animation: searchbar-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
+.searchbar-input-closing {
+  animation: searchbar-out 0.2s cubic-bezier(0.5, 0, 0.75, 0) forwards;
+}
 @keyframes searchbar-in {
   from { opacity: 0; transform: scaleX(0.85) scaleY(0.9); transform-origin: right center; }
   to { opacity: 1; transform: scaleX(1) scaleY(1); transform-origin: right center; }
+}
+@keyframes searchbar-out {
+  from { opacity: 1; transform: scaleX(1) scaleY(1); transform-origin: right center; }
+  to { opacity: 0; transform: scaleX(0.85) scaleY(0.9); transform-origin: right center; }
 }
 .searchbar-input-wrap:focus-within {
   box-shadow: 0 0 0 3px rgba(249, 189, 24, 0.15), 0 8px 32px -8px rgba(249, 189, 24, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
@@ -1220,7 +1227,7 @@ html:not(.dark) .liquid-glass-mobile-menu a[class*="shadow-"] {
   position: absolute;
   top: calc(100% + 0.5rem);
   right: 0;
-  left: 0;
+  left: auto;
   width: 340px;
   border-radius: 0.75rem;
   overflow: hidden;
@@ -1232,9 +1239,16 @@ html:not(.dark) .liquid-glass-mobile-menu a[class*="shadow-"] {
   box-shadow: 0 20px 60px -12px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
   animation: searchbar-drop-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
+.searchbar-closing .searchbar-dropdown {
+  animation: searchbar-drop-out 0.15s cubic-bezier(0.5, 0, 0.75, 0) forwards;
+}
 @keyframes searchbar-drop-in {
   from { opacity: 0; transform: translateY(-6px) scaleY(0.96); }
   to { opacity: 1; transform: translateY(0) scaleY(1); }
+}
+@keyframes searchbar-drop-out {
+  from { opacity: 1; transform: translateY(0) scaleY(1); }
+  to { opacity: 0; transform: translateY(-4px) scaleY(0.97); }
 }
 .searchbar-result {
   width: 100%;
