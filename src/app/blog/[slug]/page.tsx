@@ -1,7 +1,6 @@
 import { getPostBySlug, getAllPosts } from "@/lib/posts";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import {
   Calendar,
   Clock,
@@ -16,6 +15,7 @@ import { ProseEnhancer } from "@/components/ProseEnhancer";
 import { Comments } from "@/components/Comments";
 import { ReadingProgressBar } from "@/components/ReadingProgressBar";
 import { ImageZoomHandler } from "@/components/ImageZoomHandler";
+import { CoverImageZoom } from "@/components/CoverImageZoom";
 import { Newsletter } from "@/components/Newsletter";
 import type { Metadata } from "next";
 
@@ -168,19 +168,12 @@ export default async function PostPage({ params }: PostPageProps) {
             )}
           </header>
 
-          {/* Cover image */}
+          {/* Cover image */
           {hasCover && (
-            <div className="relative aspect-[16/9] rounded-xl sm:rounded-2xl overflow-hidden mb-10 sm:mb-12 border border-white/[0.06] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)]" data-scroll-reveal>
-              <Image
-                src={frontmatter.coverImage}
-                alt={frontmatter.title}
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 768px"
-                priority
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
-            </div>
+            <CoverImageZoom
+              src={frontmatter.coverImage}
+              alt={frontmatter.title}
+            />
           )}
 
           {/* Divider */}

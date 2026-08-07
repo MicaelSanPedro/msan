@@ -1549,6 +1549,103 @@ html:not(.dark) .liquid-glass-mobile-menu a[class*="shadow-"] {
   margin: 1.5em 0;
   box-shadow: 0 20px 50px -20px rgba(0,0,0,0.7);
 }
+
+/* ─── Cover image zoom ─── */
+.cover-zoom-wrapper {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: 1rem;
+  overflow: hidden;
+  margin-bottom: 2.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.7);
+  cursor: pointer;
+}
+@media (min-width: 640px) {
+  .cover-zoom-wrapper {
+    border-radius: 1.25rem;
+    margin-bottom: 3rem;
+  }
+}
+.cover-zoom-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  z-index: 2;
+}
+.cover-zoom-wrapper:hover .cover-zoom-overlay {
+  opacity: 1;
+}
+.cover-zoom-icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  color: white;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
+  transform: scale(0.8);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.cover-zoom-wrapper:hover .cover-zoom-icon {
+  transform: scale(1);
+}
+
+/* ─── Lightbox ─── */
+.cover-lightbox-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(12px);
+  animation: lb-fade-in 0.2s ease;
+}
+@keyframes lb-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.cover-lightbox-close {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: 201;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.cover-lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: white;
+}
+.cover-lightbox-container {
+  max-width: 92vw;
+  max-height: 88vh;
+  animation: lb-scale-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes lb-scale-in {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+.cover-lightbox-img {
+  max-width: 92vw;
+  max-height: 88vh;
+  object-fit: contain;
+  border-radius: 0.75rem;
+  box-shadow: 0 0 100px rgba(0, 0, 0, 0.8);
+}
 .prose-custom hr {
   border: none;
   height: 1px;
