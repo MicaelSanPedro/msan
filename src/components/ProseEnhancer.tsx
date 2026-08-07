@@ -2,37 +2,6 @@
 
 import { useEffect } from "react";
 
-/**
- * Shows a "Copiado!" toast notification at the bottom of the screen.
- * Reuses the same toast element across all copy actions.
- */
-function showToast() {
-  let toast = document.querySelector(".copy-toast") as HTMLElement | null;
-
-  if (!toast) {
-    toast = document.createElement("div");
-    toast.className = "copy-toast";
-    toast.innerHTML = `
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="20 6 9 17 4 12"/>
-      </svg>
-      <span>Copiado!</span>
-    `;
-    document.body.appendChild(toast);
-  }
-
-  // Reset animation
-  toast.classList.remove("visible");
-  // Force reflow so the transition triggers again
-  void toast.offsetWidth;
-  toast.classList.add("visible");
-
-  clearTimeout((toast as any)._timeout);
-  (toast as any)._timeout = setTimeout(() => {
-    toast!.classList.remove("visible");
-  }, 2000);
-}
-
 function wrapPreWithCopyButton(pre: HTMLPreElement) {
   // Skip if already wrapped
   if (pre.parentElement?.classList.contains("pre-wrapper")) return;
@@ -77,7 +46,6 @@ function wrapPreWithCopyButton(pre: HTMLPreElement) {
     }
 
     btn.classList.add("copied");
-    showToast();
     setTimeout(() => btn.classList.remove("copied"), 2000);
   });
 
