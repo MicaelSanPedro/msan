@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
 import { ScrollRevealInit } from "@/components/ScrollRevealInit";
 import { BokehParticles } from "@/components/BokehParticles";
+import { CyberCursor } from "@/components/CyberCursor";
 import { WelcomeScreen } from "@/components/WelcomeScreen";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { ThemeSync } from "@/components/ThemeSync";
@@ -106,6 +107,7 @@ export default function RootLayout({
             <div className="light-leak light-leak--rose" aria-hidden />
             <div className="light-leak light-leak--sky" aria-hidden />
             <BokehParticles />
+            <CyberCursor />
 
             <div className="relative z-10 min-h-screen flex flex-col">
               <ScrollRevealInit />
