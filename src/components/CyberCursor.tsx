@@ -16,60 +16,42 @@ export function CyberCursor() {
     if (!hasFinePointer || !hasHover) return;
 
     /* ─── Colors ─── */
-    const CYAN = "#67e8f9";
-    const CYAN_GLOW = "rgba(103, 232, 249, 0.55)";
     const CYAN_DIM = "rgba(103, 232, 249, 0.7)";
 
-    /* ─── SVG: wireframe arrow cursor with inner chevron cutout ─── */
-    const arrowSVG = `
-<svg width="22" height="24" viewBox="0 0 24 26" fill="none" xmlns="http://www.w3.org/2000/svg"
-     style="filter:drop-shadow(0 0 3px ${CYAN_GLOW}) drop-shadow(0 0 8px rgba(34,211,238,0.2))">
-  <path fill-rule="evenodd" d="
-    M 1.5 1.5
-    L 1.5 24
-    C 1.5 24, 8 18.5, 8.5 17.5
-    L 13.5 24.5
-    C 13.5 24.5, 16 22, 14.5 20
-    L 9.5 14.5
-    L 17 16
-    C 17 16, 17 13.5, 14 13.5
-    L 1.5 1.5 Z
-    M 4.5 7.5
-    L 4.5 15
-    L 10 13.5
-    L 13 17
-    C 13 17, 12 16, 11.5 15.5
-    L 8.5 12
-    L 4.5 15
-    L 4.5 7.5 Z
-  " fill="${CYAN}" opacity="0.9"/>
-</svg>`;
+    /* ─── Cursor: use the exact image ─── */
+    /* Image is 54x46, tip hotspot at ~(4, 5) */
+    const CURSOR_W = 38;
+    const CURSOR_H = 32;
+    const HOTSPOT_X = 3;
+    const HOTSPOT_Y = 3;
 
-    /* ─── Create cursor element ─── */
     const cursor = document.createElement("div");
     cursor.id = "cyber-cursor";
-    cursor.innerHTML = arrowSVG;
+    const img = document.createElement("img");
+    img.src = "/cursor.png";
+    img.alt = "";
+    img.draggable = false;
+    img.style.cssText = `width:${CURSOR_W}px;height:${CURSOR_H}px;display:block;pointer-events:none;filter:drop-shadow(0 0 3px rgba(103,232,249,0.5)) drop-shadow(0 0 8px rgba(34,211,238,0.2));`;
+    cursor.appendChild(img);
     Object.assign(cursor.style, {
       position: "fixed",
-      width: "22px",
-      height: "24px",
       pointerEvents: "none",
       zIndex: "9999999",
       top: "0",
       left: "0",
       willChange: "transform",
-      transform: "translate3d(-100px,-100px,0)",
+      transform: `translate3d(-100px,-100px,0)`,
       transition: "opacity 0.12s ease",
     });
     document.body.appendChild(cursor);
 
-    /* ─── Create circle (smaller than cursor, for interactive elements) ─── */
+    /* ─── Circle (smaller than cursor, for interactive elements) ─── */
     const circle = document.createElement("div");
     circle.id = "cyber-circle";
     Object.assign(circle.style, {
       position: "fixed",
-      width: "14px",
-      height: "14px",
+      width: "16px",
+      height: "16px",
       borderRadius: "50%",
       pointerEvents: "none",
       zIndex: "9999998",
@@ -85,7 +67,7 @@ export function CyberCursor() {
     });
     document.body.appendChild(circle);
 
-    /* ─── Create spotlight orb ─── */
+    /* ─── Spotlight orb ─── */
     const orb = document.createElement("div");
     orb.id = "cyber-orb";
     Object.assign(orb.style, {
@@ -113,7 +95,7 @@ export function CyberCursor() {
     let isVisible = false;
     let cursorHidden = false;
 
-    /* ─── Inject style to hide native cursor ─── */
+    /* ─── Hide native cursor ─── */
     const styleEl = document.createElement("style");
     styleEl.id = "cyber-cursor-hide";
     styleEl.textContent = `.cyber-cursor-active, .cyber-cursor-active *, .cyber-cursor-active *::before, .cyber-cursor-active *::after { cursor: none !important; }`;
@@ -135,7 +117,7 @@ export function CyberCursor() {
     const handleMove = (e: MouseEvent) => {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
-      cursor.style.transform = `translate3d(${mouse.x}px,${mouse.y}px,0)`;
+      cursor.style.transform = `translate3d(${mouse.x - HOTSPOT_X}px,${mouse.y - HOTSPOT_Y}px,0)`;
       circle.style.transform = `translate3d(${mouse.x}px,${mouse.y}px,0) translate(-50%,-50%)`;
       if (!isVisible) {
         isVisible = true;
@@ -155,7 +137,7 @@ export function CyberCursor() {
     const handleEnter = (e: MouseEvent) => {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
-      cursor.style.transform = `translate3d(${mouse.x}px,${mouse.y}px,0)`;
+      cursor.style.transform = `translate3d(${mouse.x - HOTSPOT_X}px,${mouse.y - HOTSPOT_Y}px,0)`;
       orbPos.x = mouse.x;
       orbPos.y = mouse.y;
       isVisible = true;
