@@ -1,9 +1,8 @@
 /**
  * TechMate Logo
- * Uses the custom PNG logo image with optional glow.
- * Source: 1536x1024 (3:2 ratio)
+ * Uses the SVG logo for crisp rendering at any size.
+ * Falls back to WebP for contexts that need raster.
  */
-import Image from "next/image";
 
 interface LogoProps {
   className?: string;
@@ -13,11 +12,9 @@ interface LogoProps {
 
 export function Logo({ className = "w-10 h-10", glow = false }: LogoProps) {
   return (
-    <Image
-      src="/logo.png"
+    <img
+      src="/logo.svg"
       alt="TechMate"
-      width={1536}
-      height={1024}
       className={`object-cover ${className}`}
       style={
         glow

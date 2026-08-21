@@ -52,7 +52,7 @@ export function BokehParticles() {
     }
 
     const particles: Particle[] = [];
-    const count = Math.min(20, Math.floor(w / 80));
+    const count = Math.min(12, Math.floor(w / 100));
 
     for (let i = 0; i < count; i++) {
       particles.push({

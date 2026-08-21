@@ -5,7 +5,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
 import { ScrollRevealInit } from "@/components/ScrollRevealInit";
-import { BokehParticles } from "@/components/BokehParticles";
+import { LazyBokehParticles } from "@/components/LazyBokehParticles";
 import { CyberCursor } from "@/components/CyberCursor";
 import { WelcomeScreen } from "@/components/WelcomeScreen";
 import { ScrollToTop } from "@/components/ScrollToTop";
@@ -102,11 +102,10 @@ export default function RootLayout({
             <WelcomeScreen />
 
             <div className="cinema-vignette" aria-hidden />
-            <div className="cinema-grain" aria-hidden />
             <div className="light-leak light-leak--amber" aria-hidden />
             <div className="light-leak light-leak--rose" aria-hidden />
             <div className="light-leak light-leak--sky" aria-hidden />
-            <BokehParticles />
+            <LazyBokehParticles />
             <CyberCursor />
 
             <div className="relative z-10 min-h-screen flex flex-col">
