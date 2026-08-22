@@ -13,7 +13,7 @@ function Badge({
   const base = "inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 gap-1 transition-colors";
 
   const variants: Record<string, string> = {
-    default: "border-transparent bg-amber-500/20 text-amber-400",
+    default: "border-transparent bg-emerald-500/20 text-emerald-400",
     secondary: "border-transparent bg-white/10 text-white/70",
     destructive: "border-transparent bg-red-500/20 text-red-400",
     outline: "border-white/10 text-white/50 bg-transparent",

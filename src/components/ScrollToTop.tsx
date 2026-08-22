@@ -30,7 +30,7 @@ export function ScrollToTop() {
                  bg-gradient-to-b from-white/[0.08] to-white/[0.02]
                  border border-white/[0.14]
                  shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_4px_16px_-4px_rgba(0,0,0,0.3)]
-                 text-white/40 hover:text-amber-300
+                 text-white/40 hover:text-emerald-300
                  hover:bg-white/[0.06] hover:border-white/[0.22]
                  active:scale-90
                  transition-all duration-300

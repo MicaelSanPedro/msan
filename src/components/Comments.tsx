@@ -154,9 +154,9 @@ export function Comments({ slug }: CommentsProps) {
   return (
     <section className="mt-12 sm:mt-16" id="comments">
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-400/20 to-amber-600/10 flex items-center justify-center">
+        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-400/20 to-emerald-600/10 flex items-center justify-center">
           <svg
-            className="w-4 h-4 text-amber-400"
+            className="w-4 h-4 text-emerald-400"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -188,7 +188,7 @@ export function Comments({ slug }: CommentsProps) {
           href="https://github.com/MicaelSanPedro/techmate/discussions"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-amber-400/50 hover:text-amber-400/80 transition-colors"
+          className="text-emerald-400/50 hover:text-emerald-400/80 transition-colors"
         >
           ver todas as discussões
         </a>

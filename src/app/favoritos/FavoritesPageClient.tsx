@@ -21,8 +21,8 @@ export default function FavoritesPageClient({ allPosts }: FavoritesPageClientPro
     return (
       <div className="pt-24 sm:pt-28 pb-20 px-4 max-w-7xl mx-auto">
         <div className="flex flex-col items-center justify-center py-20 text-center max-w-md mx-auto">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-400/20 to-amber-600/10 border border-amber-400/20 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(249,189,24,0.15)]">
-            <LogIn className="w-8 h-8 text-amber-400" />
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-400/20 to-emerald-600/10 border border-emerald-400/20 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(52,211,153,0.15)]">
+            <LogIn className="w-8 h-8 text-emerald-400" />
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold text-white mb-3">Faça login para ver seus favoritos</h1>
           <p className="text-white/45 text-sm mb-8">
@@ -56,7 +56,7 @@ export default function FavoritesPageClient({ allPosts }: FavoritesPageClientPro
     <div className="pt-24 sm:pt-28 pb-20 px-4 max-w-7xl mx-auto">
       <Link
         href="/blog"
-        className="inline-flex items-center gap-2 text-sm text-white/45 hover:text-amber-300 transition-colors mb-6 sm:mb-8 group"
+        className="inline-flex items-center gap-2 text-sm text-white/45 hover:text-emerald-300 transition-colors mb-6 sm:mb-8 group"
       >
         <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
         Voltar ao Blog

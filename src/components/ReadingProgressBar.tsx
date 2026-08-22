@@ -27,10 +27,10 @@ export function ReadingProgressBar() {
 
   return (
     <div
-      className="fixed top-[56px] left-0 right-0 h-[3px] bg-amber-500 origin-left z-[100] sm:top-16 lg:top-[72px] sm:h-1"
+      className="fixed top-[56px] left-0 right-0 h-[3px] bg-emerald-500 origin-left z-[100] sm:top-16 lg:top-[72px] sm:h-1"
       style={{
         transform: `scaleX(${progress})`,
-        boxShadow: "0 2px 10px rgba(245, 158, 11, 0.4)",
+        boxShadow: "0 2px 10px rgba(16, 185, 129, 0.4)",
         willChange: "transform"
       }}
     />

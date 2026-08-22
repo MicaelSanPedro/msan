@@ -36,7 +36,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#08070a",
+  themeColor: "#060a08",
 };
 
 export const metadata: Metadata = {
@@ -78,7 +78,7 @@ export default function RootLayout({
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('techmate_theme');if(t==='light'){document.documentElement.classList.remove('dark');var m=document.querySelector('meta[name="theme-color"]');if(m)m.content='#f8f7f5'}}catch(e){}})()`,
+            __html: `(function(){try{var t=localStorage.getItem('techmate_theme');if(t==='light'){document.documentElement.classList.remove('dark');var m=document.querySelector('meta[name="theme-color"]');if(m)m.content='#f0f5f2'}}catch(e){}})()`,
           }}
         />
       </head>
@@ -102,7 +102,7 @@ export default function RootLayout({
             <WelcomeScreen />
 
             <div className="cinema-vignette" aria-hidden />
-            <div className="light-leak light-leak--amber" aria-hidden />
+            <div className="light-leak light-leak--emerald" aria-hidden />
             <div className="light-leak light-leak--rose" aria-hidden />
             <div className="light-leak light-leak--sky" aria-hidden />
             <LazyBokehParticles />

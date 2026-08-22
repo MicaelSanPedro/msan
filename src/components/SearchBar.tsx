@@ -143,8 +143,8 @@ export function SearchBar({ allPosts, alwaysOpen = false }: SearchBarProps) {
     <div ref={containerRef} className={`relative ${isClosing ? 'searchbar-closing' : ''}`}>
       {/* Input */}
       <div className={`searchbar-input-wrap ${isClosing ? 'searchbar-input-closing' : ''}`}>
-        <span className="absolute top-0 left-[8%] right-[8%] h-px bg-gradient-to-r from-transparent via-amber-300/30 to-transparent pointer-events-none z-[2]" />
-        <Search className="w-4 h-4 text-amber-400 shrink-0" />
+        <span className="absolute top-0 left-[8%] right-[8%] h-px bg-gradient-to-r from-transparent via-emerald-300/30 to-transparent pointer-events-none z-[2]" />
+        <Search className="w-4 h-4 text-emerald-400 shrink-0" />
         <input
           ref={inputRef}
           type="text"
@@ -177,7 +177,7 @@ export function SearchBar({ allPosts, alwaysOpen = false }: SearchBarProps) {
                   className={`searchbar-result ${i === selectedIndex ? "searchbar-result-active" : ""}`}
                   type="button"
                 >
-                  <span className="text-amber-400 mt-0.5 shrink-0">
+                  <span className="text-emerald-400 mt-0.5 shrink-0">
                     <Search className="w-3.5 h-3.5" />
                   </span>
                   <div className="min-w-0 flex-1">

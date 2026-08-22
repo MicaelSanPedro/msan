@@ -118,7 +118,7 @@ export function ShareButtons({ url, title, className = "" }: ShareButtonsProps) 
             <div className="flex flex-col gap-1 p-1.5 rounded-xl bg-neutral-900/95 border border-white/[0.08] shadow-[0_16px_48px_-12px_rgba(0,0,0,0.7)] backdrop-blur-xl min-w-[180px]">
               <button
                 onClick={copyLink}
-                className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-xs text-white/70 hover:bg-amber-500/10 hover:text-amber-300 transition-all"
+                className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-xs text-white/70 hover:bg-emerald-500/10 hover:text-emerald-300 transition-all"
                 type="button"
               >
                 {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Link2 className="w-4 h-4" />}
@@ -150,7 +150,7 @@ export function ShareButtons({ url, title, className = "" }: ShareButtonsProps) 
       <button
         ref={triggerRef}
         onClick={toggleMenu}
-        className="inline-flex items-center gap-2 text-xs text-white/45 hover:text-amber-300 transition-colors group"
+        className="inline-flex items-center gap-2 text-xs text-white/45 hover:text-emerald-300 transition-colors group"
         aria-label="Compartilhar"
         type="button"
       >

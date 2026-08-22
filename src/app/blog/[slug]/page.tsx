@@ -100,7 +100,7 @@ export default async function PostPage({ params }: PostPageProps) {
           {/* Back link */}
           <Link
             href="/blog"
-            className="inline-flex items-center gap-2 text-sm text-white/45 hover:text-amber-300 transition-colors mb-6 sm:mb-10 group"
+            className="inline-flex items-center gap-2 text-sm text-white/45 hover:text-emerald-300 transition-colors mb-6 sm:mb-10 group"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
             Voltar ao Blog
@@ -128,8 +128,8 @@ export default async function PostPage({ params }: PostPageProps) {
             <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 py-3 sm:py-4 px-4 sm:px-5 rounded-xl sm:rounded-2xl bg-white/[0.025] border border-white/[0.06]">
               <div className="flex flex-wrap items-center gap-x-4 sm:gap-x-5 gap-y-2.5">
                 <div className="flex items-center gap-2 sm:gap-2.5 text-sm">
-                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-amber-400/40 to-amber-600/30 ring-1 ring-amber-400/30 flex items-center justify-center">
-                    <User className="w-3.5 h-3.5 text-amber-200" />
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-emerald-400/40 to-emerald-600/30 ring-1 ring-emerald-400/30 flex items-center justify-center">
+                    <User className="w-3.5 h-3.5 text-emerald-200" />
                   </div>
                   <span className="font-medium text-white/75 text-sm">TechMate</span>
                 </div>
@@ -159,7 +159,7 @@ export default async function PostPage({ params }: PostPageProps) {
                 {frontmatter.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="px-2.5 py-1 rounded-md text-xs font-mono text-amber-300/70 bg-amber-500/[0.06] border border-amber-500/15 hover:bg-amber-500/10 hover:text-amber-200 transition-colors"
+                    className="px-2.5 py-1 rounded-md text-xs font-mono text-emerald-300/70 bg-emerald-500/[0.06] border border-emerald-500/15 hover:bg-emerald-500/10 hover:text-emerald-200 transition-colors"
                   >
                     #{tag}
                   </span>
@@ -177,7 +177,7 @@ export default async function PostPage({ params }: PostPageProps) {
           )}
 
           {/* Divider */}
-          <div className="h-px bg-gradient-to-r from-amber-500/30 via-amber-500/10 to-transparent mb-10 sm:mb-12" />
+          <div className="h-px bg-gradient-to-r from-emerald-500/30 via-emerald-500/10 to-transparent mb-10 sm:mb-12" />
 
           {/* Post content */}
           <ProseEnhancer />
@@ -192,8 +192,8 @@ export default async function PostPage({ params }: PostPageProps) {
           </div>
 
           {/* End-of-article callout */}
-          <div className="mt-12 sm:mt-16 p-5 sm:p-8 rounded-2xl border border-amber-400/15 bg-gradient-to-br from-amber-500/[0.06] to-transparent" data-scroll-reveal>
-            <p className="text-xs sm:text-sm text-amber-200/80 font-semibold mb-1 tracking-wide uppercase">
+          <div className="mt-12 sm:mt-16 p-5 sm:p-8 rounded-2xl border border-emerald-400/15 bg-gradient-to-br from-emerald-500/[0.06] to-transparent" data-scroll-reveal>
+            <p className="text-xs sm:text-sm text-emerald-200/80 font-semibold mb-1 tracking-wide uppercase">
               Curtiu?
             </p>
             <p className="text-white/65 text-sm mb-4 sm:mb-5">
@@ -225,7 +225,7 @@ export default async function PostPage({ params }: PostPageProps) {
           <div className="mt-12 sm:mt-14 pt-6 border-t border-white/[0.06] flex items-center justify-between">
             <Link
               href="/blog"
-              className="inline-flex items-center gap-2 text-amber-300 hover:text-amber-200 transition-colors group text-sm sm:text-base"
+              className="inline-flex items-center gap-2 text-emerald-300 hover:text-emerald-200 transition-colors group text-sm sm:text-base"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
               Ver todos os artigos
@@ -240,8 +240,8 @@ export default async function PostPage({ params }: PostPageProps) {
         <section className="max-w-7xl mx-auto mt-20 sm:mt-24" data-scroll-reveal>
           <div className="mb-8 sm:mb-12 max-w-3xl">
             <div className="flex items-center gap-2 mb-3">
-              <span className="w-5 sm:w-6 h-px bg-gradient-to-r from-amber-400 to-transparent" />
-              <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-amber-300/80 font-medium">
+              <span className="w-5 sm:w-6 h-px bg-gradient-to-r from-emerald-400 to-transparent" />
+              <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-emerald-300/80 font-medium">
                 Relacionados
               </span>
             </div>

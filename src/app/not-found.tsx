@@ -59,7 +59,7 @@ export default function NotFound() {
         style={{
           background: `
             radial-gradient(600px circle at ${mousePos.x * 100}% ${mousePos.y * 100}%,
-              rgba(249, 189, 24, 0.08) 0%,
+              rgba(52, 211, 153, 0.08) 0%,
               rgba(139, 92, 246, 0.04) 30%,
               transparent 60%),
             radial-gradient(400px circle at ${(1 - mousePos.x) * 100}% ${(1 - mousePos.y) * 100}%,
@@ -74,7 +74,7 @@ export default function NotFound() {
         {particles.map((p) => (
           <div
             key={p.id}
-            className="absolute rounded-full bg-amber-400"
+            className="absolute rounded-full bg-emerald-400"
             style={{
               left: `${p.x}%`,
               top: `${p.y}%`,
@@ -92,8 +92,8 @@ export default function NotFound() {
         className="absolute inset-0 opacity-[0.03] pointer-events-none"
         style={{
           backgroundImage: `
-            linear-gradient(rgba(249,189,24,1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(249,189,24,1) 1px, transparent 1px)
+            linear-gradient(rgba(52,211,153,1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(52,211,153,1) 1px, transparent 1px)
           `,
           backgroundSize: "60px 60px",
         }}
@@ -114,13 +114,13 @@ export default function NotFound() {
           <h1
             className="text-[9rem] sm:text-[12rem] font-black leading-none tracking-tighter select-none"
             style={{
-              background: "linear-gradient(135deg, #f9bd18 0%, #fbbf24 30%, #fde68a 50%, #fbbf24 70%, #f9bd18 100%)",
+              background: "linear-gradient(135deg, #34d399 0%, #6ee7b7 30%, #a7f3d0 50%, #6ee7b7 70%, #34d399 100%)",
               backgroundSize: "200% auto",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
               animation: "shimmer-404 4s linear infinite",
-              filter: `drop-shadow(0 0 40px rgba(249,189,24,0.3))`,
+              filter: `drop-shadow(0 0 40px rgba(52,211,153,0.3))`,
             }}
           >
             404
@@ -154,7 +154,7 @@ export default function NotFound() {
           <div
             className="absolute inset-0 -z-10 blur-3xl opacity-30 pointer-events-none"
             style={{
-              background: "radial-gradient(circle, rgba(249,189,24,0.4) 0%, transparent 70%)",
+              background: "radial-gradient(circle, rgba(52,211,153,0.4) 0%, transparent 70%)",
             }}
           />
         </div>
@@ -162,15 +162,15 @@ export default function NotFound() {
         {/* Message */}
         <div className="space-y-3 mb-10 animate-fade-in" style={{ animationDelay: "0.3s" }}>
           <div className="flex items-center justify-center gap-2 mb-2">
-            <Ghost className="w-5 h-5 text-amber-400/60 animate-float-y" />
-            <p className="text-sm font-medium text-amber-400/80 uppercase tracking-[0.2em]">
+            <Ghost className="w-5 h-5 text-emerald-400/60 animate-float-y" />
+            <p className="text-sm font-medium text-emerald-400/80 uppercase tracking-[0.2em]">
               Página não encontrada
             </p>
-            <Ghost className="w-5 h-5 text-amber-400/60 animate-float-y" style={{ animationDelay: "1s" }} />
+            <Ghost className="w-5 h-5 text-emerald-400/60 animate-float-y" style={{ animationDelay: "1s" }} />
           </div>
           <p className="text-white/50 text-base leading-relaxed max-w-sm mx-auto">
             Ops! Essa página se perdeu no{" "}
-            <span className="text-amber-400/70 font-semibold">ciberespacio</span>.
+            <span className="text-emerald-400/70 font-semibold">ciberespacio</span>.
             Talvez ela tenha ficado presa entre os bytes.
           </p>
         </div>
@@ -180,12 +180,12 @@ export default function NotFound() {
           <Link
             href="/"
             className="group flex items-center gap-2.5 px-6 py-3 rounded-2xl
-                       bg-gradient-to-b from-amber-400/90 to-amber-500
-                       text-amber-950 text-sm font-bold
-                       shadow-[0_4px_20px_-4px_rgba(249,189,24,0.5),inset_0_1px_0_rgba(255,255,255,0.4)]
-                       hover:shadow-[0_8px_32px_-4px_rgba(249,189,24,0.7),inset_0_1px_0_rgba(255,255,255,0.5)]
-                       hover:from-amber-300 hover:to-amber-400
-                       border border-amber-400/30
+                       bg-gradient-to-b from-emerald-400/90 to-emerald-500
+                       text-emerald-950 text-sm font-bold
+                       shadow-[0_4px_20px_-4px_rgba(52,211,153,0.5),inset_0_1px_0_rgba(255,255,255,0.4)]
+                       hover:shadow-[0_8px_32px_-4px_rgba(52,211,153,0.7),inset_0_1px_0_rgba(255,255,255,0.5)]
+                       hover:from-emerald-300 hover:to-emerald-400
+                       border border-emerald-400/30
                        hover:scale-105 active:scale-[0.98]
                        transition-all duration-300"
           >
@@ -214,10 +214,10 @@ export default function NotFound() {
           <div className="inline-flex items-center gap-3 px-5 py-3 rounded-2xl
                          backdrop-blur-[40px] bg-white/[0.03] border border-white/[0.08]
                          shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
-            <Sparkles className="w-4 h-4 text-amber-400/50" />
+            <Sparkles className="w-4 h-4 text-emerald-400/50" />
             <div className="text-left font-mono text-xs sm:text-sm">
               <span className="text-white/25">$</span>{" "}
-              <span className="text-amber-400/70">find</span>{" "}
+              <span className="text-emerald-400/70">find</span>{" "}
               <span className="text-white/40">/pagina-perdida</span>
               <br />
               <span className="text-white/25">...</span>{" "}
@@ -244,7 +244,7 @@ export default function NotFound() {
         aria-hidden
       />
       <div
-        className="absolute inset-[15%] rounded-full border border-amber-500/[0.03] pointer-events-none animate-rotate-slow"
+        className="absolute inset-[15%] rounded-full border border-emerald-500/[0.03] pointer-events-none animate-rotate-slow"
         style={{ animationDirection: "reverse", animationDuration: "40s" }}
         aria-hidden
       />

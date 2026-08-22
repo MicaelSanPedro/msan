@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
 const categoryColors: Record<string, string> = {
-  linux: "bg-amber-900/60 text-amber-100 border-amber-500/50 shadow-[0_0_18px_-6px_rgba(249,189,24,0.5)]",
+  linux: "bg-emerald-900/60 text-emerald-100 border-emerald-500/50 shadow-[0_0_18px_-6px_rgba(52,211,153,0.5)]",
   windows: "bg-sky-900/60 text-sky-100 border-sky-500/50 shadow-[0_0_18px_-6px_rgba(56,189,248,0.5)]",
   dev: "bg-emerald-900/60 text-emerald-100 border-emerald-500/50 shadow-[0_0_18px_-6px_rgba(52,211,153,0.5)]",
   desenvolvimento: "bg-emerald-900/60 text-emerald-100 border-emerald-500/50 shadow-[0_0_18px_-6px_rgba(52,211,153,0.5)]",

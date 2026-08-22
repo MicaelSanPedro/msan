@@ -43,7 +43,7 @@ export function FeaturedPost({ post, variant = "hero" }: FeaturedPostProps) {
                      bg-gradient-to-br from-white/[0.08] to-white/[0.015]
                      border border-white/[0.15]
                      shadow-[0_8px_32px_-8px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.08)]
-                     hover:shadow-[0_12px_40px_-8px_rgba(0,0,0,0.45),0_24px_60px_-20px_rgba(249,189,24,0.18),inset_0_1px_0_rgba(255,255,255,0.14)]"
+                     hover:shadow-[0_12px_40px_-8px_rgba(0,0,0,0.45),0_24px_60px_-20px_rgba(52,211,153,0.18),inset_0_1px_0_rgba(255,255,255,0.14)]"
         >
           {/* Specular top highlight */}
           <div className="absolute top-0 left-[8%] right-[8%] h-px bg-gradient-to-r from-transparent via-white/40 to-transparent z-[2] pointer-events-none" />
@@ -60,9 +60,9 @@ export function FeaturedPost({ post, variant = "hero" }: FeaturedPostProps) {
                 sizes="(max-width: 1024px) 50vw, 33vw"
               />
             ) : (
-              <div className="w-full h-full bg-[radial-gradient(ellipse_at_top,_rgba(249,189,24,0.3),_transparent_60%)]" />
+              <div className="w-full h-full bg-[radial-gradient(ellipse_at_top,_rgba(52,211,153,0.3),_transparent_60%)]" />
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0908] via-[#0a0908]/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#080a09] via-[#080a09]/40 to-transparent" />
             <div className="absolute top-3 left-3">
               <CategoryBadge category={frontmatter.category} />
             </div>
@@ -70,7 +70,7 @@ export function FeaturedPost({ post, variant = "hero" }: FeaturedPostProps) {
 
           <div className="flex-1 flex flex-col p-4 sm:p-5 gap-2.5 sm:gap-3">
             <h3 className="text-base sm:text-lg font-semibold text-white leading-tight tracking-tight line-clamp-2
-                           group-hover:text-amber-100 transition-colors">
+                           group-hover:text-emerald-100 transition-colors">
               {frontmatter.title}
             </h3>
             <p className="text-sm text-white/45 leading-relaxed line-clamp-2 flex-1">
@@ -84,7 +84,7 @@ export function FeaturedPost({ post, variant = "hero" }: FeaturedPostProps) {
                   {frontmatter.readTime}
                 </span>
               </div>
-              <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-300 group-hover:text-amber-200 transition-colors">
+              <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-300 group-hover:text-emerald-200 transition-colors">
                 Ler
                 <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </span>
@@ -105,7 +105,7 @@ export function FeaturedPost({ post, variant = "hero" }: FeaturedPostProps) {
                    transition-all duration-500 ease-out h-full min-h-[360px] sm:min-h-[440px] lg:min-h-[480px]
                    active:scale-[0.99]
                    hover:border-white/[0.25]
-                   hover:shadow-[0_40px_100px_-20px_rgba(249,189,24,0.3),inset_0_1px_0_rgba(255,255,255,0.1)]"
+                   hover:shadow-[0_40px_100px_-20px_rgba(52,211,153,0.3),inset_0_1px_0_rgba(255,255,255,0.1)]"
       >
         {/* Background image */}
         {hasImage && (
@@ -120,8 +120,8 @@ export function FeaturedPost({ post, variant = "hero" }: FeaturedPostProps) {
         )}
 
         {/* Gradient overlays for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#06060a] via-[#06060a]/60 to-[#06060a]/40 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-tr from-amber-900/15 via-transparent to-rose-900/10 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#060a08] via-[#060a08]/60 to-[#060a08]/40 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-emerald-900/15 via-transparent to-rose-900/10 pointer-events-none" />
         {/* Specular highlight at top */}
         <div className="absolute top-0 left-[5%] right-[5%] h-px bg-gradient-to-r from-transparent via-white/25 to-transparent z-[3] pointer-events-none" />
 
@@ -131,7 +131,7 @@ export function FeaturedPost({ post, variant = "hero" }: FeaturedPostProps) {
           </div>
 
           <h2 className="text-xl sm:text-2xl lg:text-[2.25rem] font-extrabold text-white leading-[1.1] mb-3 sm:mb-4 max-w-2xl tracking-tight
-                         group-hover:text-amber-50 transition-colors duration-300 text-balance">
+                         group-hover:text-emerald-50 transition-colors duration-300 text-balance">
             {frontmatter.title}
           </h2>
 

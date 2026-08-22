@@ -12,15 +12,15 @@ function Button({
   size = "default",
   ...props
 }: ButtonProps) {
-  const base = "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-amber-500/50 cursor-pointer";
+  const base = "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 shrink-0 outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/50 cursor-pointer";
 
   const variants: Record<string, string> = {
-    default: "bg-amber-600 text-white shadow-sm hover:bg-amber-500",
+    default: "bg-emerald-600 text-white shadow-sm hover:bg-emerald-500",
     destructive: "bg-red-600 text-white shadow-sm hover:bg-red-500",
     outline: "border border-white/10 bg-transparent shadow-sm hover:bg-white/5 hover:text-white",
     secondary: "bg-white/10 text-white shadow-sm hover:bg-white/15",
     ghost: "hover:bg-white/5",
-    link: "text-amber-400 underline-offset-4 hover:underline",
+    link: "text-emerald-400 underline-offset-4 hover:underline",
   };
 
   const sizes: Record<string, string> = {

@@ -20,7 +20,7 @@ export function Newsletter() {
   return (
     <div className="relative overflow-hidden rounded-3xl p-8 sm:p-10
                     backdrop-blur-[40px] saturate-[200%] brightness-[105%]
-                    bg-gradient-to-br from-amber-500/[0.08] via-white/[0.03] to-white/[0.01]
+                    bg-gradient-to-br from-emerald-500/[0.08] via-white/[0.03] to-white/[0.01]
                     border border-white/[0.14]
                     shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)]">
       {/* Specular highlight */}
@@ -28,7 +28,7 @@ export function Newsletter() {
       
       <div className="relative z-10 max-w-xl">
         <h3 className="text-2xl sm:text-3xl font-bold text-white mb-3 tracking-tight">
-          Newsletter <span className="text-amber-400">TechMate</span>
+          Newsletter <span className="text-emerald-400">TechMate</span>
         </h3>
         <p className="text-white/50 text-sm sm:text-base mb-8 leading-relaxed">
           Receba tutoriais exclusivos, dicas de Linux e novidades de dev diretamente no seu e-mail. 
@@ -49,7 +49,7 @@ export function Newsletter() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="flex-1 px-5 py-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.1] 
-                         text-white placeholder:text-white/20 outline-none focus:border-amber-500/50 
+                         text-white placeholder:text-white/20 outline-none focus:border-emerald-500/50 
                          transition-all focus:bg-white/[0.06]"
             />
             <button

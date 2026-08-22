@@ -26,8 +26,8 @@ interface CategoryTheme {
 const themes: Record<string, CategoryTheme> = {
   Linux: {
     icon: <Terminal className="w-full h-full" />,
-    hex: "#fbbf24",
-    rgb: "251, 191, 36",
+    hex: "#34d399",
+    rgb: "52, 211, 153",
     tagline: "Distros, shell & poder",
   },
   Windows: {
@@ -70,8 +70,8 @@ const themes: Record<string, CategoryTheme> = {
 
 const defaultTheme: CategoryTheme = {
   icon: <Terminal className="w-full h-full" />,
-  hex: "#fbbf24",
-  rgb: "251, 191, 36",
+  hex: "#34d399",
+  rgb: "52, 211, 153",
   tagline: "Conteúdo selecionado",
 };
 

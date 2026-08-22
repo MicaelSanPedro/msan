@@ -27,7 +27,7 @@ export function AuthButton() {
         onClick={() => openSignInModal()}
         className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-medium
                    bg-gradient-to-b from-white/[0.08] to-white/[0.02] border border-white/[0.12]
-                   hover:border-amber-400/30 hover:text-amber-200 transition-all duration-200
+                   hover:border-emerald-400/30 hover:text-emerald-200 transition-all duration-200
                    shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_4px_12px_-4px_rgba(0,0,0,0.4)]"
       >
         <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">

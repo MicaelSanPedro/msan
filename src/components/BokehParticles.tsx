@@ -31,8 +31,8 @@ export function BokehParticles() {
     window.addEventListener("resize", resize);
 
     const colors = [
-      "rgba(249,189,24,",  // amber
-      "rgba(251,191,36,",  // amber lighter
+      "rgba(52,211,153,",  // emerald
+      "rgba(110,231,183,",  // emerald lighter
       "rgba(244,63,94,",   // rose
       "rgba(56,189,248,",  // sky
       "rgba(163,230,53,",  // lime

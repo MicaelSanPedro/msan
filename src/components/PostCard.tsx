@@ -35,13 +35,13 @@ export function PostCard({ post }: PostCardProps) {
         onMouseMove={handleMouseMove}
         className="spotlight card-shine relative rounded-2xl overflow-hidden h-full flex flex-col
                    transition-all duration-500 ease-out
-                   active:scale-[0.99] active:border-amber-400/30
+                   active:scale-[0.99] active:border-emerald-400/30
                    hover:border-white/[0.22] hover:-translate-y-1
                    backdrop-blur-[40px] saturate-[200%] brightness-[105%]
                    bg-gradient-to-b from-white/[0.08] to-white/[0.015]
                    border border-white/[0.15]
                    shadow-[0_8px_32px_-8px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.08)]
-                   hover:shadow-[0_12px_40px_-8px_rgba(0,0,0,0.45),0_24px_60px_-20px_rgba(249,189,24,0.15),inset_0_1px_0_rgba(255,255,255,0.14)]"
+                   hover:shadow-[0_12px_40px_-8px_rgba(0,0,0,0.45),0_24px_60px_-20px_rgba(52,211,153,0.15),inset_0_1px_0_rgba(255,255,255,0.14)]"
       >
         {/* Specular top highlight */}
         <div className="absolute top-0 left-[8%] right-[8%] h-px bg-gradient-to-r from-transparent via-white/50 to-transparent z-[2] pointer-events-none" />
@@ -59,7 +59,7 @@ export function PostCard({ post }: PostCardProps) {
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />
           ) : (
-            <div className="w-full h-full bg-[radial-gradient(ellipse_at_top_left,_rgba(249,189,24,0.25),_transparent_60%),_radial-gradient(ellipse_at_bottom_right,_rgba(244,63,94,0.15),_transparent_60%)] flex items-center justify-center">
+            <div className="w-full h-full bg-[radial-gradient(ellipse_at_top_left,_rgba(52,211,153,0.25),_transparent_60%),_radial-gradient(ellipse_at_bottom_right,_rgba(244,63,94,0.15),_transparent_60%)] flex items-center justify-center">
               <span className="text-4xl opacity-60">⌘</span>
             </div>
           )}
@@ -67,7 +67,7 @@ export function PostCard({ post }: PostCardProps) {
           {/* Top gradient for badge readability */}
           <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/40 to-transparent" />
           {/* Bottom fade into card */}
-          <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#0a0908] to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#080a09] to-transparent" />
 
           {/* Category badge */}
           <div className="absolute top-3 left-3">
@@ -84,7 +84,7 @@ export function PostCard({ post }: PostCardProps) {
                             flex items-center justify-center
                             opacity-70 sm:opacity-0 sm:-translate-y-1 sm:group-hover:opacity-100 sm:group-hover:translate-y-0
                             transition-all duration-300">
-              <ArrowUpRight className="w-4 h-4 text-amber-300" />
+              <ArrowUpRight className="w-4 h-4 text-emerald-300" />
             </div>
           </div>
         </div>
@@ -93,7 +93,7 @@ export function PostCard({ post }: PostCardProps) {
         <div className="flex flex-col flex-1 p-4 sm:p-5 gap-2.5 sm:gap-3">
           {/* Title */}
           <h3 className="text-base sm:text-lg font-semibold text-white leading-snug tracking-tight
-                         group-hover:text-amber-100 transition-colors duration-200 line-clamp-2">
+                         group-hover:text-emerald-100 transition-colors duration-200 line-clamp-2">
             {frontmatter.title}
           </h3>
 

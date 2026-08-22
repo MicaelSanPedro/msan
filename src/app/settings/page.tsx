@@ -100,11 +100,10 @@ const FONT_SIZES = [
 
 /* ─── Accent colors ─── */
 const ACCENT_COLORS = [
-  { label: "Ambar", value: "amber", primary: "#f59e0b", glow: "rgba(245,158,11,0.45)" },
+  { label: "Esmeralda", value: "emerald", primary: "#10b981", glow: "rgba(16,185,129,0.45)" },
   { label: "Azul", value: "blue", primary: "#3b82f6", glow: "rgba(59,130,246,0.45)" },
   { label: "Violeta", value: "violet", primary: "#8b5cf6", glow: "rgba(139,92,246,0.45)" },
   { label: "Rosa", value: "rose", primary: "#f43f5e", glow: "rgba(244,63,94,0.45)" },
-  { label: "Esmeralda", value: "emerald", primary: "#10b981", glow: "rgba(16,185,129,0.45)" },
   { label: "Ciano", value: "cyan", primary: "#06b6d4", glow: "rgba(6,182,212,0.45)" },
 ] as const;
 
@@ -114,8 +113,8 @@ function SectionTitle({ icon: Icon, title }: { icon: React.ElementType; title: s
   return (
     <div className="flex items-center gap-2.5 mb-4">
       <div className="flex items-center justify-center w-8 h-8 rounded-xl
-                      bg-amber-500/[0.08] border border-amber-500/15">
-        <Icon className="w-4 h-4 text-amber-400" />
+                      bg-emerald-500/[0.08] border border-emerald-500/15">
+        <Icon className="w-4 h-4 text-emerald-400" />
       </div>
       <h2 className="text-base font-bold text-white/90">{title}</h2>
     </div>
@@ -152,13 +151,13 @@ function Toggle({
       type="button"
       onClick={() => onChange(!checked)}
       className={`relative w-11 h-6 rounded-full transition-colors duration-300 flex-shrink-0 cursor-pointer
-                  ${checked ? "bg-amber-500/40" : "bg-white/[0.08] border border-white/[0.12]"}`}
+                  ${checked ? "bg-emerald-500/40" : "bg-white/[0.08] border border-white/[0.12]"}`}
       role="switch"
       aria-checked={checked}
     >
       <div className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full transition-all duration-300
                       ${checked
-                        ? "translate-x-5 bg-amber-400 shadow-[0_0_8px_rgba(249,189,24,0.5)]"
+                        ? "translate-x-5 bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.5)]"
                         : "bg-white/40"}`}
       />
     </button>
@@ -235,7 +234,7 @@ function SegmentedControl<T extends string>({
             onClick={() => onChange(opt.value)}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer
                        ${isActive
-                         ? "bg-amber-500/20 border border-amber-500/30 text-amber-300 shadow-[0_0_12px_rgba(249,189,24,0.15)]"
+                         ? "bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 shadow-[0_0_12px_rgba(52,211,153,0.15)]"
                          : "bg-white/[0.03] border border-white/[0.08] text-white/40 hover:bg-white/[0.06] hover:text-white/60"}`}
           >
             {renderLabel ? renderLabel(opt) : opt.label}
@@ -294,7 +293,7 @@ export default function SettingsPage() {
   const [fontSize, setFontSize] = useState<string>("medium");
   const [reducedMotion, setReducedMotion] = useState(false);
   const [compactMode, setCompactMode] = useState(false);
-  const [accentColor, setAccentColor] = useState("amber");
+  const [accentColor, setAccentColor] = useState("emerald");
   const [mounted, setMounted] = useState(false);
   const [storageSize, setStorageSize] = useState("0 B");
   const [visitCount, setVisitCount] = useState(1);
@@ -389,11 +388,11 @@ export default function SettingsPage() {
     if (next === "light") {
       document.documentElement.classList.remove("dark");
       const m = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null;
-      if (m) m.content = "#f8f7f5";
+      if (m) m.content = "#f0f5f2";
     } else {
       document.documentElement.classList.add("dark");
       const m = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null;
-      if (m) m.content = "#08070a";
+      if (m) m.content = "#060a08";
     }
     showSaved();
   };
@@ -432,7 +431,7 @@ export default function SettingsPage() {
     setFontSize("medium");
     setReducedMotion(false);
     setCompactMode(false);
-    setAccentColor("amber");
+    setAccentColor("emerald");
     setStorageSize("0 B");
     setVisitCount(0);
     setFirstVisit("Hoje");
@@ -446,7 +445,7 @@ export default function SettingsPage() {
     document.documentElement.style.removeProperty("--accent-glow");
     document.documentElement.removeAttribute("data-accent");
     const m = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null;
-    if (m) m.content = "#08070a";
+    if (m) m.content = "#060a08";
     window.dispatchEvent(new CustomEvent("techmate:username-set"));
     showSaved();
   };
@@ -456,14 +455,14 @@ export default function SettingsPage() {
     setStored(KEYS.theme, "dark");
     document.documentElement.classList.add("dark");
     const m = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null;
-    if (m) m.content = "#08070a";
+    if (m) m.content = "#060a08";
     showSaved();
   };
 
   /* ── Compute display values ── */
   const currentFontLabel = FONT_SIZES.find((f) => f.value === fontSize)?.label || "Padrao";
   const currentAccentLabel = ACCENT_COLORS.find((c) => c.value === accentColor)?.label || "Ambar";
-  const currentAccentColor = ACCENT_COLORS.find((c) => c.value === accentColor)?.primary || "#f59e0b";
+  const currentAccentColor = ACCENT_COLORS.find((c) => c.value === accentColor)?.primary || "#10b981";
 
   if (!mounted) return null;
 
@@ -506,13 +505,13 @@ export default function SettingsPage() {
               <div className="flex items-center gap-4 py-3 px-4">
                 {session.user.image ? (
                   <div className="w-14 h-14 rounded-full overflow-hidden shrink-0
-                              border-2 border-amber-400/30 shadow-[0_0_20px_rgba(249,189,24,0.2)]">
+                              border-2 border-emerald-400/30 shadow-[0_0_20px_rgba(52,211,153,0.2)]">
                     <img src={session.user.image} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                   </div>
                 ) : (
                   <div className="flex items-center justify-center w-14 h-14 rounded-full shrink-0
-                              bg-gradient-to-br from-amber-400/20 to-amber-500/10 border border-amber-400/20">
-                    <User className="w-7 h-7 text-amber-400" />
+                              bg-gradient-to-br from-emerald-400/20 to-emerald-500/10 border border-emerald-400/20">
+                    <User className="w-7 h-7 text-emerald-400" />
                   </div>
                 )}
                 <div className="min-w-0">
@@ -640,8 +639,8 @@ export default function SettingsPage() {
           <div className="py-3 px-4">
             <div className="flex items-center gap-3 mb-3">
               <div className="flex items-center justify-center w-9 h-9 rounded-xl
-                              bg-amber-500/[0.08] border border-amber-500/15">
-                <Type className="w-4 h-4 text-amber-400" />
+                              bg-emerald-500/[0.08] border border-emerald-500/15">
+                <Type className="w-4 h-4 text-emerald-400" />
               </div>
               <div>
                 <p className="text-sm font-medium text-white/80">Tamanho da fonte</p>
@@ -673,7 +672,7 @@ export default function SettingsPage() {
                               bg-white/[0.05] border-white/[0.08]">
                 {reducedMotion
                   ? <VolumeX className="w-4 h-4 text-white/50" />
-                  : <Volume2 className="w-4 h-4 text-amber-400" />}
+                  : <Volume2 className="w-4 h-4 text-emerald-400" />}
               </div>
               <SettingLabel
                 label="Animacoes reduzidas"
@@ -693,7 +692,7 @@ export default function SettingsPage() {
               <div className="flex items-center justify-center w-9 h-9 rounded-xl border
                               bg-white/[0.05] border-white/[0.08]">
                 {compactMode
-                  ? <Minimize2 className="w-4 h-4 text-amber-400" />
+                  ? <Minimize2 className="w-4 h-4 text-emerald-400" />
                   : <Maximize2 className="w-4 h-4 text-white/50" />}
               </div>
               <SettingLabel
@@ -712,8 +711,8 @@ export default function SettingsPage() {
           <SettingRow>
             <div className="flex items-center gap-3 flex-1 mr-4">
               <div className="flex items-center justify-center w-9 h-9 rounded-xl
-                              bg-amber-500/[0.08] border border-amber-500/15">
-                <Globe className="w-4 h-4 text-amber-400" />
+                              bg-emerald-500/[0.08] border border-emerald-500/15">
+                <Globe className="w-4 h-4 text-emerald-400" />
               </div>
               <SettingLabel
                 label="Idioma"
@@ -732,8 +731,8 @@ export default function SettingsPage() {
           <SettingRow>
             <div className="flex items-center gap-3 flex-1 mr-4">
               <div className="flex items-center justify-center w-9 h-9 rounded-xl
-                              bg-amber-500/[0.08] border border-amber-500/15">
-                <Keyboard className="w-4 h-4 text-amber-400" />
+                              bg-emerald-500/[0.08] border border-emerald-500/15">
+                <Keyboard className="w-4 h-4 text-emerald-400" />
               </div>
               <SettingLabel
                 label="Atalhos de teclado"
@@ -742,7 +741,7 @@ export default function SettingsPage() {
             </div>
             <Link
               href="/settings#shortcuts"
-              className="flex items-center gap-1 text-xs text-amber-400/70 hover:text-amber-300 transition-colors"
+              className="flex items-center gap-1 text-xs text-emerald-400/70 hover:text-emerald-300 transition-colors"
             >
               Ver
               <ChevronRight className="w-3 h-3" />
@@ -755,8 +754,8 @@ export default function SettingsPage() {
           <SettingRow>
             <div className="flex items-center gap-3 flex-1 mr-4">
               <div className="flex items-center justify-center w-9 h-9 rounded-xl
-                              bg-amber-500/[0.08] border border-amber-500/15">
-                <Smartphone className="w-4 h-4 text-amber-400" />
+                              bg-emerald-500/[0.08] border border-emerald-500/15">
+                <Smartphone className="w-4 h-4 text-emerald-400" />
               </div>
               <SettingLabel
                 label="Plataforma"
@@ -780,8 +779,8 @@ export default function SettingsPage() {
           <SettingRow>
             <div className="flex items-center gap-3 flex-1 mr-4">
               <div className="flex items-center justify-center w-9 h-9 rounded-xl
-                              bg-amber-500/[0.08] border border-amber-500/15">
-                <HardDrive className="w-4 h-4 text-amber-400" />
+                              bg-emerald-500/[0.08] border border-emerald-500/15">
+                <HardDrive className="w-4 h-4 text-emerald-400" />
               </div>
               <SettingLabel
                 label="Dados salvos"
@@ -926,7 +925,7 @@ export default function SettingsPage() {
 
         {/* ── Footer ── */}
         <div className="flex items-center justify-center gap-2 pt-4 pb-2">
-          <Zap className="w-3 h-3 text-amber-400/30" />
+          <Zap className="w-3 h-3 text-emerald-400/30" />
           <p className="text-[11px] text-white/15">TechMate v1.0.0</p>
         </div>
 

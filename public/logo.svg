@@ -2,13 +2,13 @@
 <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="tm-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#fde68a"/>
-      <stop offset="45%" stop-color="#fbbf24"/>
-      <stop offset="100%" stop-color="#cb8c0a"/>
+      <stop offset="0%" stop-color="#a7f3d0"/>
+      <stop offset="45%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#059669"/>
     </linearGradient>
     <linearGradient id="tm-stroke" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#1a1206" stop-opacity="0.95"/>
-      <stop offset="100%" stop-color="#3a2810" stop-opacity="0.95"/>
+      <stop offset="0%" stop-color="#051a14" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#0a3d2e" stop-opacity="0.95"/>
     </linearGradient>
   </defs>
   <rect x="2" y="2" width="60" height="60" rx="14" ry="14" fill="url(#tm-grad)"/>

@@ -39,12 +39,12 @@ export function Footer() {
       {/* Top gradient divider — liquid glass edge */}
       <div className="relative h-px">
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-500/30 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent" />
       </div>
 
       {/* Background decoration */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-amber-500/[0.04] blur-3xl rounded-full" />
+        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-emerald-500/[0.04] blur-3xl rounded-full" />
       </div>
 
       {/* Giant brand watermark */}
@@ -86,7 +86,7 @@ export function Footer() {
                              bg-gradient-to-b from-white/[0.08] to-white/[0.02]
                              border border-white/[0.14]
                              shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_4px_16px_-4px_rgba(0,0,0,0.3)]
-                             text-white/50 hover:text-amber-300
+                             text-white/50 hover:text-emerald-300
                              hover:bg-white/[0.06] hover:border-white/[0.22]
                              active:scale-95
                              transition-all duration-200"
@@ -99,7 +99,7 @@ export function Footer() {
 
           {/* Categorias */}
           <div>
-            <h4 className="text-[11px] font-semibold text-amber-300/80 mb-4 sm:mb-5 uppercase tracking-[0.18em]">
+            <h4 className="text-[11px] font-semibold text-emerald-300/80 mb-4 sm:mb-5 uppercase tracking-[0.18em]">
               Categorias
             </h4>
             <ul className="space-y-2.5 sm:space-y-3">
@@ -107,10 +107,10 @@ export function Footer() {
                 <li key={item.label}>
                   <Link
                     href={item.href}
-                    className="group inline-flex items-center gap-1.5 text-sm text-white/45 hover:text-amber-200 transition-colors duration-200
+                    className="group inline-flex items-center gap-1.5 text-sm text-white/45 hover:text-emerald-200 transition-colors duration-200
                                hover:bg-white/[0.03] rounded-lg -ml-1 pl-1 py-0.5"
                   >
-                    <span className="w-0 group-hover:w-3 h-px bg-gradient-to-r from-amber-400 to-transparent transition-all duration-300" />
+                    <span className="w-0 group-hover:w-3 h-px bg-gradient-to-r from-emerald-400 to-transparent transition-all duration-300" />
                     {item.label}
                   </Link>
                 </li>
@@ -120,7 +120,7 @@ export function Footer() {
 
           {/* Links Rápidos */}
           <div>
-            <h4 className="text-[11px] font-semibold text-amber-300/80 mb-4 sm:mb-5 uppercase tracking-[0.18em]">
+            <h4 className="text-[11px] font-semibold text-emerald-300/80 mb-4 sm:mb-5 uppercase tracking-[0.18em]">
               Navegação
             </h4>
             <ul className="space-y-2.5 sm:space-y-3">
@@ -133,10 +133,10 @@ export function Footer() {
                       {...(isExternal
                         ? { target: "_blank", rel: "noopener noreferrer" }
                         : {})}
-                      className="group inline-flex items-center gap-1.5 text-sm text-white/45 hover:text-amber-200 transition-colors duration-200
+                      className="group inline-flex items-center gap-1.5 text-sm text-white/45 hover:text-emerald-200 transition-colors duration-200
                                  hover:bg-white/[0.03] rounded-lg -ml-1 pl-1 py-0.5"
                     >
-                      <span className="w-0 group-hover:w-3 h-px bg-gradient-to-r from-amber-400 to-transparent transition-all duration-300" />
+                      <span className="w-0 group-hover:w-3 h-px bg-gradient-to-r from-emerald-400 to-transparent transition-all duration-300" />
                       {item.label}
                       {isExternal && (
                         <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -150,7 +150,7 @@ export function Footer() {
 
           {/* Status / colofon */}
           <div className="col-span-2 lg:col-span-1">
-            <h4 className="text-[11px] font-semibold text-amber-300/80 mb-4 sm:mb-5 uppercase tracking-[0.18em]">
+            <h4 className="text-[11px] font-semibold text-emerald-300/80 mb-4 sm:mb-5 uppercase tracking-[0.18em]">
               Status
             </h4>
             <div className="space-y-2.5 sm:space-y-3 text-sm">
@@ -174,8 +174,8 @@ export function Footer() {
             © {currentYear} <span className="text-white/50">TechMate</span>. Todos os direitos reservados.
           </p>
           <p className="text-xs text-white/30 flex items-center gap-1.5 flex-wrap justify-center">
-            Feito com <Heart className="w-3 h-3 text-amber-400 fill-amber-400 animate-pulse" /> e café pra galera
-            <span className="text-amber-300/70">tech BR</span>
+            Feito com <Heart className="w-3 h-3 text-emerald-400 fill-emerald-400 animate-pulse" /> e café pra galera
+            <span className="text-emerald-300/70">tech BR</span>
           </p>
         </div>
       </div>

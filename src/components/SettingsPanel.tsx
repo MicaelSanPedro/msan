@@ -68,7 +68,7 @@ export function SettingsPanel({ userName, onNameChange, isOpen, onClose }: Setti
       localStorage.setItem(THEME_KEY, next);
       document.documentElement.classList.toggle("dark", next === "dark");
       const meta = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null;
-      if (meta) meta.content = next === "dark" ? "#08070a" : "#f8f7f5";
+      if (meta) meta.content = next === "dark" ? "#060a08" : "#f0f5f2";
     } catch { /* ignore */ }
   };
 
@@ -95,7 +95,7 @@ export function SettingsPanel({ userName, onNameChange, isOpen, onClose }: Setti
         {/* Header */}
         <div className="flex items-center justify-between px-4 pt-4 pb-3">
           <div className="flex items-center gap-2">
-            <Settings className="w-4 h-4 text-amber-400/70" />
+            <Settings className="w-4 h-4 text-emerald-400/70" />
             <span className="text-sm font-semibold text-white/80">Configurações</span>
           </div>
           <span className="text-[10px] text-white/25 uppercase tracking-widest">TechMate</span>
@@ -113,8 +113,8 @@ export function SettingsPanel({ userName, onNameChange, isOpen, onClose }: Setti
           >
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center
-                          bg-amber-500/[0.08] border border-amber-500/15">
-                <User className="w-4 h-4 text-amber-400" />
+                          bg-emerald-500/[0.08] border border-emerald-500/15">
+                <User className="w-4 h-4 text-emerald-400" />
               </div>
               <div className="text-left">
                 <p className="text-xs text-white/40 mb-0.5">Nome</p>

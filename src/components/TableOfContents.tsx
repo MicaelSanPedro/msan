@@ -58,9 +58,9 @@ export function TableOfContents() {
           >
             <a
               href={`#${heading.id}`}
-              className={`text-sm transition-all duration-300 block hover:text-amber-300 ${
+              className={`text-sm transition-all duration-300 block hover:text-emerald-300 ${
                 activeId === heading.id
-                  ? "text-amber-400 font-medium translate-x-1"
+                  ? "text-emerald-400 font-medium translate-x-1"
                   : "text-white/40"
               }`}
             >

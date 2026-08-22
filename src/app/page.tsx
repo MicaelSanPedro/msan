@@ -44,7 +44,7 @@ export default function HomePage() {
               Tech blog · ao vivo
             </span>
             <span className="text-white/20 relative z-[3]">·</span>
-            <span className="text-[10px] sm:text-[11px] text-amber-300/80 font-medium relative z-[3]">v2026</span>
+            <span className="text-[10px] sm:text-[11px] text-emerald-300/80 font-medium relative z-[3]">v2026</span>
           </div>
 
           {/* Main title */}
@@ -57,7 +57,7 @@ export default function HomePage() {
               Seu parceiro em{" "}
               <span className="relative inline-block">
                 <span className="text-white/70">tech</span>
-                <span className="absolute -bottom-1 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-400/50 to-transparent" />
+                <span className="absolute -bottom-1 left-0 right-0 h-px bg-gradient-to-r from-transparent via-emerald-400/50 to-transparent" />
               </span>
             </span>
           </h1>
@@ -65,7 +65,7 @@ export default function HomePage() {
           {/* Subtitle */}
           <p className="text-sm sm:text-base lg:text-lg text-white/40 max-w-2xl mx-auto leading-relaxed text-pretty animate-fade-up delay-2 px-2">
             Tutoriais e dicas honestas sobre{" "}
-            <span className="text-amber-300/80 font-medium">Linux</span>
+            <span className="text-emerald-300/80 font-medium">Linux</span>
             {", "}
             <span className="text-sky-300/80 font-medium">Windows</span>
             {", "}
@@ -82,7 +82,7 @@ export default function HomePage() {
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link href="/#categories" className="btn-secondary justify-center">
-              <Sparkles className="w-4 h-4 text-amber-300" />
+              <Sparkles className="w-4 h-4 text-emerald-300" />
               Ver categorias
             </Link>
           </div>
@@ -90,7 +90,7 @@ export default function HomePage() {
           {/* Quick stats */}
           <div className="flex flex-wrap items-center justify-center gap-x-5 sm:gap-x-7 gap-y-2 mt-8 sm:mt-10 text-xs sm:text-sm text-white/35 animate-fade-up delay-4">
             <div className="flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400/60" />
+              <Sparkles className="w-3.5 h-3.5 text-emerald-400/60" />
               <span className="font-mono tabular-nums text-white/60">{allPosts.length}</span>
               <span>artigos</span>
             </div>
@@ -101,7 +101,7 @@ export default function HomePage() {
             </div>
             <div className="w-px h-3.5 bg-white/10" />
             <div className="flex items-center gap-1.5">
-              <Zap className="w-3.5 h-3.5 text-amber-400/60" />
+              <Zap className="w-3.5 h-3.5 text-emerald-400/60" />
               <span>Semanal</span>
             </div>
           </div>
@@ -207,7 +207,7 @@ export default function HomePage() {
             />
             <Link
               href="/blog"
-              className="shrink-0 inline-flex items-center gap-1.5 text-sm font-medium text-amber-300 hover:text-amber-200 transition-colors group self-start sm:self-auto"
+              className="shrink-0 inline-flex items-center gap-1.5 text-sm font-medium text-emerald-300 hover:text-emerald-200 transition-colors group self-start sm:self-auto"
             >
               Ver todos
               <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -238,10 +238,10 @@ export default function HomePage() {
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-5">
-            {/* Card principal — Sobre o autor — liquid glass with amber tint */}
+            {/* Card principal — Sobre o autor — liquid glass with emerald tint */}
             <div className="lg:col-span-3 relative overflow-hidden rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10
                             backdrop-blur-[40px] saturate-[200%] brightness-[105%]
-                            bg-gradient-to-br from-amber-500/[0.08] via-white/[0.03] to-white/[0.01]
+                            bg-gradient-to-br from-emerald-500/[0.08] via-white/[0.03] to-white/[0.01]
                             border border-white/[0.14]
                             shadow-[0_8px_32px_-8px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.08)]">
               {/* Specular top highlight */}
@@ -251,15 +251,15 @@ export default function HomePage() {
               <div className="flex items-start gap-4 mb-6">
                 <div className="shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-2xl
                                 backdrop-blur-[40px] saturate-[180%]
-                                bg-gradient-to-br from-amber-400/30 to-amber-600/20
-                                border border-amber-400/30
+                                bg-gradient-to-br from-emerald-400/30 to-emerald-600/20
+                                border border-emerald-400/30
                                 flex items-center justify-center
-                                shadow-[0_8px_24px_-8px_rgba(249,189,24,0.45),inset_0_1px_0_rgba(255,255,255,0.15)]">
-                  <Terminal className="w-7 h-7 sm:w-8 sm:h-8 text-amber-200" />
+                                shadow-[0_8px_24px_-8px_rgba(52,211,153,0.45),inset_0_1px_0_rgba(255,255,255,0.15)]">
+                  <Terminal className="w-7 h-7 sm:w-8 sm:h-8 text-emerald-200" />
                 </div>
                 <div>
-                  <div className="text-[10px] sm:text-[11px] font-mono text-amber-300/80 uppercase tracking-wider mb-1">
-                    <span className="text-amber-400">❯</span> whoami
+                  <div className="text-[10px] sm:text-[11px] font-mono text-emerald-300/80 uppercase tracking-wider mb-1">
+                    <span className="text-emerald-400">❯</span> whoami
                   </div>
                   <h3 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">
                     Oi, eu sou o Micael
@@ -273,12 +273,12 @@ export default function HomePage() {
                   testando mod, tunando BIOS. Em algum momento eu pensei: <em className="text-white/85 not-italic">por que não compartilhar tudo isso?</em>
                 </p>
                 <p>
-                  E foi assim que nasceu o <span className="text-amber-300 font-semibold">TechMate</span> —
+                  E foi assim que nasceu o <span className="text-emerald-300 font-semibold">TechMate</span> —
                   um blog sem firula, sem &ldquo;10 maneiras de você ser mais produtivo!&rdquo;.
                   Só tutorial honesto, dica que funciona e opinião quando precisa ter.
                 </p>
                 <p>
-                  Aqui você encontra de tudo um pouco: <span className="text-amber-300/80">Linux</span>,
+                  Aqui você encontra de tudo um pouco: <span className="text-emerald-300/80">Linux</span>,
                   {" "}<span className="text-sky-300/80">Windows</span>,
                   {" "}<span className="text-emerald-300/80">dev</span> e
                   {" "}<span className="text-lime-300/80">gaming</span>.
@@ -396,8 +396,8 @@ function SectionHeader({
   return (
     <div className={`mb-8 sm:mb-12 ${className}`}>
       <div className="flex items-center gap-2 mb-2.5 sm:mb-3">
-        <span className="w-5 sm:w-6 h-px bg-gradient-to-r from-amber-400 to-transparent" />
-        <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-amber-300/80 font-medium">
+        <span className="w-5 sm:w-6 h-px bg-gradient-to-r from-emerald-400 to-transparent" />
+        <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.2em] text-emerald-300/80 font-medium">
           {eyebrow}
         </span>
       </div>

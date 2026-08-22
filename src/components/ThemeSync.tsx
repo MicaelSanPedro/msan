@@ -16,11 +16,10 @@ const FONT_SCALES: Record<string, number> = {
 };
 
 const ACCENT_PRESETS: Record<string, { primary: string; glow: string }> = {
-  amber: { primary: "#f59e0b", glow: "rgba(245,158,11,0.45)" },
+  emerald: { primary: "#10b981", glow: "rgba(16,185,129,0.45)" },
   blue: { primary: "#3b82f6", glow: "rgba(59,130,246,0.45)" },
   violet: { primary: "#8b5cf6", glow: "rgba(139,92,246,0.45)" },
   rose: { primary: "#f43f5e", glow: "rgba(244,63,94,0.45)" },
-  emerald: { primary: "#10b981", glow: "rgba(16,185,129,0.45)" },
   cyan: { primary: "#06b6d4", glow: "rgba(6,182,212,0.45)" },
 };
 
@@ -38,11 +37,11 @@ export function ThemeSync() {
         if (theme === "light") {
           root.classList.remove("dark");
           const m = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null;
-          if (m) m.content = "#f8f7f5";
+          if (m) m.content = "#f0f5f2";
         } else {
           root.classList.add("dark");
           const m = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null;
-          if (m) m.content = "#08070a";
+          if (m) m.content = "#060a08";
         }
 
         /* Font size */

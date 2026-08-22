@@ -136,10 +136,10 @@ export function WelcomeScreen() {
             </div>
           ) : displayName ? (
             <div className="welcome-avatar-circle welcome-avatar-circle--fallback">
-              <User className="w-10 h-10 sm:w-12 sm:h-12 text-amber-400" />
+              <User className="w-10 h-10 sm:w-12 sm:h-12 text-emerald-400" />
             </div>
           ) : (
-            <Logo className="w-20 h-20 sm:w-24 sm:h-24" glow variant="amber" />
+            <Logo className="w-20 h-20 sm:w-24 sm:h-24" glow variant="emerald" />
           )}
         </div>
 

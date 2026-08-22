@@ -241,10 +241,10 @@ export function Navbar({ allPosts }: NavbarProps) {
                   ref={indicatorRef}
                   aria-hidden="true"
                   className="absolute top-1 left-0 h-[calc(100%-8px)] rounded-full
-                             bg-gradient-to-b from-amber-500/20 to-amber-500/5
+                             bg-gradient-to-b from-emerald-500/20 to-emerald-500/5
                              backdrop-blur-[40px] saturate-[180%]
-                             border border-amber-400/25
-                             shadow-[0_4px_20px_-8px_rgba(249,189,24,0.45),inset_0_1px_0_rgba(255,255,255,0.15)]
+                             border border-emerald-400/25
+                             shadow-[0_4px_20px_-8px_rgba(52,211,153,0.45),inset_0_1px_0_rgba(255,255,255,0.15)]
                              transition-all duration-300 ease-out pointer-events-none opacity-0"
                   style={{ willChange: "transform, width" }}
                 />
@@ -261,7 +261,7 @@ export function Navbar({ allPosts }: NavbarProps) {
                       }}
                       className={`relative px-4 py-1.5 text-sm font-medium rounded-full transition-colors duration-300 ${
                         active
-                          ? "text-amber-100"
+                          ? "text-emerald-100"
                           : "text-white/55 hover:text-white"
                       }`}
                     >
@@ -333,7 +333,7 @@ export function Navbar({ allPosts }: NavbarProps) {
                              text-white/80 hover:bg-white/[0.05] active:bg-white/[0.06]
                              transition-colors"
                 >
-                  <span className="text-amber-400 mt-0.5 shrink-0">
+                  <span className="text-emerald-400 mt-0.5 shrink-0">
                     <SearchIcon className="w-3.5 h-3.5" />
                   </span>
                   <div className="min-w-0 flex-1">
@@ -404,14 +404,14 @@ export function Navbar({ allPosts }: NavbarProps) {
               <div className="mobile-menu-user flex flex-col items-center">
                 {avatarUrl ? (
                   <div className="w-14 h-14 rounded-full overflow-hidden shrink-0
-                              border-2 border-amber-400/25
-                              shadow-[0_0_20px_rgba(249,189,24,0.2)]">
+                              border-2 border-emerald-400/25
+                              shadow-[0_0_20px_rgba(52,211,153,0.2)]">
                     <img src={avatarUrl} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                   </div>
                 ) : (
                   <div className="flex items-center justify-center w-12 h-12 rounded-full shrink-0
-                              bg-gradient-to-b from-amber-400/20 to-amber-500/10 border border-amber-400/20">
-                    <User className="w-5 h-5 text-amber-400" />
+                              bg-gradient-to-b from-emerald-400/20 to-emerald-500/10 border border-emerald-400/20">
+                    <User className="w-5 h-5 text-emerald-400" />
                   </div>
                 )}
                 <div className="mt-3 text-center">
