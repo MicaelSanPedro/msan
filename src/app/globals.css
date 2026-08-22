@@ -36,7 +36,11 @@
   --glass-saturate: 220%;
   --glass-contrast: 105%;
   --glass-border-opacity: 0.35;
-  --glass-transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  --glass-transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 
   /* Volumetric shadow system */
   --glass-volumetric:
@@ -3677,13 +3681,178 @@ button, a, [role="button"] {
   touch-action: manipulation;
 }
 
-/* Slightly reduce ambient orb blur on mobile to save GPU */
+/* ═══════════════════════════════════════════════════
+   MOBILE PERFORMANCE — Aggressive GPU savings ═════════════════════════════════════════════════════ */
 @media (max-width: 640px) {
+  /* ── 1. Slash blur intensity (biggest GPU saver) ── */
+  :root {
+    --glass-blur: 10px;
+    --glass-saturate: 140%;
+    --glass-volumetric:
+      inset 0 1px 2px 0 rgba(255, 255, 255, 0.5),
+      0 8px 24px -8px rgba(0, 0, 0, 0.3);
+    --glass-volumetric-hover:
+      inset 0 1px 2px 0 rgba(255, 255, 255, 0.6),
+      0 12px 32px -8px rgba(0, 0, 0, 0.35);
+  }
+
+  /* ── 2. Kill the refraction-pulse animation (animates backdrop-filter) ── */
+  .liquid-glass,
+  .liquid-glass-card,
+  .liquid-glass-pill,
+  .liquid-glass-nav,
+  .glass-card,
+  .glass-nav {
+    animation: none !important;
+  }
+
+  /* ── 3. Strip decorative pseudo-elements from glass cards/pills ── */
+  .liquid-glass::before,
+  .liquid-glass::after,
+  .liquid-glass-card::before,
+  .liquid-glass-card::after,
+  .liquid-glass-pill::before,
+  .liquid-glass-pill::after,
+  .liquid-glass-panel::before,
+  .liquid-glass-panel::after,
+  .liquid-glass-input::before,
+  .liquid-glass-input::after,
+  .glass-card::before,
+  .glass-card::after,
+  .glass-nav::before,
+  .glass-nav::after,
+  .glass-input::before,
+  .glass-input::after,
+  .liquid-glass-mobile-menu::before,
+  .liquid-glass-mobile-menu::after {
+    display: none !important;
+  }
+
+  /* ── 4. Remove SVG refraction filter ── */
+  .liquid-refraction {
+    filter: none !important;
+  }
+
+  /* ── 5. Remove prismatic/conic borders ── */
+  .prismatic-border::before,
+  .liquid-glass-prismatic::before,
+  .conic-border::before {
+    display: none !important;
+  }
+
+  /* ── 6. Hide decorative overlays ── */
+  .cinema-grain,
+  .light-leak,
+  .bokeh-canvas {
+    display: none !important;
+  }
+
+  /* ── 7. Simplify button pseudo-elements ── */
+  .btn-primary::before,
+  .btn-primary::after,
+  .btn-secondary::before,
+  .btn-secondary::after,
+  .searchbar-input-wrap::before,
+  .searchbar-input-wrap::after,
+  .mobile-search-bar::before,
+  .mobile-search-bar::after {
+    display: none !important;
+  }
+  .btn-primary,
+  .btn-secondary {
+    backdrop-filter: blur(8px);
+  }
+
+  /* ── 8. Reduce specific heavy blurs ── */
+  .settings-panel {
+    backdrop-filter: blur(16px) !important;
+  }
+  .settings-input {
+    backdrop-filter: blur(6px) !important;
+  }
+  .mobile-search-results {
+    backdrop-filter: blur(16px) !important;
+  }
+  .mobile-menu-content {
+    backdrop-filter: blur(20px) !important;
+  }
+  .mobile-menu-close {
+    backdrop-filter: blur(8px) !important;
+  }
+  .searchbar-dropdown {
+    backdrop-filter: blur(12px) !important;
+  }
+  .welcome-name-input {
+    backdrop-filter: blur(16px) !important;
+  }
+  .welcome-photo-btn--skip {
+    backdrop-filter: blur(12px) !important;
+  }
+  .category-card {
+    backdrop-filter: blur(10px) !important;
+  }
+
+  /* ── 9. Remove blur from entry animations ── */
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes welcome-logo-in {
+    from { opacity: 0; transform: scale(0.9) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  @keyframes welcome-text-in {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes welcome-element-out {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0; transform: scale(0.96); }
+  }
+  @keyframes welcome-fade-out {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+  @keyframes page-enter {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── 10. Toggle slider optimization ── */
+  .toggle-track {
+    transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1),
+      background 280ms cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 280ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .toggle-v3,
+  .toggle-v1,
+  .toggle-v2 {
+    backdrop-filter: blur(6px) saturate(140%);
+    transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1),
+      background 280ms cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 280ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* ── 11. Reduce ambient effects ── */
   .ambient-orb {
-    filter: blur(80px);
+    filter: blur(60px);
   }
   .noise-overlay {
-    opacity: 0.025;
+    display: none !important;
+  }
+
+  /* ── 12. Kill continuous non-essential animations ── */
+  .shimmer-text {
+    animation: none !important;
+    -webkit-text-fill-color: var(--foreground);
+  }
+  .card-shine::after {
+    display: none !important;
+  }
+  .spotlight::before {
+    display: none !important;
   }
 }
 

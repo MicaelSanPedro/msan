@@ -659,7 +659,7 @@ export default function SettingsPage() {
                   : "Ative para reduzir animacoes e efeitos visuais"}
               />
             </div>
-            <ToggleSlider checked={reducedMotion} onChange={handleReducedMotionToggle} variant="v2" aria-label="Animações reduzidas" />
+            <ToggleSlider checked={reducedMotion} onChange={handleReducedMotionToggle} variant="v3" aria-label="Animações reduzidas" />
           </SettingRow>
 
           <Divider />
@@ -680,7 +680,7 @@ export default function SettingsPage() {
                   : "Ative para reduzir espaçamentos e mostrar mais conteúdo"}
               />
             </div>
-            <ToggleSlider checked={compactMode} onChange={handleCompactModeToggle} variant="v1" aria-label="Modo compacto" />
+            <ToggleSlider checked={compactMode} onChange={handleCompactModeToggle} variant="v3" aria-label="Modo compacto" />
           </SettingRow>
 
           <Divider />
