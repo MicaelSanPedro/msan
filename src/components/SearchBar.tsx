@@ -120,19 +120,19 @@ export function SearchBar({ allPosts, alwaysOpen = false }: SearchBarProps) {
       <button
         onClick={() => setIsOpen(true)}
         className="flex items-center gap-2 px-3 py-2 rounded-xl relative overflow-hidden
-                   backdrop-blur-[40px] saturate-[180%] brightness-[105%]
-                   bg-gradient-to-b from-white/[0.08] to-white/[0.02]
-                   border border-white/[0.14]
-                   shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_4px_16px_-4px_rgba(0,0,0,0.3)]
-                   text-white/40 hover:text-white/60 hover:border-white/[0.22]
-                   active:scale-95 transition-all duration-200 text-sm"
+                   backdrop-blur-[24px] saturate-[200%] contrast-[105%]
+                   bg-gradient-to-b from-white/[0.18] to-white/[0.05]
+                   border border-white/30
+                   shadow-[inset_0_1px_2px_0_rgba(255,255,255,0.6),inset_0_-1px_2px_0_rgba(0,0,0,0.1),0_20px_50px_rgba(0,0,0,0.25)]
+                   text-white/55 hover:text-white/70 hover:border-white/45
+                   active:scale-95 transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)] text-sm"
         aria-label="Buscar artigos"
         type="button"
       >
-        <span className="absolute top-0 left-[15%] right-[15%] h-px bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none" />
+        <span className="absolute top-0 left-[15%] right-[15%] h-px bg-gradient-to-r from-transparent via-white/60 to-transparent pointer-events-none" />
         <Search className="w-4 h-4" />
         <span className="hidden lg:inline">Buscar...</span>
-        <kbd className="hidden lg:inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-white/[0.06] text-[10px] text-white/25 font-mono">
+        <kbd className="hidden lg:inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-white/[0.06] text-[10px] text-white/40 font-mono">
           Ctrl K
         </kbd>
       </button>
@@ -160,7 +160,7 @@ export function SearchBar({ allPosts, alwaysOpen = false }: SearchBarProps) {
           type="button"
           aria-label="Fechar busca"
         >
-          <X className="w-3.5 h-3.5 text-white/40" />
+          <X className="w-3.5 h-3.5 text-white/55" />
         </button>
       </div>
 
@@ -168,7 +168,7 @@ export function SearchBar({ allPosts, alwaysOpen = false }: SearchBarProps) {
       <div className="searchbar-dropdown">
         {results.length > 0 && query.trim().length >= 2 && (
           <>
-            <div className="absolute top-0 left-[5%] right-[5%] h-px bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none z-[3]" />
+            <div className="absolute top-0 left-[5%] right-[5%] h-px bg-gradient-to-r from-transparent via-white/60 to-transparent pointer-events-none z-[3]" />
             <div className="p-1 max-h-[60vh] overflow-y-auto">
               {results.map((post, i) => (
                 <button
@@ -184,7 +184,7 @@ export function SearchBar({ allPosts, alwaysOpen = false }: SearchBarProps) {
                     <p className="text-sm text-white font-medium truncate">
                       {post.frontmatter.title}
                     </p>
-                    <p className="text-xs text-white/30 truncate mt-0.5">
+                    <p className="text-xs text-white/40 truncate mt-0.5">
                       {post.frontmatter.category} · {post.frontmatter.readTime} de leitura
                     </p>
                   </div>
@@ -192,7 +192,7 @@ export function SearchBar({ allPosts, alwaysOpen = false }: SearchBarProps) {
               ))}
             </div>
             <div className="px-3 py-2 border-t border-white/[0.04]">
-              <p className="text-[11px] text-white/20">
+              <p className="text-[11px] text-white/30">
                 {results.length} resultado{results.length !== 1 ? "s" : ""} · Enter para abrir
               </p>
             </div>
@@ -201,7 +201,7 @@ export function SearchBar({ allPosts, alwaysOpen = false }: SearchBarProps) {
 
         {query.trim().length >= 2 && results.length === 0 && (
           <div className="px-4 py-8 text-center">
-            <p className="text-sm text-white/30">
+            <p className="text-sm text-white/40">
               Nenhum resultado para &quot;{query}&quot;
             </p>
           </div>

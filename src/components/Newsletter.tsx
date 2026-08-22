@@ -19,9 +19,9 @@ export function Newsletter() {
 
   return (
     <div className="relative overflow-hidden rounded-3xl p-8 sm:p-10
-                    backdrop-blur-[40px] saturate-[200%] brightness-[105%]
-                    bg-gradient-to-br from-emerald-500/[0.08] via-white/[0.03] to-white/[0.01]
-                    border border-white/[0.14]
+                    backdrop-blur-[24px] saturate-[200%] contrast-[105%]
+                    bg-gradient-to-br from-emerald-500/[0.08] via-white/[0.03] to-white/[0.05]
+                    border border-white/30
                     shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)]">
       {/* Specular highlight */}
       <div className="absolute top-0 left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none" />

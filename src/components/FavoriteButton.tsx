@@ -50,10 +50,10 @@ export function FavoriteButton({ slug, className = "", size = "sm" }: FavoriteBu
         size === "sm"
           ? "w-7 h-7 sm:w-8 sm:h-8 rounded-lg"
           : "w-9 h-9 rounded-xl"
-      } backdrop-blur-[40px] saturate-[180%] ${
+      } backdrop-blur-[24px] saturate-[200%] ${
         fav
           ? "bg-gradient-to-b from-rose-500/25 to-rose-600/10 border border-rose-400/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_4px_12px_-4px_rgba(244,63,94,0.3)]"
-          : "bg-gradient-to-b from-white/[0.08] to-white/[0.02] border border-white/[0.12] shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_4px_12px_-4px_rgba(0,0,0,0.4)]"
+          : "bg-gradient-to-b from-white/[0.18] to-white/[0.05] border border-white/30 shadow-[inset_0_1px_2px_0_rgba(255,255,255,0.6),inset_0_-1px_2px_0_rgba(0,0,0,0.1),0_20px_50px_rgba(0,0,0,0.25),0_4px_12px_-4px_rgba(0,0,0,0.4)]"
       } hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
       title={fav ? "Remover dos favoritos" : "Adicionar aos favoritos"}
     >

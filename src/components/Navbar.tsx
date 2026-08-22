@@ -232,19 +232,19 @@ export function Navbar({ allPosts }: NavbarProps) {
               <div
                 ref={navRef}
                 className="relative flex items-center gap-1 p-1 rounded-full
-                           backdrop-blur-[40px] saturate-[200%] brightness-[105%]
-                           bg-gradient-to-b from-white/[0.08] to-white/[0.02]
-                           border border-white/[0.14]
-                           shadow-[0_4px_16px_-4px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.1)]"
+                           backdrop-blur-[24px] saturate-[200%] contrast-[105%]
+                           bg-gradient-to-b from-white/[0.18] to-white/[0.05]
+                           border border-white/30
+                           shadow-[inset_0_1px_2px_0_rgba(255,255,255,0.6),inset_0_-1px_2px_0_rgba(0,0,0,0.1),0_20px_50px_rgba(0,0,0,0.25)]"
               >
                 <span
                   ref={indicatorRef}
                   aria-hidden="true"
                   className="absolute top-1 left-0 h-[calc(100%-8px)] rounded-full
                              bg-gradient-to-b from-emerald-500/20 to-emerald-500/5
-                             backdrop-blur-[40px] saturate-[180%]
+                             backdrop-blur-[24px] saturate-[200%] contrast-[105%]
                              border border-emerald-400/25
-                             shadow-[0_4px_20px_-8px_rgba(52,211,153,0.45),inset_0_1px_0_rgba(255,255,255,0.15)]
+                             shadow-[0_4px_20px_-8px_rgba(52,211,153,0.45),inset_0_1px_2px_0_rgba(255,255,255,0.6),inset_0_-1px_2px_0_rgba(0,0,0,0.1)]
                              transition-all duration-300 ease-out pointer-events-none opacity-0"
                   style={{ willChange: "transform, width" }}
                 />
@@ -262,7 +262,7 @@ export function Navbar({ allPosts }: NavbarProps) {
                       className={`relative px-4 py-1.5 text-sm font-medium rounded-full transition-colors duration-300 ${
                         active
                           ? "text-emerald-100"
-                          : "text-white/55 hover:text-white"
+                          : "text-white/70 hover:text-white"
                       }`}
                     >
                       <span className="relative z-10">{link.label}</span>
@@ -298,7 +298,7 @@ export function Navbar({ allPosts }: NavbarProps) {
               onFocus={() => setMobileSearchActive(true)}
               onBlur={() => { if (!mobileQuery) setMobileSearchActive(false); }}
               placeholder="Pesquisar"
-              className="w-[70px] min-w-0 bg-transparent text-xs text-white placeholder:text-white/30 outline-none"
+              className="w-[70px] min-w-0 bg-transparent text-xs text-white placeholder:text-white/40 outline-none"
             />
           </div>
 
@@ -331,7 +331,7 @@ export function Navbar({ allPosts }: NavbarProps) {
                   onClick={() => handleMobileSearchSelect(post.slug)}
                   className="flex items-start gap-3 px-3 py-2.5 rounded-lg
                              text-white/80 hover:bg-white/[0.05] active:bg-white/[0.06]
-                             transition-colors"
+                             transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
                 >
                   <span className="text-emerald-400 mt-0.5 shrink-0">
                     <SearchIcon className="w-3.5 h-3.5" />
@@ -340,7 +340,7 @@ export function Navbar({ allPosts }: NavbarProps) {
                     <p className="text-sm text-white font-medium truncate">
                       {post.frontmatter.title}
                     </p>
-                    <p className="text-xs text-white/30 truncate mt-0.5">
+                    <p className="text-xs text-white/40 truncate mt-0.5">
                       {post.frontmatter.category} &middot; {post.frontmatter.readTime} de leitura
                     </p>
                   </div>
@@ -348,7 +348,7 @@ export function Navbar({ allPosts }: NavbarProps) {
               ))}
             </div>
             <div className="px-3.5 py-2 border-t border-white/[0.04]">
-              <p className="text-[11px] text-white/20">
+              <p className="text-[11px] text-white/30">
                 {mobileResults.length} resultado{mobileResults.length !== 1 ? "s" : ""}
               </p>
             </div>
@@ -361,7 +361,7 @@ export function Navbar({ allPosts }: NavbarProps) {
         <div className="md:hidden fixed inset-x-0 bottom-24 z-[55] px-4 animate-fade-in">
           <div className="mobile-search-results">
             <div className="px-4 py-6 text-center">
-              <p className="text-sm text-white/30">
+              <p className="text-sm text-white/40">
                 Nenhum resultado para &quot;{mobileQuery}&quot;
               </p>
             </div>

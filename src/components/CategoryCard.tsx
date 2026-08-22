@@ -101,16 +101,16 @@ export function CategoryCard({ name, count, size = "md", className = "" }: Categ
   const cardStyle: React.CSSProperties = {
     background: `
       radial-gradient(circle at 100% 0%, rgba(${theme.rgb}, 0.18) 0%, transparent 50%),
-      linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.025) 50%, rgba(255,255,255,0.008) 100%)
+      linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.05) 100%)
     `,
-    borderColor: `rgba(${theme.rgb}, 0.18)`,
+    borderColor: `rgba(${theme.rgb}, 0.3)`,
     boxShadow: `
-      0 8px 32px -8px rgba(0,0,0,0.35),
-      inset 0 1px 0 rgba(255,255,255,0.08),
-      inset 0 1px 0 rgba(255,255,255,0.04)
+      inset 0 1px 2px 0 rgba(255,255,255,0.6),
+      inset 0 -1px 2px 0 rgba(0,0,0,0.1),
+      0 20px 50px rgba(0,0,0,0.25)
     `,
-    backdropFilter: 'blur(40px) saturate(200%) brightness(105%)',
-    WebkitBackdropFilter: 'blur(40px) saturate(200%) brightness(105%)',
+    backdropFilter: 'blur(24px) saturate(200%) contrast(105%)',
+    WebkitBackdropFilter: 'blur(24px) saturate(200%) contrast(105%)',
   };
 
   return (
@@ -119,11 +119,11 @@ export function CategoryCard({ name, count, size = "md", className = "" }: Categ
       href={`/blog?category=${encodeURIComponent(name)}`}
       onMouseMove={handleMouseMove}
       style={cardStyle}
-      className={`category-card group relative block overflow-hidden rounded-2xl border
-                  transition-all duration-500 ease-out
-                  hover:-translate-y-1
-                  active:scale-[0.99]
-                  hover:border-white/[0.22]
+      className={`category-card group relative block overflow-hidden rounded-3xl border
+                  transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)]
+                  hover:-translate-y-1.5 hover:scale-[1.015]
+                  active:scale-[1.005]
+                  hover:border-white/[0.45]
                   ${isLg
                     ? "min-h-[260px] sm:min-h-[300px] p-6 sm:p-8"
                     : "min-h-[180px] p-5 sm:p-6"}
@@ -133,14 +133,14 @@ export function CategoryCard({ name, count, size = "md", className = "" }: Categ
       <div
         className="absolute top-0 left-[8%] right-[8%] h-px pointer-events-none z-[2]"
         style={{
-          background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.35) 20%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0.35) 80%, transparent 100%)',
+          background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.45) 20%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0.45) 80%, transparent 100%)',
         }}
       />
       {/* ─── Inner refraction glow ─── */}
       <div
         className="absolute inset-0 pointer-events-none z-[1]"
         style={{
-          background: 'radial-gradient(ellipse at 25% 12%, rgba(255,255,255,0.05) 0%, transparent 45%)',
+          background: 'radial-gradient(ellipse at 25% 12%, rgba(255,255,255,0.10) 0%, transparent 45%)',
         }}
       />
       {/* ─── Hover spotlight (liquid glass refraction) ─── */}
@@ -179,16 +179,16 @@ export function CategoryCard({ name, count, size = "md", className = "" }: Categ
         <div className="flex items-start justify-between mb-6 sm:mb-8">
           {/* Icon (NO flex shrink, FIXED dimensions) */}
           <div
-            className={`flex items-center justify-center rounded-xl border
+            className={`flex items-center justify-center rounded-2xl border
 
                         ${isLg ? "w-14 h-14" : "w-12 h-12"}
                         group-hover:scale-110 group-hover:-rotate-3
-                        transition-transform duration-500 backdrop-blur-[40px] saturate-[180%]`}
+                        transition-transform duration-500 backdrop-blur-[24px] saturate-[200%] contrast-[105%]`}
             style={{
               color: theme.hex,
-              background: `rgba(${theme.rgb}, 0.08)`,
-              borderColor: `rgba(${theme.rgb}, 0.25)`,
-              boxShadow: `0 8px 24px -8px rgba(${theme.rgb}, 0.35), inset 0 1px 0 rgba(255,255,255,0.1)`,
+              background: `rgba(${theme.rgb}, 0.12)`,
+              borderColor: `rgba(${theme.rgb}, 0.3)`,
+              boxShadow: `inset 0 1px 2px 0 rgba(255,255,255,0.6), inset 0 -1px 2px 0 rgba(0,0,0,0.1), 0 20px 50px rgba(0,0,0,0.25)`,
             }}
           >
             <div className={isLg ? "w-7 h-7" : "w-6 h-6"}>
@@ -198,16 +198,16 @@ export function CategoryCard({ name, count, size = "md", className = "" }: Categ
 
           {/* Arrow — liquid glass mini pill */}
           <div
-            className="flex items-center justify-center w-9 h-9 rounded-xl
+            className="flex items-center justify-center w-9 h-9 rounded-2xl
                        border opacity-60 group-hover:opacity-100
                        group-hover:translate-x-0.5 group-hover:-translate-y-0.5
-                       backdrop-blur-[40px] saturate-[180%]
+                       backdrop-blur-[24px] saturate-[200%] contrast-[105%]
                        transition-all duration-300"
             style={{
               color: theme.hex,
-              background: `rgba(${theme.rgb}, 0.08)`,
-              borderColor: `rgba(${theme.rgb}, 0.18)`,
-              boxShadow: `inset 0 1px 0 rgba(255,255,255,0.1)`,
+              background: `rgba(${theme.rgb}, 0.12)`,
+              borderColor: `rgba(${theme.rgb}, 0.3)`,
+              boxShadow: `inset 0 1px 2px 0 rgba(255,255,255,0.6), inset 0 -1px 2px 0 rgba(0,0,0,0.1), 0 20px 50px rgba(0,0,0,0.25)`,
             }}
           >
             <ArrowUpRight className="w-4 h-4" />
@@ -220,9 +220,6 @@ export function CategoryCard({ name, count, size = "md", className = "" }: Categ
             className={`font-extrabold text-white leading-[1.1] tracking-tight mb-2
                         ${isLg ? "text-3xl sm:text-4xl" : "text-2xl"}
                         transition-colors duration-300`}
-            style={{
-              // No hover, escurece e troca cor — feito via JS-less de CSS var
-            }}
           >
             <span className="group-hover:hidden">{name}</span>
             <span
@@ -234,19 +231,19 @@ export function CategoryCard({ name, count, size = "md", className = "" }: Categ
           </h3>
 
           {isLg && (
-            <p className="text-sm text-white/50 mb-4">
+            <p className="text-sm text-white/65 mb-4">
               {theme.tagline}
             </p>
           )}
 
           <div
             className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-[11px] font-mono font-semibold uppercase tracking-wider
-                       backdrop-blur-[40px] saturate-[180%]"
+                       backdrop-blur-[24px] saturate-[200%] contrast-[105%]"
             style={{
               color: theme.hex,
-              background: `rgba(${theme.rgb}, 0.08)`,
-              border: `1px solid rgba(${theme.rgb}, 0.2)`,
-              boxShadow: `inset 0 1px 0 rgba(255,255,255,0.1)`,
+              background: `rgba(${theme.rgb}, 0.12)`,
+              border: `1px solid rgba(${theme.rgb}, 0.3)`,
+              boxShadow: `inset 0 1px 2px 0 rgba(255,255,255,0.6), inset 0 -1px 2px 0 rgba(0,0,0,0.1), 0 20px 50px rgba(0,0,0,0.25)`,
             }}
           >
             <span
@@ -266,9 +263,9 @@ export function CategoryCard({ name, count, size = "md", className = "" }: Categ
 
       {/* ─── Border glow on hover (liquid glass) ─── */}
       <div
-        className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+        className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
         style={{
-          boxShadow: `0 0 0 1px rgba(${theme.rgb}, 0.3) inset, 0 12px 40px -10px rgba(${theme.rgb}, 0.2), inset 0 1px 0 rgba(255,255,255,0.12)`,
+          boxShadow: `0 0 0 1px rgba(${theme.rgb}, 0.3) inset, 0 30px 60px -10px rgba(${theme.rgb}, 0.2), inset 0 1px 2px 0 rgba(255,255,255,0.6), inset 0 -1px 2px 0 rgba(0,0,0,0.1)`,
         }}
       />
     </Link>

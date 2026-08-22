@@ -35,20 +35,20 @@ export function FeaturedPost({ post, variant = "hero" }: FeaturedPostProps) {
         <article
           ref={cardRef}
           onMouseMove={handleMouseMove}
-          className="spotlight card-shine relative rounded-2xl overflow-hidden h-full flex flex-col
-                     transition-all duration-500 ease-out
-                     active:scale-[0.99]
-                     hover:border-white/[0.22] hover:-translate-y-1
-                     backdrop-blur-[40px] saturate-[200%] brightness-[105%]
-                     bg-gradient-to-br from-white/[0.08] to-white/[0.015]
-                     border border-white/[0.15]
-                     shadow-[0_8px_32px_-8px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.08)]
-                     hover:shadow-[0_12px_40px_-8px_rgba(0,0,0,0.45),0_24px_60px_-20px_rgba(52,211,153,0.18),inset_0_1px_0_rgba(255,255,255,0.14)]"
+          className="spotlight card-shine relative rounded-3xl overflow-hidden h-full flex flex-col
+                     transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)]
+                     active:scale-[1.005]
+                     hover:border-white/30 hover:-translate-y-1.5 hover:scale-[1.015]
+                     backdrop-blur-[24px] saturate-[200%] contrast-[105%]
+                     bg-gradient-to-br from-white/[0.18] to-white/[0.05]
+                     border border-white/30
+                     shadow-[inset_0_1px_2px_0_rgba(255,255,255,0.6),inset_0_-1px_2px_0_rgba(0,0,0,0.1),0_20px_50px_rgba(0,0,0,0.25)]
+                     hover:shadow-[inset_0_1px_2px_0_rgba(255,255,255,0.6),inset_0_-1px_2px_0_rgba(0,0,0,0.1),0_30px_60px_rgba(0,0,0,0.35),0_24px_60px_-20px_rgba(52,211,153,0.18),0_0_0_1px_rgba(52,211,153,0.15)_inset]"
         >
           {/* Specular top highlight */}
-          <div className="absolute top-0 left-[8%] right-[8%] h-px bg-gradient-to-r from-transparent via-white/40 to-transparent z-[2] pointer-events-none" />
+          <div className="absolute top-0 left-[8%] right-[8%] h-px bg-gradient-to-r from-transparent via-white/50 to-transparent z-[2] pointer-events-none" />
           {/* Inner refraction glow */}
-          <div className="absolute inset-0 rounded-2xl bg-[radial-gradient(ellipse_at_25%_12%,rgba(255,255,255,0.05)_0%,transparent_45%)] pointer-events-none z-[1]" />
+          <div className="absolute inset-0 rounded-3xl bg-[radial-gradient(ellipse_at_25%_12%,rgba(255,255,255,0.10)_0%,transparent_45%)] pointer-events-none z-[1]" />
           {/* Background image */}
           <div className="relative h-40 sm:h-48 overflow-hidden">
             {hasImage ? (
@@ -62,7 +62,7 @@ export function FeaturedPost({ post, variant = "hero" }: FeaturedPostProps) {
             ) : (
               <div className="w-full h-full bg-[radial-gradient(ellipse_at_top,_rgba(52,211,153,0.3),_transparent_60%)]" />
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#080a09] via-[#080a09]/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#060a08] via-[#060a08]/40 to-transparent" />
             <div className="absolute top-3 left-3">
               <CategoryBadge category={frontmatter.category} />
             </div>
@@ -73,12 +73,12 @@ export function FeaturedPost({ post, variant = "hero" }: FeaturedPostProps) {
                            group-hover:text-emerald-100 transition-colors">
               {frontmatter.title}
             </h3>
-            <p className="text-sm text-white/45 leading-relaxed line-clamp-2 flex-1">
+            <p className="text-sm text-white/60 leading-relaxed line-clamp-2 flex-1">
               {frontmatter.excerpt}
             </p>
             <div className="flex items-center justify-between pt-3 border-t border-white/[0.06] relative">
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
-              <div className="flex items-center gap-3 text-[11px] text-white/35 font-mono">
+              <div className="flex items-center gap-3 text-[11px] text-white/45 font-mono">
                 <span className="inline-flex items-center gap-1">
                   <Clock className="w-3 h-3" />
                   {frontmatter.readTime}
@@ -101,11 +101,11 @@ export function FeaturedPost({ post, variant = "hero" }: FeaturedPostProps) {
       <article
         ref={cardRef}
         onMouseMove={handleMouseMove}
-        className="spotlight card-shine relative rounded-2xl sm:rounded-3xl overflow-hidden border border-white/[0.12]
-                   transition-all duration-500 ease-out h-full min-h-[360px] sm:min-h-[440px] lg:min-h-[480px]
-                   active:scale-[0.99]
-                   hover:border-white/[0.25]
-                   hover:shadow-[0_40px_100px_-20px_rgba(52,211,153,0.3),inset_0_1px_0_rgba(255,255,255,0.1)]"
+        className="spotlight card-shine relative rounded-3xl sm:rounded-[32px] overflow-hidden border border-white/30
+                   transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)] h-full min-h-[360px] sm:min-h-[440px] lg:min-h-[480px]
+                   active:scale-[1.005]
+                   hover:border-white/45
+                   hover:shadow-[inset_0_1px_2px_0_rgba(255,255,255,0.6),inset_0_-1px_2px_0_rgba(0,0,0,0.1),0_40px_100px_-20px_rgba(52,211,153,0.3),0_0_0_1px_rgba(52,211,153,0.15)_inset]"
       >
         {/* Background image */}
         {hasImage && (
@@ -123,7 +123,7 @@ export function FeaturedPost({ post, variant = "hero" }: FeaturedPostProps) {
         <div className="absolute inset-0 bg-gradient-to-t from-[#060a08] via-[#060a08]/60 to-[#060a08]/40 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-tr from-emerald-900/15 via-transparent to-rose-900/10 pointer-events-none" />
         {/* Specular highlight at top */}
-        <div className="absolute top-0 left-[5%] right-[5%] h-px bg-gradient-to-r from-transparent via-white/25 to-transparent z-[3] pointer-events-none" />
+        <div className="absolute top-0 left-[5%] right-[5%] h-px bg-gradient-to-r from-transparent via-white/30 to-transparent z-[3] pointer-events-none" />
 
         <div className="relative z-[2] p-5 sm:p-8 lg:p-10 flex flex-col justify-end h-full">
           <div className="flex items-center gap-3 mb-3 sm:mb-4">
@@ -135,12 +135,12 @@ export function FeaturedPost({ post, variant = "hero" }: FeaturedPostProps) {
             {frontmatter.title}
           </h2>
 
-          <p className="text-sm sm:text-base text-white/75 leading-relaxed mb-5 sm:mb-6 max-w-2xl line-clamp-2 sm:line-clamp-3 text-pretty">
+          <p className="text-sm sm:text-base text-white/80 leading-relaxed mb-5 sm:mb-6 max-w-2xl line-clamp-2 sm:line-clamp-3 text-pretty">
             {frontmatter.excerpt}
           </p>
 
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
-            <div className="flex items-center gap-3 sm:gap-4 text-xs text-white/60 font-mono">
+            <div className="flex items-center gap-3 sm:gap-4 text-xs text-white/65 font-mono">
               <div className="flex items-center gap-1.5">
                 <Calendar className="w-3.5 h-3.5" />
                 <time dateTime={frontmatter.date}>

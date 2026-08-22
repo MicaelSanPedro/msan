@@ -100,7 +100,7 @@ export default async function PostPage({ params }: PostPageProps) {
           {/* Back link */}
           <Link
             href="/blog"
-            className="inline-flex items-center gap-2 text-sm text-white/45 hover:text-emerald-300 transition-colors mb-6 sm:mb-10 group"
+            className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-emerald-300 transition-colors mb-6 sm:mb-10 group"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
             Voltar ao Blog
@@ -111,7 +111,7 @@ export default async function PostPage({ params }: PostPageProps) {
             <div className="flex items-center gap-2 sm:gap-3 mb-5 sm:mb-6 flex-wrap">
               <CategoryBadge category={frontmatter.category} />
               <span className="text-xs text-white/20">·</span>
-              <span className="text-xs text-white/45 font-mono">
+              <span className="text-xs text-white/60 font-mono">
                 {getRelativeDate(frontmatter.date)}
               </span>
             </div>
@@ -120,7 +120,7 @@ export default async function PostPage({ params }: PostPageProps) {
               {frontmatter.title}
             </h1>
 
-            <p className="text-base sm:text-lg lg:text-xl text-white/55 leading-relaxed mb-7 sm:mb-9 text-pretty">
+            <p className="text-base sm:text-lg lg:text-xl text-white/70 leading-relaxed mb-7 sm:mb-9 text-pretty">
               {frontmatter.excerpt}
             </p>
 
@@ -134,13 +134,13 @@ export default async function PostPage({ params }: PostPageProps) {
                   <span className="font-medium text-white/75 text-sm">TechMate</span>
                 </div>
                 <div className="w-px h-4 bg-white/10" />
-                <div className="flex items-center gap-1.5 text-xs text-white/40 font-mono">
+                <div className="flex items-center gap-1.5 text-xs text-white/70 font-mono">
                   <Calendar className="w-3.5 h-3.5" />
                   <time dateTime={frontmatter.date}>
                     {formatDate(frontmatter.date)}
                   </time>
                 </div>
-                <div className="flex items-center gap-1.5 text-xs text-white/40 font-mono">
+                <div className="flex items-center gap-1.5 text-xs text-white/70 font-mono">
                   <Clock className="w-3.5 h-3.5" />
                   <span>{frontmatter.readTime}</span>
                 </div>

@@ -17,7 +17,7 @@ export default function SearchPage() {
           <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">
             Encontre seu próximo artigo
           </h1>
-          <p className="text-white/40">
+          <p className="text-white/70">
             Busque por título, categoria, tag ou assunto
           </p>
         </div>

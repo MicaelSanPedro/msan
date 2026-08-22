@@ -44,7 +44,7 @@ export function TableOfContents() {
 
   return (
     <nav className="hidden lg:block sticky top-32 h-fit max-w-[240px] ml-auto p-6 rounded-2xl 
-                    backdrop-blur-xl bg-white/[0.02] border border-white/[0.08]
+                    backdrop-blur-xl bg-white/[0.02] border border-white/30
                     shadow-[0_8px_32px_-8px_rgba(0,0,0,0.3)]">
       <div className="flex items-center gap-2 mb-4 text-white/40 uppercase tracking-widest text-[10px] font-bold">
         <ScrollLink className="w-3 h-3" />

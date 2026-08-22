@@ -176,7 +176,7 @@ export function Comments({ slug }: CommentsProps) {
       </div>
 
       <div
-        className="rounded-2xl overflow-hidden border border-white/[0.08] bg-white/[0.02]"
+        className="rounded-2xl overflow-hidden border border-white/30 bg-white/[0.02]"
         style={{ minHeight: "120px" }}
       >
         <div ref={containerRef} />

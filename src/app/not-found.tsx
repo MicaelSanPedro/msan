@@ -168,7 +168,7 @@ export default function NotFound() {
             </p>
             <Ghost className="w-5 h-5 text-emerald-400/60 animate-float-y" style={{ animationDelay: "1s" }} />
           </div>
-          <p className="text-white/50 text-base leading-relaxed max-w-sm mx-auto">
+          <p className="text-white/65 text-base leading-relaxed max-w-sm mx-auto">
             Ops! Essa página se perdeu no{" "}
             <span className="text-emerald-400/70 font-semibold">ciberespacio</span>.
             Talvez ela tenha ficado presa entre os bytes.
@@ -195,9 +195,9 @@ export default function NotFound() {
           <Link
             href="/blog"
             className="group flex items-center gap-2.5 px-6 py-3 rounded-2xl
-                       backdrop-blur-[40px] saturate-[200%]
-                       bg-gradient-to-b from-white/[0.08] to-white/[0.02]
-                       border border-white/[0.12]
+                       backdrop-blur-[24px] saturate-[200%]
+                       bg-gradient-to-b from-white/[0.18] to-white/[0.05]
+                       border border-white/30
                        text-white/70 text-sm font-semibold
                        shadow-[0_4px_16px_-4px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.08)]
                        hover:bg-white/[0.12] hover:text-white/90 hover:border-white/[0.20]
@@ -212,13 +212,13 @@ export default function NotFound() {
         {/* Decorative terminal snippet */}
         <div className="mt-14 animate-fade-in" style={{ animationDelay: "0.9s" }}>
           <div className="inline-flex items-center gap-3 px-5 py-3 rounded-2xl
-                         backdrop-blur-[40px] bg-white/[0.03] border border-white/[0.08]
+                         backdrop-blur-[24px] bg-white/[0.03] border border-white/30
                          shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
             <Sparkles className="w-4 h-4 text-emerald-400/50" />
             <div className="text-left font-mono text-xs sm:text-sm">
               <span className="text-white/25">$</span>{" "}
               <span className="text-emerald-400/70">find</span>{" "}
-              <span className="text-white/40">/pagina-perdida</span>
+              <span className="text-white/70">/pagina-perdida</span>
               <br />
               <span className="text-white/25">...</span>{" "}
               <span className="text-red-400/60 animate-terminal-blink">not found</span>

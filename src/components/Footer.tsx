@@ -68,7 +68,7 @@ export function Footer() {
                 <span className="shimmer-text">Mate</span>
               </span>
             </Link>
-            <p className="text-xs sm:text-sm text-white/40 leading-relaxed max-w-xs text-pretty">
+            <p className="text-xs sm:text-sm text-white/55 leading-relaxed max-w-xs text-pretty">
               Tech blog brasileiro sobre Linux, Windows, dev, gaming e segurança. Tutoriais honestos e dicas práticas.
             </p>
 
@@ -81,15 +81,15 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={item.label}
-                  className="w-10 h-10 inline-flex items-center justify-center rounded-xl
-                             backdrop-blur-[40px] saturate-[180%] brightness-[105%]
-                             bg-gradient-to-b from-white/[0.08] to-white/[0.02]
-                             border border-white/[0.14]
-                             shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_4px_16px_-4px_rgba(0,0,0,0.3)]
-                             text-white/50 hover:text-emerald-300
-                             hover:bg-white/[0.06] hover:border-white/[0.22]
+                  className="w-10 h-10 inline-flex items-center justify-center rounded-2xl
+                             backdrop-blur-[24px] saturate-[200%] contrast-[105%]
+                             bg-gradient-to-b from-white/[0.18] to-white/[0.05]
+                             border border-white/30
+                             shadow-[inset_0_1px_2px_0_rgba(255,255,255,0.6),inset_0_-1px_2px_0_rgba(0,0,0,0.1),0_20px_50px_rgba(0,0,0,0.25)]
+                             text-white/65 hover:text-emerald-300
+                             hover:bg-white/[0.10] hover:border-white/45
                              active:scale-95
-                             transition-all duration-200"
+                             transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
                 >
                   <item.icon className="w-4 h-4" />
                 </a>
@@ -107,7 +107,7 @@ export function Footer() {
                 <li key={item.label}>
                   <Link
                     href={item.href}
-                    className="group inline-flex items-center gap-1.5 text-sm text-white/45 hover:text-emerald-200 transition-colors duration-200
+                    className="group inline-flex items-center gap-1.5 text-sm text-white/60 hover:text-emerald-200 transition-colors duration-200
                                hover:bg-white/[0.03] rounded-lg -ml-1 pl-1 py-0.5"
                   >
                     <span className="w-0 group-hover:w-3 h-px bg-gradient-to-r from-emerald-400 to-transparent transition-all duration-300" />
@@ -133,7 +133,7 @@ export function Footer() {
                       {...(isExternal
                         ? { target: "_blank", rel: "noopener noreferrer" }
                         : {})}
-                      className="group inline-flex items-center gap-1.5 text-sm text-white/45 hover:text-emerald-200 transition-colors duration-200
+                      className="group inline-flex items-center gap-1.5 text-sm text-white/60 hover:text-emerald-200 transition-colors duration-200
                                  hover:bg-white/[0.03] rounded-lg -ml-1 pl-1 py-0.5"
                     >
                       <span className="w-0 group-hover:w-3 h-px bg-gradient-to-r from-emerald-400 to-transparent transition-all duration-300" />
@@ -154,14 +154,14 @@ export function Footer() {
               Status
             </h4>
             <div className="space-y-2.5 sm:space-y-3 text-sm">
-              <div className="inline-flex items-center gap-2 text-white/50">
+              <div className="inline-flex items-center gap-2 text-white/65">
                 <span className="live-dot" />
                 Tudo operacional
               </div>
-              <div className="text-white/35 text-xs font-mono">
+              <div className="text-white/45 text-xs font-mono">
                 v1.0.0 · build {currentYear}
               </div>
-              <div className="text-white/35 text-xs">
+              <div className="text-white/45 text-xs">
                 Hospedado com ❤
               </div>
             </div>
@@ -170,10 +170,10 @@ export function Footer() {
 
         {/* Bottom copyright */}
         <div className="mt-10 sm:mt-14 pt-5 sm:pt-6 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-center sm:text-left">
-          <p className="text-xs text-white/30">
-            © {currentYear} <span className="text-white/50">TechMate</span>. Todos os direitos reservados.
+          <p className="text-xs text-white/40">
+            © {currentYear} <span className="text-white/65">TechMate</span>. Todos os direitos reservados.
           </p>
-          <p className="text-xs text-white/30 flex items-center gap-1.5 flex-wrap justify-center">
+          <p className="text-xs text-white/40 flex items-center gap-1.5 flex-wrap justify-center">
             Feito com <Heart className="w-3 h-3 text-emerald-400 fill-emerald-400 animate-pulse" /> e café pra galera
             <span className="text-emerald-300/70">tech BR</span>
           </p>

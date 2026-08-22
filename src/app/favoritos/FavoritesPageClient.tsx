@@ -25,7 +25,7 @@ export default function FavoritesPageClient({ allPosts }: FavoritesPageClientPro
             <LogIn className="w-8 h-8 text-emerald-400" />
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold text-white mb-3">Faça login para ver seus favoritos</h1>
-          <p className="text-white/45 text-sm mb-8">
+          <p className="text-white/60 text-sm mb-8">
             Entre com sua conta GitHub para salvar artigos e acessar seus favoritos de qualquer dispositivo
           </p>
           <button
@@ -45,7 +45,7 @@ export default function FavoritesPageClient({ allPosts }: FavoritesPageClientPro
   if (loading) {
     return (
       <div className="pt-28 pb-20 px-4 max-w-7xl mx-auto flex items-center justify-center min-h-[60vh]">
-        <div className="text-white/40 text-sm animate-pulse">Carregando favoritos...</div>
+        <div className="text-white/70 text-sm animate-pulse">Carregando favoritos...</div>
       </div>
     );
   }
@@ -56,7 +56,7 @@ export default function FavoritesPageClient({ allPosts }: FavoritesPageClientPro
     <div className="pt-24 sm:pt-28 pb-20 px-4 max-w-7xl mx-auto">
       <Link
         href="/blog"
-        className="inline-flex items-center gap-2 text-sm text-white/45 hover:text-emerald-300 transition-colors mb-6 sm:mb-8 group"
+        className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-emerald-300 transition-colors mb-6 sm:mb-8 group"
       >
         <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
         Voltar ao Blog
@@ -71,7 +71,7 @@ export default function FavoritesPageClient({ allPosts }: FavoritesPageClientPro
             Meus Favoritos
           </h1>
         </div>
-        <p className="text-white/45 text-sm">
+        <p className="text-white/60 text-sm">
           {favPosts.length} artigo{favPosts.length !== 1 ? "s" : ""} salvo{favPosts.length !== 1 ? "s" : ""}
         </p>
       </div>
@@ -85,7 +85,7 @@ export default function FavoritesPageClient({ allPosts }: FavoritesPageClientPro
       ) : (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <Heart className="w-12 h-12 text-white/10 mb-4" />
-          <p className="text-white/40 text-lg mb-2">Nenhum favorito ainda</p>
+          <p className="text-white/70 text-lg mb-2">Nenhum favorito ainda</p>
           <p className="text-white/25 text-sm mb-6">Toque no coracao em qualquer artigo para salvar</p>
           <Link href="/blog" className="btn-primary">
             Explorar artigos

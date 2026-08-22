@@ -26,7 +26,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
       <div className="max-w-7xl mx-auto">
         {/* ── Header ── */}
         <div className="mb-10 sm:mb-14 lg:mb-16 max-w-3xl animate-fade-up">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] mb-4 sm:mb-5">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/30 mb-4 sm:mb-5">
             <Layers className="w-3.5 h-3.5 text-emerald-300" />
             <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.18em] text-white/70 font-medium">
               Biblioteca
@@ -44,7 +44,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
               </>
             )}
           </h1>
-          <p className="text-sm sm:text-base lg:text-lg text-white/45 text-pretty">
+          <p className="text-sm sm:text-base lg:text-lg text-white/60 text-pretty">
             {selectedCategory
               ? `Mostrando ${filteredPosts.length} artigo${
                   filteredPosts.length === 1 ? "" : "s"
@@ -74,7 +74,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
         ) : (
           <div className="text-center py-16 sm:py-24 px-6 rounded-2xl sm:rounded-3xl border border-white/[0.06] bg-white/[0.02]">
             <Search className="w-10 h-10 mx-auto text-white/20 mb-4" />
-            <p className="text-white/45 text-base sm:text-lg mb-4">Nenhum artigo encontrado.</p>
+            <p className="text-white/60 text-base sm:text-lg mb-4">Nenhum artigo encontrado.</p>
             <Link
               href="/blog"
               className="btn-secondary inline-flex"

@@ -151,7 +151,7 @@ function Toggle({
       type="button"
       onClick={() => onChange(!checked)}
       className={`relative w-11 h-6 rounded-full transition-colors duration-300 flex-shrink-0 cursor-pointer
-                  ${checked ? "bg-emerald-500/40" : "bg-white/[0.08] border border-white/[0.12]"}`}
+                  ${checked ? "bg-emerald-500/40" : "bg-white/[0.08] border border-white/30"}`}
       role="switch"
       aria-checked={checked}
     >
@@ -198,7 +198,7 @@ function DangerButton({ onClick, children }: { onClick: () => void; children: Re
         type="button"
         onClick={() => setConfirm(false)}
         className="px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer
-                   border border-white/[0.08] bg-white/[0.03] text-white/40
+                   border border-white/30 bg-white/[0.03] text-white/40
                    hover:bg-white/[0.06] transition-colors"
       >
         Cancelar
@@ -235,7 +235,7 @@ function SegmentedControl<T extends string>({
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer
                        ${isActive
                          ? "bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 shadow-[0_0_12px_rgba(52,211,153,0.15)]"
-                         : "bg-white/[0.03] border border-white/[0.08] text-white/40 hover:bg-white/[0.06] hover:text-white/60"}`}
+                         : "bg-white/[0.03] border border-white/30 text-white/40 hover:bg-white/[0.06] hover:text-white/60"}`}
           >
             {renderLabel ? renderLabel(opt) : opt.label}
             {isActive && <Check className="w-3 h-3 inline ml-1" />}
@@ -475,7 +475,7 @@ export default function SettingsPage() {
           <Link
             href="/"
             className="flex items-center justify-center w-10 h-10 rounded-xl
-                       backdrop-blur-[40px] bg-white/[0.05] border border-white/[0.10]
+                       backdrop-blur-[24px] bg-white/[0.05] border border-white/30
                        hover:bg-white/[0.08] hover:border-white/[0.18] active:scale-95
                        transition-all duration-200"
           >
@@ -591,7 +591,7 @@ export default function SettingsPage() {
           <div className="py-3 px-4">
             <div className="flex items-center gap-3 mb-3">
               <div className="flex items-center justify-center w-9 h-9 rounded-xl
-                              bg-white/[0.05] border border-white/[0.08]">
+                              bg-white/[0.05] border border-white/30">
                 <Palette className="w-4 h-4 text-white/50" />
               </div>
               <div>
@@ -619,7 +619,7 @@ export default function SettingsPage() {
               type="button"
               onClick={handleResetTheme}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium
-                         bg-white/[0.04] border border-white/[0.08] text-white/50
+                         bg-white/[0.04] border border-white/30 text-white/50
                          hover:bg-white/[0.07] hover:text-white/70 transition-colors cursor-pointer"
             >
               <RotateCcw className="w-3 h-3" />
@@ -669,7 +669,7 @@ export default function SettingsPage() {
           <SettingRow>
             <div className="flex items-center gap-3 flex-1 mr-4">
               <div className="flex items-center justify-center w-9 h-9 rounded-xl border
-                              bg-white/[0.05] border-white/[0.08]">
+                              bg-white/[0.05] border-white/30">
                 {reducedMotion
                   ? <VolumeX className="w-4 h-4 text-white/50" />
                   : <Volume2 className="w-4 h-4 text-emerald-400" />}
@@ -690,7 +690,7 @@ export default function SettingsPage() {
           <SettingRow>
             <div className="flex items-center gap-3 flex-1 mr-4">
               <div className="flex items-center justify-center w-9 h-9 rounded-xl border
-                              bg-white/[0.05] border-white/[0.08]">
+                              bg-white/[0.05] border-white/30">
                 {compactMode
                   ? <Minimize2 className="w-4 h-4 text-emerald-400" />
                   : <Maximize2 className="w-4 h-4 text-white/50" />}
@@ -851,7 +851,7 @@ export default function SettingsPage() {
                     <span key={i}>
                       <kbd className="inline-flex items-center justify-center px-2 py-0.5 rounded-md
                                    text-[11px] font-mono font-medium
-                                   bg-white/[0.06] border border-white/[0.10]
+                                   bg-white/[0.06] border border-white/30
                                    text-white/40 min-w-[1.75rem]">
                         {key}
                       </kbd>
@@ -904,7 +904,7 @@ export default function SettingsPage() {
                 <span
                   key={tech}
                   className="px-2 py-0.5 rounded-md text-[10px] font-medium
-                           bg-white/[0.04] border border-white/[0.08] text-white/35"
+                           bg-white/[0.04] border border-white/30 text-white/35"
                 >
                   {tech}
                 </span>

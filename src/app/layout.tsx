@@ -42,7 +42,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "TechMate — Seu parceiro em tech",
   description:
-    "Tutoriais, dicas e guias sobre Linux, Windows, desenvolvimento, segurança e gaming. Conteúdo honesto e prático, direto ao ponto.",
+    "Tutoriais, dicas e guias sobre Linux, Windows, desenvolvimento, seguranca e gaming. Conteudo honesto e pratico, direto ao ponto.",
   keywords: [
     "tech",
     "tecnologia",
@@ -50,9 +50,9 @@ export const metadata: Metadata = {
     "linux",
     "windows",
     "desenvolvimento",
-    "programação",
+    "programacao",
     "gaming",
-    "segurança",
+    "seguranca",
     "hardware",
     "open source",
     "tech blog brasil",
@@ -87,18 +87,12 @@ export default function RootLayout({
       >
         <ThemeSync />
         <div className="site-backdrop" aria-hidden>
-          {/* Grid background */}
-          <div className="grid-bg" />
-
-
-          {/* Noise overlay */}
+          <div className="mesh-bg" />
           <div className="noise-overlay" />
         </div>
 
         <SessionProvider>
           <FavoritesProvider>
-            {/* Cinematic overlays */}
-            {/* Welcome screen for first-time visitors */}
             <WelcomeScreen />
 
             <div className="cinema-vignette" aria-hidden />

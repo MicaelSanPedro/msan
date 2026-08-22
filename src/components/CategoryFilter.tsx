@@ -24,8 +24,8 @@ export function CategoryFilter({ categories, totalPosts }: CategoryFilterProps) 
         scroll={false}
         className={`shrink-0 px-3.5 sm:px-4 py-2 rounded-full text-sm font-medium transition-all cursor-pointer relative overflow-hidden ${
           !selectedCategory
-            ? "backdrop-blur-[40px] saturate-[200%] brightness-[105%] bg-gradient-to-b from-emerald-500/25 to-emerald-500/10 text-emerald-100 border border-emerald-400/35 shadow-[0_4px_20px_-8px_rgba(52,211,153,0.45),inset_0_1px_0_rgba(255,255,255,0.15)]"
-            : "backdrop-blur-[40px] saturate-[180%] brightness-[105%] bg-gradient-to-b from-white/[0.08] to-white/[0.02] text-white/55 border border-white/[0.14] shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] hover:text-white hover:border-white/[0.22] hover:bg-white/[0.06]"
+            ? "backdrop-blur-[24px] saturate-[200%] contrast-[105%] bg-gradient-to-b from-emerald-500/25 to-emerald-500/10 text-emerald-100 border border-emerald-400/35 shadow-[0_4px_20px_-8px_rgba(52,211,153,0.45),inset_0_1px_0_rgba(255,255,255,0.15)]"
+            : "backdrop-blur-[24px] saturate-[200%] contrast-[105%] bg-gradient-to-b from-white/[0.18] to-white/[0.05] text-white/55 border border-white/30 shadow-[inset_0_1px_2px_0_rgba(255,255,255,0.6),inset_0_-1px_2px_0_rgba(0,0,0,0.1),0_20px_50px_rgba(0,0,0,0.25)] hover:text-white hover:border-white/[0.22] hover:bg-white/[0.06]"
         }`}
       >
         {!selectedCategory && (
@@ -46,8 +46,8 @@ export function CategoryFilter({ categories, totalPosts }: CategoryFilterProps) 
             scroll={false}
             className={`shrink-0 px-3.5 sm:px-4 py-2 rounded-full text-sm font-medium transition-all cursor-pointer relative overflow-hidden ${
               active
-                ? "backdrop-blur-[40px] saturate-[200%] brightness-[105%] bg-gradient-to-b from-emerald-500/25 to-emerald-500/10 text-emerald-100 border border-emerald-400/35 shadow-[0_4px_20px_-8px_rgba(52,211,153,0.45),inset_0_1px_0_rgba(255,255,255,0.15)]"
-                : "backdrop-blur-[40px] saturate-[180%] brightness-[105%] bg-gradient-to-b from-white/[0.08] to-white/[0.02] text-white/55 border border-white/[0.14] shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] hover:text-white hover:border-white/[0.22] hover:bg-white/[0.06]"
+                ? "backdrop-blur-[24px] saturate-[200%] contrast-[105%] bg-gradient-to-b from-emerald-500/25 to-emerald-500/10 text-emerald-100 border border-emerald-400/35 shadow-[0_4px_20px_-8px_rgba(52,211,153,0.45),inset_0_1px_0_rgba(255,255,255,0.15)]"
+                : "backdrop-blur-[24px] saturate-[200%] contrast-[105%] bg-gradient-to-b from-white/[0.18] to-white/[0.05] text-white/55 border border-white/30 shadow-[inset_0_1px_2px_0_rgba(255,255,255,0.6),inset_0_-1px_2px_0_rgba(0,0,0,0.1),0_20px_50px_rgba(0,0,0,0.25)] hover:text-white hover:border-white/[0.22] hover:bg-white/[0.06]"
             }`}
           >
             {active && (
