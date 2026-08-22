@@ -1,0 +1,2002 @@
+   865→.liquid-glass-pill {
+   866→  position: relative;
+   867→  background: linear-gradient(
+   868→    var(--glass-bg-angle, 135deg),
+   869→    var(--glass-bg-1) 0%,
+   870→    var(--glass-bg-2) 50%,
+   871→    var(--glass-bg-3) 100%
+   872→  );
+   873→  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+   874→  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+   875→  border: 1.5px solid rgba(255, 255, 255, var(--glass-border-opacity));
+   876→  border-radius: 9999px;
+   877→  box-shadow: var(--glass-volumetric);
+   878→  overflow: hidden;
+   879→  transition: var(--glass-transition);
+   880→  animation: refraction-pulse 8s ease-in-out infinite;
+   881→}
+   882→.liquid-glass-pill::before {
+   883→  content: '';
+   884→  position: absolute;
+   885→  top: 0;
+   886→  left: 12%;
+   887→  right: 12%;
+   888→  height: 1.5px;
+   889→  background: linear-gradient(
+   890→    90deg,
+   891→    transparent 0%,
+   892→    rgba(255, 255, 255, 0.6) 30%,
+   893→    rgba(255, 255, 255, 0.9) 50%,
+   894→    rgba(255, 255, 255, 0.6) 70%,
+   895→    transparent 100%
+   896→  );
+   897→  z-index: 3;
+   898→  pointer-events: none;
+   899→}
+   900→.liquid-glass-pill::after {
+   901→  content: '';
+   902→  position: absolute;
+   903→  inset: 0;
+   904→  border-radius: inherit;
+   905→  background: radial-gradient(
+   906→    ellipse 50% 35% at var(--light-x, 50%) var(--light-y, 20%),
+   907→    rgba(255, 255, 255, 0.15) 0%,
+   908→    transparent 55%
+   909→  );
+   910→  pointer-events: none;
+   911→  z-index: 1;
+   912→}
+   913→.liquid-glass-pill > * {
+   914→  position: relative;
+   915→  z-index: 2;
+   916→}
+   917→.liquid-glass-pill:hover {
+   918→  box-shadow: var(--glass-volumetric-hover);
+   919→  border-color: rgba(255, 255, 255, 0.5);
+   920→}
+   921→.liquid-glass-pill:active {
+   922→  transform: scale(0.97);
+   923→  box-shadow:
+   924→    inset 0 1px 2px 0 rgba(255, 255, 255, 0.4),
+   925→    inset 0 -2px 6px 0 rgba(0, 0, 0, 0.2),
+   926→    0 8px 20px -6px rgba(0, 0, 0, 0.3);
+   927→}
+   928→@supports not (backdrop-filter: blur(16px)) {
+   929→  .liquid-glass-pill { background: rgba(13, 13, 13, 0.9); }
+   930→}
+   931→
+   932→/* Liquid glass - panel variant (dropdowns/modals) */
+   933→.liquid-glass-panel {
+   934→  position: relative;
+   935→  background: linear-gradient(
+   936→    145deg,
+   937→    rgba(18, 18, 22, 0.88) 0%,
+   938→    rgba(12, 12, 14, 0.94) 100%
+   939→  );
+   940→  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+   941→  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+   942→  border: 1.5px solid rgba(255, 255, 255, var(--glass-border-opacity));
+   943→  border-radius: 28px;
+   944→  box-shadow: var(--glass-volumetric);
+   945→  overflow: hidden;
+   946→  transition: var(--glass-transition);
+   947→}
+   948→.liquid-glass-panel::before {
+   949→  content: '';
+   950→  position: absolute;
+   951→  top: 0;
+   952→  left: 5%;
+   953→  right: 5%;
+   954→  height: 1.5px;
+   955→  background: linear-gradient(
+   956→    90deg,
+   957→    transparent 0%,
+   958→    rgba(255, 255, 255, 0.35) 20%,
+   959→    rgba(255, 255, 255, 0.6) 50%,
+   960→    rgba(255, 255, 255, 0.35) 80%,
+   961→    transparent 100%
+   962→  );
+   963→  z-index: 3;
+   964→  pointer-events: none;
+   965→}
+   966→.liquid-glass-panel::after {
+   967→  content: '';
+   968→  position: absolute;
+   969→  inset: 0;
+   970→  border-radius: inherit;
+   971→  background: radial-gradient(
+   972→    ellipse 60% 40% at var(--light-x, 50%) var(--light-y, 20%),
+   973→    rgba(255, 255, 255, 0.06) 0%,
+   974→    transparent 50%
+   975→  );
+   976→  pointer-events: none;
+   977→  z-index: 1;
+   978→}
+   979→.liquid-glass-panel > * {
+   980→  position: relative;
+   981→  z-index: 2;
+   982→}
+   983→@supports not (backdrop-filter: blur(20px)) {
+   984→  .liquid-glass-panel { background: rgba(10, 10, 10, 0.97); }
+   985→}
+   986→
+   987→/* Liquid glass - input variant with prismatic focus */
+   988→.liquid-glass-input {
+   989→  position: relative;
+   990→  background: linear-gradient(
+   991→    var(--glass-bg-angle, 135deg),
+   992→    var(--glass-bg-1) 0%,
+   993→    var(--glass-bg-2) 100%
+   994→  );
+   995→  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+   996→  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+   997→  border: 1.5px solid rgba(52, 211, 153, 0.25);
+   998→  border-radius: 16px;
+   999→  box-shadow: var(--glass-volumetric);
+  1000→  transition: var(--glass-transition);
+  1001→}
+  1002→.liquid-glass-input::before {
+  1003→  content: '';
+  1004→  position: absolute;
+  1005→  top: 0;
+  1006→  left: 10%;
+  1007→  right: 10%;
+  1008→  height: 1px;
+  1009→  background: linear-gradient(
+  1010→    90deg,
+  1011→    transparent 0%,
+  1012→    rgba(255, 255, 255, 0.45) 25%,
+  1013→    rgba(52, 211, 153, 0.3) 50%,
+  1014→    rgba(255, 255, 255, 0.45) 70%,
+  1015→    transparent 100%
+  1016→  );
+  1017→  z-index: 2;
+  1018→  pointer-events: none;
+  1019→}
+  1020→.liquid-glass-input::after {
+  1021→  content: '';
+  1022→  position: absolute;
+  1023→  inset: 0;
+  1024→  border-radius: inherit;
+  1025→  background: radial-gradient(
+  1026→    ellipse 60% 40% at var(--light-x, 50%) var(--light-y, 20%),
+  1027→    rgba(52, 211, 153, 0.06) 0%,
+  1028→    transparent 50%
+  1029→  );
+  1030→  pointer-events: none;
+  1031→  z-index: 1;
+  1032→}
+  1033→.liquid-glass-input > * {
+  1034→  position: relative;
+  1035→  z-index: 2;
+  1036→}
+  1037→.liquid-glass-input:focus {
+  1038→  box-shadow:
+  1039→    0 0 0 3px rgba(52, 211, 153, 0.2),
+  1040→    var(--glass-volumetric);
+  1041→  border-color: rgba(255, 255, 255, 0.5);
+  1042→}
+  1043→
+  1044→/* Liquid glass - mobile menu variant */
+  1045→.liquid-glass-mobile-menu {
+  1046→  position: relative;
+  1047→  background: linear-gradient(
+  1048→    180deg,
+  1049→    rgba(18, 18, 22, 0.9) 0%,
+  1050→    rgba(12, 12, 14, 0.96) 100%
+  1051→  );
+  1052→  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  1053→  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  1054→  border-bottom: 1.5px solid rgba(255, 255, 255, var(--glass-border-opacity));
+  1055→  box-shadow: var(--glass-volumetric);
+  1056→  overflow: hidden;
+  1057→  transition: var(--glass-transition);
+  1058→}
+  1059→.liquid-glass-mobile-menu::before {
+  1060→  content: '';
+  1061→  position: absolute;
+  1062→  top: 0;
+  1063→  left: 5%;
+  1064→  right: 5%;
+  1065→  height: 1.5px;
+  1066→  background: linear-gradient(
+  1067→    90deg,
+  1068→    transparent 0%,
+  1069→    rgba(255, 255, 255, 0.3) 20%,
+  1070→    rgba(52, 211, 153, 0.25) 50%,
+  1071→    rgba(255, 255, 255, 0.3) 80%,
+  1072→    transparent 100%
+  1073→  );
+  1074→  z-index: 3;
+  1075→  pointer-events: none;
+  1076→}
+  1077→.liquid-glass-mobile-menu::after {
+  1078→  content: '';
+  1079→  position: absolute;
+  1080→  inset: 0;
+  1081→  background: radial-gradient(
+  1082→    ellipse 80% 50% at var(--light-x, 50%) var(--light-y, 20%),
+  1083→    rgba(255, 255, 255, 0.04) 0%,
+  1084→    transparent 50%
+  1085→  );
+  1086→  pointer-events: none;
+  1087→  z-index: 1;
+  1088→}
+  1089→
+  1090→/* Prismatic / rainbow edge effect (enhanced with mouse tracking) */
+  1091→.liquid-glass-prismatic {
+  1092→  position: relative;
+  1093→  border: 1.5px solid transparent;
+  1094→  background-clip: padding-box;
+  1095→}
+  1096→.liquid-glass-prismatic::before {
+  1097→  content: '';
+  1098→  position: absolute;
+  1099→  inset: -1.5px;
+  1100→  border-radius: inherit;
+  1101→  background: conic-gradient(
+  1102→    from var(--light-angle, 135deg) at var(--light-x, 50%) var(--light-y, 20%),
+  1103→    rgba(255, 100, 100, 0.2),
+  1104→    rgba(100, 255, 100, 0.2),
+  1105→    rgba(100, 100, 255, 0.15),
+  1106→    rgba(255, 255, 100, 0.15),
+  1107→    rgba(255, 100, 100, 0.2)
+  1108→  );
+  1109→  z-index: -1;
+  1110→  pointer-events: none;
+  1111→  animation: prismatic-drift 12s ease-in-out infinite;
+  1112→}
+  1113→
+  1114→/* ─── Legacy Glass Classes (Liquid Glass 3D) ─── */
+  1115→.glass-card {
+  1116→  position: relative;
+  1117→  background: linear-gradient(
+  1118→    var(--glass-bg-angle, 135deg),
+  1119→    var(--glass-bg-1) 0%,
+  1120→    var(--glass-bg-2) 50%,
+  1121→    var(--glass-bg-3) 100%
+  1122→  );
+  1123→  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  1124→  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  1125→  border: 1.5px solid rgba(255, 255, 255, var(--glass-border-opacity));
+  1126→  border-radius: var(--r-lg);
+  1127→  box-shadow: var(--glass-volumetric);
+  1128→  overflow: hidden;
+  1129→  transition: var(--glass-transition);
+  1130→  animation: refraction-pulse 8s ease-in-out infinite;
+  1131→}
+  1132→.glass-card::before {
+  1133→  content: '';
+  1134→  position: absolute;
+  1135→  top: 0;
+  1136→  left: 8%;
+  1137→  right: 8%;
+  1138→  height: 1.5px;
+  1139→  background: linear-gradient(
+  1140→    90deg,
+  1141→    transparent 0%,
+  1142→    rgba(255, 255, 255, 0.5) 15%,
+  1143→    rgba(52, 211, 153, 0.2) 35%,
+  1144→    rgba(255, 255, 255, 0.7) 50%,
+  1145→    rgba(56, 189, 248, 0.12) 65%,
+  1146→    rgba(255, 255, 255, 0.5) 85%,
+  1147→    transparent 100%
+  1148→  );
+  1149→  z-index: 3;
+  1150→  pointer-events: none;
+  1151→  animation: specular-shift 6s ease-in-out infinite;
+  1152→}
+  1153→.glass-card::after {
+  1154→  content: '';
+  1155→  position: absolute;
+  1156→  inset: 0;
+  1157→  border-radius: inherit;
+  1158→  background: radial-gradient(
+  1159→    ellipse 60% 40% at var(--light-x, 50%) var(--light-y, 20%),
+  1160→    rgba(255, 255, 255, 0.08) 0%,
+  1161→    transparent 50%
+  1162→  );
+  1163→  pointer-events: none;
+  1164→  z-index: 1;
+  1165→  animation: caustic-shadow-move 10s ease-in-out infinite;
+  1166→}
+  1167→.glass-card > * {
+  1168→  position: relative;
+  1169→  z-index: 2;
+  1170→}
+  1171→.glass-card:hover {
+  1172→  transform: translateY(-6px) scale(1.015);
+  1173→  box-shadow: var(--glass-volumetric-hover);
+  1174→  border-color: rgba(255, 255, 255, 0.5);
+  1175→}
+  1176→.glass-card:active {
+  1177→  transform: translateY(-2px) scale(1.005);
+  1178→}
+  1179→@supports not (backdrop-filter: blur(16px)) {
+  1180→  .glass-card { background: rgba(13, 13, 13, 0.92); }
+  1181→}
+  1182→
+  1183→.glass-nav {
+  1184→  position: relative;
+  1185→  background: linear-gradient(
+  1186→    180deg,
+  1187→    var(--glass-bg-1) 0%,
+  1188→    var(--glass-bg-2) 100%
+  1189→  );
+  1190→  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  1191→  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  1192→  border-bottom: 1.5px solid rgba(255, 255, 255, var(--glass-border-opacity));
+  1193→  box-shadow: var(--glass-volumetric);
+  1194→  transition: var(--glass-transition);
+  1195→}
+  1196→.glass-nav::after {
+  1197→  content: '';
+  1198→  position: absolute;
+  1199→  bottom: -28px;
+  1200→  left: 0;
+  1201→  right: 0;
+  1202→  height: 28px;
+  1203→  background: linear-gradient(to bottom, rgba(8, 7, 10, 0.5), transparent);
+  1204→  pointer-events: none;
+  1205→  z-index: -1;
+  1206→}
+  1207→.glass-nav::before {
+  1208→  content: '';
+  1209→  position: absolute;
+  1210→  top: 0;
+  1211→  left: 3%;
+  1212→  right: 3%;
+  1213→  height: 1.5px;
+  1214→  background: linear-gradient(
+  1215→    90deg,
+  1216→    transparent 0%,
+  1217→    rgba(255, 255, 255, 0.4) 15%,
+  1218→    rgba(255, 255, 255, 0.65) 50%,
+  1219→    rgba(255, 255, 255, 0.4) 85%,
+  1220→    transparent 100%
+  1221→  );
+  1222→  z-index: 3;
+  1223→  pointer-events: none;
+  1224→  animation: specular-shift 6s ease-in-out infinite;
+  1225→}
+  1226→.glass-nav.scrolled {
+  1227→  background: linear-gradient(
+  1228→    180deg,
+  1229→    var(--glass-bg-1) 0%,
+  1230→    rgba(255, 255, 255, 0.07) 100%
+  1231→  );
+  1232→  box-shadow: var(--glass-volumetric);
+  1233→  border-bottom: 1.5px solid rgba(255, 255, 255, var(--glass-border-opacity));
+  1234→}
+  1235→@supports not (backdrop-filter: blur(20px)) {
+  1236→  .glass-nav { background: rgba(8, 7, 10, 0.95); }
+  1237→  .glass-nav::before { display: none; }
+  1238→  .glass-nav::after { display: none; }
+  1239→}
+  1240→@media (max-width: 640px) {
+  1241→  .glass-nav::after { display: none; }
+  1242→}
+  1243→
+  1244→.glass-input {
+  1245→  position: relative;
+  1246→  background: linear-gradient(
+  1247→    var(--glass-bg-angle, 135deg),
+  1248→    var(--glass-bg-1) 0%,
+  1249→    var(--glass-bg-2) 100%
+  1250→  );
+  1251→  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  1252→  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  1253→  border: 1.5px solid rgba(255, 255, 255, var(--glass-border-opacity));
+  1254→  border-radius: 16px;
+  1255→  box-shadow: var(--glass-volumetric);
+  1256→  transition: var(--glass-transition);
+  1257→}
+  1258→.glass-input::before {
+  1259→  content: '';
+  1260→  position: absolute;
+  1261→  top: 0;
+  1262→  left: 10%;
+  1263→  right: 10%;
+  1264→  height: 1px;
+  1265→  background: linear-gradient(
+  1266→    90deg,
+  1267→    transparent 0%,
+  1268→    rgba(255, 255, 255, 0.4) 25%,
+  1269→    rgba(255, 255, 255, 0.6) 50%,
+  1270→    rgba(255, 255, 255, 0.4) 75%,
+  1271→    transparent 100%
+  1272→  );
+  1273→  z-index: 2;
+  1274→  pointer-events: none;
+  1275→}
+  1276→.glass-input::after {
+  1277→  content: '';
+  1278→  position: absolute;
+  1279→  inset: 0;
+  1280→  border-radius: inherit;
+  1281→  background: radial-gradient(
+  1282→    ellipse 60% 40% at var(--light-x, 50%) var(--light-y, 20%),
+  1283→    rgba(255, 255, 255, 0.06) 0%,
+  1284→    transparent 50%
+  1285→  );
+  1286→  pointer-events: none;
+  1287→  z-index: 1;
+  1288→}
+  1289→.glass-input > * {
+  1290→  position: relative;
+  1291→  z-index: 2;
+  1292→}
+  1293→.glass-input:focus {
+  1294→  box-shadow:
+  1295→    0 0 0 3px rgba(52, 211, 153, 0.2),
+  1296→    var(--glass-volumetric);
+  1297→  border-color: rgba(255, 255, 255, 0.5);
+  1298→}
+  1299→
+  1300→.glass-light {
+  1301→  position: relative;
+  1302→  background: linear-gradient(
+  1303→    var(--glass-bg-angle, 135deg),
+  1304→    var(--glass-bg-1) 0%,
+  1305→    var(--glass-bg-2) 100%
+  1306→  );
+  1307→  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  1308→  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  1309→  border: 1.5px solid rgba(255, 255, 255, var(--glass-border-opacity));
+  1310→  box-shadow: var(--glass-volumetric);
+  1311→  transition: var(--glass-transition);
+  1312→}
+  1313→.glass-light::before {
+  1314→  content: '';
+  1315→  position: absolute;
+  1316→  inset: 0;
+  1317→  border-radius: inherit;
+  1318→  background: radial-gradient(
+  1319→    ellipse 60% 40% at var(--light-x, 50%) var(--light-y, 20%),
+  1320→    rgba(255, 255, 255, 0.06) 0%,
+  1321→    transparent 50%
+  1322→  );
+  1323→  pointer-events: none;
+  1324→  z-index: 1;
+  1325→}
+  1326→.glass-light > * {
+  1327→  position: relative;
+  1328→  z-index: 2;
+  1329→}
+  1330→
+  1331→
+  1332→/* ─── Global Backdrop ──────────────────────── */
+  1333→.site-backdrop {
+  1334→  position: fixed;
+  1335→  inset: 0;
+  1336→  z-index: 0;
+  1337→  overflow: hidden;
+  1338→  pointer-events: none;
+  1339→}
+  1340→.site-backdrop .grid-bg {
+  1341→  position: absolute;
+  1342→  inset: 0;
+  1343→}
+  1344→.site-backdrop .noise-overlay {
+  1345→  position: absolute;
+  1346→  inset: 0;
+  1347→}
+  1348→
+  1349→/* ─── Ambient orbs ─────────────────────────── */
+  1350→.ambient-orb {
+  1351→  position: absolute;
+  1352→  border-radius: 50%;
+  1353→  filter: blur(120px);
+  1354→  pointer-events: none;
+  1355→  contain: layout style paint;
+  1356→}
+  1357→
+  1358→/* ─── Noise / film grain overlay ───────────── */
+  1359→.noise-overlay {
+  1360→  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  1361→  opacity: 0.055;
+  1362→  mix-blend-mode: overlay;
+  1363→}
+  1364→
+  1365→/* ─── Card shine effect (liquid glass refraction) ── */
+  1366→.card-shine {
+  1367→  position: relative;
+  1368→  overflow: hidden;
+  1369→}
+  1370→.card-shine::after {
+  1371→  content: '';
+  1372→  position: absolute;
+  1373→  inset: -50%;
+  1374→  background: linear-gradient(
+  1375→    to bottom right,
+  1376→    transparent 35%,
+  1377→    rgba(255, 255, 255, 0.12) 45%,
+  1378→    rgba(255, 255, 255, 0.05) 55%,
+  1379→    transparent 65%
+  1380→  );
+  1381→  transform: translate3d(-100%, -100%, 0) rotate(-30deg);
+  1382→  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  1383→  pointer-events: none;
+  1384→}
+  1385→.card-shine:hover::after {
+  1386→  transform: translate3d(50%, 50%, 0) rotate(-30deg);
+  1387→}
+  1388→
+  1389→/* ─── Spotlight (mouse-follow) hover (Liquid Glass 3D) ──── */
+  1390→.spotlight {
+  1391→  position: relative;
+  1392→  isolation: isolate;
+  1393→}
+  1394→.spotlight::before {
+  1395→  content: '';
+  1396→  position: absolute;
+  1397→  inset: 0;
+  1398→  border-radius: inherit;
+  1399→  background: radial-gradient(
+  1400→    400px circle at var(--light-x, 50%) var(--light-y, 50%),
+  1401→    rgba(255, 255, 255, 0.12),
+  1402→    transparent 50%
+  1403→  );
+  1404→  opacity: 0;
+  1405→  transition: opacity 0.3s ease;
+  1406→  pointer-events: none;
+  1407→  z-index: 0;
+  1408→}
+  1409→.spotlight:hover::before { opacity: 1; }
+  1410→.spotlight > * { position: relative; z-index: 1; }
+  1411→
+  1412→
+  1413→/* ─── Conic border glow ─────────────────────── */
+  1414→.conic-border {
+  1415→  position: relative;
+  1416→  border-radius: var(--r-xl);
+  1417→  background: linear-gradient(var(--background), var(--background)) padding-box,
+  1418→              conic-gradient(from 180deg at 50% 50%,
+  1419→                rgba(52, 211, 153, 0.4),
+  1420→                rgba(52, 211, 153, 0.0) 25%,
+  1421→                rgba(52, 211, 153, 0.0) 75%,
+  1422→                rgba(52, 211, 153, 0.4) 100%) border-box;
+  1423→  border: 1px solid transparent;
+  1424→}
+  1425→
+  1426→/* ─── Grid background (kept for fallback) ───────────────────── */
+  1427→.grid-bg {
+  1428→  background-image:
+  1429→    linear-gradient(rgba(52, 211, 153, 0.025) 1px, transparent 1px),
+  1430→    linear-gradient(90deg, rgba(52, 211, 153, 0.025) 1px, transparent 1px);
+  1431→  background-size: 64px 64px;
+  1432→  mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  1433→  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  1434→}
+  1435→
+  1436→/* ─── Animated Mesh Gradient Background ────────── */
+  1437→@keyframes mesh-move {
+  1438→  0% { background-position: 0% 50%; }
+  1439→  25% { background-position: 100% 0%; }
+  1440→  50% { background-position: 100% 100%; }
+  1441→  75% { background-position: 0% 100%; }
+  1442→  100% { background-position: 0% 50%; }
+  1443→}
+  1444→.mesh-bg {
+  1445→  position: absolute;
+  1446→  inset: 0;
+  1447→  background:
+  1448→    radial-gradient(ellipse at 20% 50%, rgba(52, 211, 153, 0.15) 0%, transparent 50%),
+  1449→    radial-gradient(ellipse at 80% 20%, rgba(16, 185, 129, 0.12) 0%, transparent 50%),
+  1450→    radial-gradient(ellipse at 40% 80%, rgba(5, 150, 105, 0.10) 0%, transparent 50%),
+  1451→    radial-gradient(ellipse at 90% 90%, rgba(52, 211, 153, 0.08) 0%, transparent 40%),
+  1452→    radial-gradient(ellipse at 10% 20%, rgba(110, 231, 183, 0.06) 0%, transparent 40%);
+  1453→  background-size: 200% 200%;
+  1454→  animation: mesh-move 20s ease-in-out infinite;
+  1455→  filter: blur(60px);
+  1456→}
+  1457→
+  1458→/* ─── Scroll Reveal ───────────────────────── */
+  1459→[data-scroll-reveal] {
+  1460→  opacity: 0;
+  1461→  transform: translateY(28px);
+  1462→  filter: blur(8px);
+  1463→  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+  1464→              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+  1465→              filter 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  1466→}
+  1467→[data-scroll-reveal].revealed {
+  1468→  opacity: 1;
+  1469→  transform: translateY(0);
+  1470→  filter: blur(0);
+  1471→}
+  1472→
+  1473→/* ─── Prose auto-reveal (blog content) ───── */
+  1474→.prose-custom.revealed,
+  1475→.prose-custom.revealed > * {
+  1476→  opacity: 1 !important;
+  1477→  transform: none !important;
+  1478→  filter: none !important;
+  1479→}
+  1480→.prose-custom > h2,
+  1481→.prose-custom > h3,
+  1482→.prose-custom > h4,
+  1483→.prose-custom > pre,
+  1484→.prose-custom > img,
+  1485→.prose-custom > hr,
+  1486→.prose-custom > table {
+  1487→  opacity: 0;
+  1488→  transform: translateY(20px);
+  1489→  filter: blur(5px);
+  1490→  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+  1491→              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+  1492→              filter 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  1493→}
+  1494→.prose-custom > h2.revealed,
+  1495→.prose-custom > h3.revealed,
+  1496→.prose-custom > h4.revealed,
+  1497→.prose-custom > pre.revealed,
+  1498→.prose-custom > img.revealed,
+  1499→.prose-custom > hr.revealed,
+  1500→.prose-custom > table.revealed {
+  1501→  opacity: 1;
+  1502→  transform: translateY(0);
+  1503→  filter: blur(0);
+  1504→}
+  1505→.prose-custom > blockquote {
+  1506→  opacity: 0;
+  1507→  transform: translateX(-12px);
+  1508→  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+  1509→              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  1510→}
+  1511→.prose-custom > blockquote.revealed {
+  1512→  opacity: 1;
+  1513→  transform: translateX(0);
+  1514→}
+  1515→.prose-custom > p,
+  1516→.prose-custom > ul,
+  1517→.prose-custom > ol {
+  1518→  opacity: 0;
+  1519→  transform: translateY(10px);
+  1520→  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+  1521→              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  1522→}
+  1523→.prose-custom > p.revealed,
+  1524→.prose-custom > ul.revealed,
+  1525→.prose-custom > ol.revealed {
+  1526→  opacity: 1;
+  1527→  transform: translateY(0);
+  1528→}
+  1529→
+  1530→/* ─── Terminal code block ──────────────────── */
+  1531→.terminal-block {
+  1532→  background: rgba(0, 0, 0, 0.6);
+  1533→  border: 1px solid rgba(52, 211, 153, 0.15);
+  1534→  border-radius: 0.75rem;
+  1535→  font-family: var(--font-jetbrains-mono), 'JetBrains Mono', monospace;
+  1536→}
+  1537→.terminal-block .terminal-header {
+  1538→  background: rgba(52, 211, 153, 0.05);
+  1539→  border-bottom: 1px solid rgba(52, 211, 153, 0.1);
+  1540→  padding: 0.5rem 1rem;
+  1541→  display: flex;
+  1542→  align-items: center;
+  1543→  gap: 0.5rem;
+  1544→}
+  1545→.terminal-block .terminal-dot { width: 8px; height: 8px; border-radius: 50%; }
+  1546→.terminal-block .terminal-body {
+  1547→  padding: 1rem 1.25rem;
+  1548→  color: #d4c8b8;
+  1549→  font-size: 0.875rem;
+  1550→  line-height: 1.6;
+  1551→}
+  1552→.terminal-block .terminal-prompt { color: #34d399; }
+  1553→.terminal-block .terminal-command { color: #e8e5df; }
+  1554→.terminal-block .terminal-comment { color: #5a5648; }
+  1555→
+  1556→/* ─── Scrollbar ─────────────────────────────── */
+  1557→::-webkit-scrollbar { width: 10px; height: 10px; }
+  1558→::-webkit-scrollbar-track { background: transparent; }
+  1559→::-webkit-scrollbar-thumb {
+  1560→  background: linear-gradient(180deg, rgba(52,211,153,0.6), rgba(5,150,105,0.6));
+  1561→  border-radius: 10px;
+  1562→  border: 2px solid transparent;
+  1563→  background-clip: padding-box;
+  1564→}
+  1565→::-webkit-scrollbar-thumb:hover {
+  1566→  background: linear-gradient(180deg, #6ee7b7, #34d399);
+  1567→  background-clip: padding-box;
+  1568→}
+  1569→* { scrollbar-width: thin; scrollbar-color: rgba(52, 211, 153, 0.6) transparent; }
+  1570→
+  1571→/* ─── Search bar (desktop) — Liquid Glass 3D ─── */
+  1572→.searchbar-input-wrap {
+  1573→  display: flex;
+  1574→  align-items: center;
+  1575→  gap: 0.5rem;
+  1576→  width: 280px;
+  1577→  padding: 0.55rem 0.75rem 0.55rem 1rem;
+  1578→  border-radius: 16px;
+  1579→  position: relative;
+  1580→  overflow: hidden;
+  1581→  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  1582→  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  1583→  background: linear-gradient(135deg, var(--glass-bg-1), var(--glass-bg-2));
+  1584→  border: 1.5px solid rgba(255,255,255, var(--glass-border-opacity));
+  1585→  box-shadow: var(--glass-volumetric);
+  1586→  animation: searchbar-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  1587→  transition: var(--glass-transition);
+  1588→}
+  1589→.searchbar-input-wrap::before {
+  1590→  content: '';
+  1591→  position: absolute;
+  1592→  top: 0;
+  1593→  left: 8%;
+  1594→  right: 8%;
+  1595→  height: 1px;
+  1596→  background: linear-gradient(
+  1597→    90deg,
+  1598→    transparent 0%,
+  1599→    rgba(255, 255, 255, 0.4) 20%,
+  1600→    rgba(52, 211, 153, 0.2) 40%,
+  1601→    rgba(255, 255, 255, 0.6) 50%,
+  1602→    rgba(56, 189, 248, 0.12) 60%,
+  1603→    rgba(255, 255, 255, 0.4) 80%,
+  1604→    transparent 100%
+  1605→  );
+  1606→  z-index: 3;
+  1607→  pointer-events: none;
+  1608→}
+  1609→.searchbar-input-wrap::after {
+  1610→  content: '';
+  1611→  position: absolute;
+  1612→  inset: 0;
+  1613→  border-radius: inherit;
+  1614→  background: radial-gradient(
+  1615→    ellipse 60% 40% at var(--light-x, 50%) var(--light-y, 20%),
+  1616→    rgba(255, 255, 255, 0.06) 0%,
+  1617→    transparent 50%
+  1618→  );
+  1619→  pointer-events: none;
+  1620→  z-index: 1;
+  1621→}
+  1622→.searchbar-input-wrap > * {
+  1623→  position: relative;
+  1624→  z-index: 2;
+  1625→}
+  1626→.searchbar-input-closing {
+  1627→  animation: searchbar-out 0.2s cubic-bezier(0.5, 0, 0.75, 0) forwards;
+  1628→}
+  1629→@keyframes searchbar-in {
+  1630→  from { opacity: 0; transform: scaleX(0.85) scaleY(0.9); transform-origin: right center; }
+  1631→  to { opacity: 1; transform: scaleX(1) scaleY(1); transform-origin: right center; }
+  1632→}
+  1633→@keyframes searchbar-out {
+  1634→  from { opacity: 1; transform: scaleX(1) scaleY(1); transform-origin: right center; }
+  1635→  to { opacity: 0; transform: scaleX(0.85) scaleY(0.9); transform-origin: right center; }
+  1636→}
+  1637→.searchbar-input-wrap:focus-within {
+  1638→  box-shadow:
+  1639→    0 0 0 3px rgba(52, 211, 153, 0.2),
+  1640→    var(--glass-volumetric);
+  1641→  border-color: rgba(255, 255, 255, 0.5);
+  1642→}
+  1643→.searchbar-input {
+  1644→  flex: 1;
+  1645→  min-width: 0;
+  1646→  background: transparent;
+  1647→  font-size: 0.875rem;
+  1648→  color: white;
+  1649→  outline: none;
+  1650→}
+  1651→.searchbar-input::placeholder {
+  1652→  color: rgba(255, 255, 255, 0.25);
+  1653→}
+  1654→.searchbar-dropdown {
+  1655→  position: absolute;
+  1656→  top: calc(100% + 0.5rem);
+  1657→  right: 0;
+  1658→  left: auto;
+  1659→  width: 340px;
+  1660→  border-radius: 28px;
+  1661→  overflow: hidden;
+  1662→  z-index: 50;
+  1663→  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  1664→  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  1665→  background: linear-gradient(135deg, rgba(18,18,22,0.88), rgba(12,12,14,0.94));
+  1666→  border: 1.5px solid rgba(255,255,255, var(--glass-border-opacity));
+  1667→  box-shadow: var(--glass-volumetric);
+  1668→  animation: searchbar-drop-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  1669→}
+  1670→.searchbar-dropdown::before {
+  1671→  content: '';
+  1672→  position: absolute;
+  1673→  top: 0;
+  1674→  left: 8%;
+  1675→  right: 8%;
+  1676→  height: 1.5px;
+  1677→  background: linear-gradient(
+  1678→    90deg,
+  1679→    transparent 0%,
+  1680→    rgba(255, 255, 255, 0.35) 20%,
+  1681→    rgba(52, 211, 153, 0.15) 45%,
+  1682→    rgba(255, 255, 255, 0.5) 50%,
+  1683→    rgba(56, 189, 248, 0.1) 55%,
+  1684→    rgba(255, 255, 255, 0.35) 80%,
+  1685→    transparent 100%
+  1686→  );
+  1687→  z-index: 3;
+  1688→  pointer-events: none;
+  1689→}
+  1690→.searchbar-closing .searchbar-dropdown {
+  1691→  animation: searchbar-drop-out 0.15s cubic-bezier(0.5, 0, 0.75, 0) forwards;
+  1692→}
+  1693→@keyframes searchbar-drop-in {
+  1694→  from { opacity: 0; transform: translateY(-6px) scaleY(0.96); }
+  1695→  to { opacity: 1; transform: translateY(0) scaleY(1); }
+  1696→}
+  1697→@keyframes searchbar-drop-out {
+  1698→  from { opacity: 1; transform: translateY(0) scaleY(1); }
+  1699→  to { opacity: 0; transform: translateY(-4px) scaleY(0.97); }
+  1700→}
+  1701→.searchbar-result {
+  1702→  width: 100%;
+  1703→  text-align: left;
+  1704→  padding: 0.6rem 0.75rem;
+  1705→  border-radius: 0.5rem;
+  1706→  display: flex;
+  1707→  align-items: flex-start;
+  1708→  gap: 0.75rem;
+  1709→  color: rgba(255,255,255,0.8);
+  1710→  transition: background 0.15s ease;
+  1711→}
+  1712→.searchbar-result:hover,
+  1713→.searchbar-result-active {
+  1714→  background: rgba(52, 211, 153, 0.1);
+  1715→  backdrop-filter: blur(10px);
+  1716→}
+  1717→
+  1718→
+  1719→/* ─── Search (liquid glass) ────────────────── */
+  1720→.search-glow:focus-within {
+  1721→  box-shadow:
+  1722→    0 0 0 3px rgba(52, 211, 153, 0.2),
+  1723→    inset 0 1px 2px 0 rgba(255, 255, 255, 0.6),
+  1724→    inset 0 -1px 2px 0 rgba(0, 0, 0, 0.1),
+  1725→    0 20px 50px rgba(0, 0, 0, 0.25);
+  1726→  border-color: rgba(255, 255, 255, 0.45);
+  1727→}
+  1728→
+  1729→/* ─── Card hover glow (Liquid Glass 3D) ─── */
+  1730→.card-glow-hover {
+  1731→  position: relative;
+  1732→  transition: var(--glass-transition);
+  1733→}
+  1734→.card-glow-hover::after {
+  1735→  content: '';
+  1736→  position: absolute;
+  1737→  inset: 0;
+  1738→  border-radius: inherit;
+  1739→  background: radial-gradient(
+  1740→    ellipse 60% 40% at var(--light-x, 50%) var(--light-y, 20%),
+  1741→    rgba(255, 255, 255, 0.06) 0%,
+  1742→    transparent 50%
+  1743→  );
+  1744→  pointer-events: none;
+  1745→  z-index: 1;
+  1746→  animation: caustic-shadow-move 10s ease-in-out infinite;
+  1747→}
+  1748→.card-glow-hover > * {
+  1749→  position: relative;
+  1750→  z-index: 2;
+  1751→}
+  1752→.card-glow-hover:hover {
+  1753→  transform: translateY(-6px) scale(1.015);
+  1754→  box-shadow: var(--glass-volumetric-hover);
+  1755→  border-color: rgba(255, 255, 255, 0.5);
+  1756→}
+  1757→.card-glow-hover:active {
+  1758→  transform: translateY(-2px) scale(1.005);
+  1759→  box-shadow:
+  1760→    inset 0 1px 2px 0 rgba(255, 255, 255, 0.5),
+  1761→    inset 0 -2px 6px 0 rgba(0, 0, 0, 0.15),
+  1762→    0 15px 30px -8px rgba(0, 0, 0, 0.3);
+  1763→}
+  1764→
+  1765→
+  1766→/* ─── Hero ring decoration ──────────────────── */
+  1767→.hero-ring {
+  1768→  position: absolute;
+  1769→  border-radius: 9999px;
+  1770→  border: 1px solid rgba(52, 211, 153, 0.08);
+  1771→  pointer-events: none;
+  1772→}
+  1773→
+  1774→/* ─── Buttons (Liquid Glass Droplets) ───── */
+  1775→.btn-primary {
+  1776→  position: relative;
+  1777→  display: inline-flex;
+  1778→  align-items: center;
+  1779→  gap: 0.5rem;
+  1780→  padding: 0.7rem 1.4rem;
+  1781→  border-radius: 9999px;
+  1782→  font-weight: 600;
+  1783→  font-size: 0.9rem;
+  1784→  color: #022c22;
+  1785→  background: linear-gradient(135deg, #a7f3d0 0%, #6ee7b7 45%, #34d399 100%);
+  1786→  box-shadow:
+  1787→    0 2px 4px 0 rgba(255,255,255,0.9) inset,
+  1788→    0 -3px 8px 0 rgba(0,0,0,0.2) inset,
+  1789→    0 12px 32px -8px rgba(52, 211, 153, 0.45),
+  1790→    0 0 0 1px rgba(52, 211, 153, 0.4);
+  1791→  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, filter 0.2s ease;
+  1792→  overflow: hidden;
+  1793→  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  1794→}
+  1795→/* Glass sheen overlay on btn-primary */
+  1796→.btn-primary::before {
+  1797→  content: '';
+  1798→  position: absolute;
+  1799→  inset: 0;
+  1800→  border-radius: inherit;
+  1801→  background: linear-gradient(
+  1802→    135deg,
+  1803→    rgba(255, 255, 255, 0.45) 0%,
+  1804→    rgba(255, 255, 255, 0.12) 35%,
+  1805→    rgba(255, 255, 255, 0.0) 100%
+  1806→  );
+  1807→  pointer-events: none;
+  1808→  z-index: 1;
+  1809→}
+  1810→/* Specular top highlight on btn-primary */
+  1811→.btn-primary::after {
+  1812→  content: '';
+  1813→  position: absolute;
+  1814→  top: 0;
+  1815→  left: 15%;
+  1816→  right: 15%;
+  1817→  height: 1.5px;
+  1818→  background: linear-gradient(
+  1819→    90deg,
+  1820→    transparent 0%,
+  1821→    rgba(255, 255, 255, 0.7) 25%,
+  1822→    rgba(255, 255, 255, 0.95) 50%,
+  1823→    rgba(255, 255, 255, 0.7) 75%,
+  1824→    transparent 100%
+  1825→  );
+  1826→  z-index: 2;
+  1827→  pointer-events: none;
+  1828→}
+  1829→.btn-primary:hover {
+  1830→  transform: translateY(-2px) scale(1.03);
+  1831→  filter: brightness(1.08);
+  1832→  box-shadow:
+  1833→    0 2px 4px 0 rgba(255,255,255,1) inset,
+  1834→    0 -3px 8px 0 rgba(0,0,0,0.25) inset,
+  1835→    0 20px 40px -6px rgba(52, 211, 153, 0.6),
+  1836→    0 0 0 1.5px rgba(52, 211, 153, 0.6);
+  1837→}
+  1838→.btn-primary:active {
+  1839→  transform: translateY(1px) scale(0.97);
+  1840→  box-shadow:
+  1841→    0 1px 2px 0 rgba(255,255,255,0.5) inset,
+  1842→    0 -1px 4px 0 rgba(0,0,0,0.3) inset,
+  1843→    0 4px 12px -4px rgba(52, 211, 153, 0.4);
+  1844→}
+  1845→.btn-primary > * { position: relative; z-index: 3; }
+  1846→
+  1847→.btn-secondary {
+  1848→  position: relative;
+  1849→  display: inline-flex;
+  1850→  align-items: center;
+  1851→  gap: 0.5rem;
+  1852→  padding: 0.7rem 1.4rem;
+  1853→  border-radius: 9999px;
+  1854→  font-weight: 500;
+  1855→  font-size: 0.9rem;
+  1856→  color: rgba(255,255,255,0.85);
+  1857→  background: linear-gradient(
+  1858→    var(--glass-bg-angle, 135deg),
+  1859→    var(--glass-bg-1) 0%,
+  1860→    var(--glass-bg-2) 50%,
+  1861→    var(--glass-bg-3) 100%
+  1862→  );
+  1863→  border: 1.5px solid rgba(255, 255, 255, var(--glass-border-opacity));
+  1864→  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  1865→  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  1866→  box-shadow: var(--glass-volumetric);
+  1867→  transition: var(--glass-transition);
+  1868→  overflow: hidden;
+  1869→}
+  1870→.btn-secondary::before {
+  1871→  content: '';
+  1872→  position: absolute;
+  1873→  top: 0;
+  1874→  left: 12%;
+  1875→  right: 12%;
+  1876→  height: 1.5px;
+  1877→  background: linear-gradient(
+  1878→    90deg,
+  1879→    transparent 0%,
+  1880→    rgba(255, 255, 255, 0.5) 25%,
+  1881→    rgba(255, 255, 255, 0.7) 50%,
+  1882→    rgba(255, 255, 255, 0.5) 75%,
+  1883→    transparent 100%
+  1884→  );
+  1885→  z-index: 1;
+  1886→  pointer-events: none;
+  1887→}
+  1888→.btn-secondary::after {
+  1889→  content: '';
+  1890→  position: absolute;
+  1891→  inset: 0;
+  1892→  border-radius: inherit;
+  1893→  background: radial-gradient(
+  1894→    ellipse 50% 35% at var(--light-x, 50%) var(--light-y, 20%),
+  1895→    rgba(255, 255, 255, 0.1) 0%,
+  1896→    transparent 55%
+  1897→  );
+  1898→  pointer-events: none;
+  1899→  z-index: 0;
+  1900→}
+  1901→.btn-secondary:hover {
+  1902→  background: linear-gradient(
+  1903→    var(--glass-bg-angle, 135deg),
+  1904→    rgba(255, 255, 255, 0.22) 0%,
+  1905→    rgba(255, 255, 255, 0.1) 100%
+  1906→  );
+  1907→  border-color: rgba(255, 255, 255, 0.5);
+  1908→  box-shadow: var(--glass-volumetric-hover);
+  1909→  color: #fff;
+  1910→  transform: translateY(-2px) scale(1.03);
+  1911→}
+  1912→.btn-secondary:active {
+  1913→  transform: translateY(1px) scale(0.97);
+  1914→  box-shadow:
+  1915→    inset 0 1px 2px 0 rgba(255, 255, 255, 0.4),
+  1916→    inset 0 -2px 6px 0 rgba(0, 0, 0, 0.2),
+  1917→    0 8px 20px -6px rgba(0, 0, 0, 0.3);
+  1918→}
+  1919→.btn-secondary > * { position: relative; z-index: 2; }
+  1920→
+  1921→
+  1922→/* ─── Live dot ─────────────────────────────── */
+  1923→.live-dot {
+  1924→  display: inline-block;
+  1925→  width: 6px;
+  1926→  height: 6px;
+  1927→  border-radius: 50%;
+  1928→  background: #22c55e;
+  1929→  animation: pulse-dot 2s ease-out infinite;
+  1930→}
+  1931→
+  1932→/* ─── Rating stars ─────────────────────────── */
+  1933→.star-filled { color: #34d399; fill: #34d399; }
+  1934→.star-empty { color: #3a3830; }
+  1935→
+  1936→/* ─── Blog Prose ────────────────────────────── */
+  1937→.prose-custom {
+  1938→  color: #ece8df;
+  1939→  line-height: 1.8;
+  1940→  font-size: 1.05rem;
+  1941→}
+  1942→.prose-custom h1,
+  1943→.prose-custom h2,
+  1944→.prose-custom h3,
+  1945→.prose-custom h4 {
+  1946→  color: #fff;
+  1947→  font-weight: 700;
+  1948→  margin-top: 2em;
+  1949→  margin-bottom: 0.75em;
+  1950→  line-height: 1.25;
+  1951→  letter-spacing: -0.01em;
+  1952→}
+  1953→.prose-custom h1 { font-size: 2rem; letter-spacing: -0.025em; }
+  1954→.prose-custom h2 {
+  1955→  font-size: 1.6rem;
+  1956→  padding-bottom: 0.5em;
+  1957→  border-bottom: 1px solid rgba(52, 211, 153, 0.15);
+  1958→}
+  1959→.prose-custom h3 { font-size: 1.3rem; font-style: italic; }
+  1960→.prose-custom h4 { font-size: 1.1rem; font-style: italic; }
+  1961→.prose-custom p {
+  1962→  margin-bottom: 1.25em;
+  1963→  color: rgba(236, 232, 223, 0.78);
+  1964→}
+  1965→.prose-custom a {
+  1966→  color: #6ee7b7;
+  1967→  text-decoration: none;
+  1968→  background-image: linear-gradient(currentColor, currentColor);
+  1969→  background-size: 100% 1px;
+  1970→  background-repeat: no-repeat;
+  1971→  background-position: 0 100%;
+  1972→  transition: color 0.2s, background-size 0.2s, gap 0.2s;
+  1973→  display: inline-flex;
+  1974→  align-items: center;
+  1975→  gap: 0.2em;
+  1976→}
+  1977→.prose-custom a:hover {
+  1978→  color: #a7f3d0;
+  1979→  background-size: 100% 2px;
+  1980→}
+  1981→.prose-custom a::after {
+  1982→  content: "";
+  1983→  display: inline-block;
+  1984→  width: 14px;
+  1985→  height: 14px;
+  1986→  min-width: 14px;
+  1987→  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236ee7b7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17L17 7'/%3E%3Cpath d='M7 7h10v10'/%3E%3C/svg%3E");
+  1988→  background-repeat: no-repeat;
+  1989→  background-position: center;
+  1990→  opacity: 0.85;
+  1991→  transition: opacity 0.2s, transform 0.2s;
+  1992→  vertical-align: middle;
+  1993→}
+  1994→.prose-custom a:hover::after {
+  1995→  opacity: 1;
+  1996→  transform: translate(2px, -2px);
+  1997→}
+  1998→@media (hover: none) {
+  1999→  .prose-custom a::after {
+  2000→    opacity: 1;
+  2001→  }
+  2002→}
+  2003→.prose-custom strong { color: #fff; font-weight: 600; }
+  2004→.prose-custom ul, .prose-custom ol { margin-bottom: 1.25em; padding-left: 1.5em; }
+  2005→.prose-custom ul { list-style-type: disc; }
+  2006→.prose-custom ol { list-style-type: decimal; }
+  2007→.prose-custom li { margin-bottom: 0.5em; color: rgba(236, 232, 223, 0.72); }
+  2008→.prose-custom blockquote {
+  2009→  border-left: 3px solid rgba(52, 211, 153, 0.5);
+  2010→  padding: 0.75em 1.25em;
+  2011→  margin: 1.5em 0;
+  2012→  background: linear-gradient(90deg, rgba(52,211,153,0.05), transparent);
+  2013→  border-radius: 0 0.5rem 0.5rem 0;
+  2014→}
+  2015→.prose-custom blockquote p { color: rgba(236, 232, 223, 0.65); font-style: italic; }
+  2016→.prose-custom pre {
+  2017→  background: rgba(0, 0, 0, 0.7);
+  2018→  border: 1px solid rgba(52, 211, 153, 0.14);
+  2019→  border-radius: 0.85rem;
+  2020→  padding: 1.25rem 1.5rem;
+  2021→  margin: 1.5em 0;
+  2022→  overflow-x: auto;
+  2023→  max-width: 100%;
+  2024→  width: 100%;
+  2025→  font-family: var(--font-jetbrains-mono), 'JetBrains Mono', monospace;
+  2026→  font-size: 0.875rem;
+  2027→  line-height: 1.65;
+  2028→  box-shadow: 0 8px 24px -12px rgba(0,0,0,0.8);
+  2029→}
+  2030→/* Shiki support */
+  2031→.prose-custom pre.shiki {
+  2032→  background-color: #1a1b26 !important; /* Tokyo Night background */
+  2033→  margin: 1.5em 0;
+  2034→  overflow-x: auto !important;
+  2035→  max-width: 100% !important;
+  2036→}
+  2037→.prose-custom pre.shiki code {
+  2038→  color: inherit;
+  2039→  display: block;
+  2040→  width: fit-content;
+  2041→  min-width: 100%;
+  2042→}
+  2043→.prose-custom code { font-family: var(--font-jetbrains-mono), 'JetBrains Mono', monospace; font-size: 0.875em; }
+  2044→.prose-custom :not(pre) > code {
+  2045→  background: rgba(52, 211, 153, 0.1);
+  2046→  color: #6ee7b7;
+  2047→  padding: 0.15em 0.45em;
+  2048→  border-radius: 0.3rem;
+  2049→  border: 1px solid rgba(52, 211, 153, 0.15);
+  2050→}
+  2051→.prose-custom pre code { background: none; color: #d4c8b8; padding: 0; border: 0; }
+  2052→
+  2053→/* ─── Pre wrapper (holds copy button outside scroll) ── */
+  2054→.prose-custom .pre-wrapper {
+  2055→  position: relative;
+  2056→}
+  2057→
+  2058→/* ─── Code copy button ───────────────── */
+  2059→.prose-custom .pre-wrapper .copy-btn {
+  2060→  position: absolute;
+  2061→  top: 0.75rem;
+  2062→  right: 0.75rem;
+  2063→  display: flex;
+  2064→  align-items: center;
+  2065→  justify-content: center;
+  2066→  gap: 0.35rem;
+  2067→  padding: 0.4rem 0.55rem;
+  2068→  border-radius: 0.5rem;
+  2069→  border: 1px solid rgba(52, 211, 153, 0.2);
+  2070→  background: rgba(0, 0, 0, 0.6);
+  2071→  color: rgba(52, 211, 153, 0.6);
+  2072→  font-size: 0.7rem;
+  2073→  font-family: inherit;
+  2074→  cursor: pointer;
+  2075→  opacity: 1;
+  2076→  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  2077→  backdrop-filter: blur(8px);
+  2078→  z-index: 2;
+  2079→}
+  2080→.prose-custom .pre-wrapper .copy-btn:hover {
+  2081→  background: rgba(52, 211, 153, 0.15);
+  2082→  color: #6ee7b7;
+  2083→  border-color: rgba(52, 211, 153, 0.4);
+  2084→}
+  2085→.prose-custom .pre-wrapper .copy-btn .check-icon,
+  2086→.prose-custom .pre-wrapper .copy-btn .copied-label {
+  2087→  display: none;
+  2088→}
+  2089→.prose-custom .pre-wrapper .copy-btn .copy-label {
+  2090→  display: inline;
+  2091→}
+  2092→.prose-custom .pre-wrapper .copy-btn.copied {
+  2093→  opacity: 1;
+  2094→  background: rgba(52, 211, 153, 0.15);
+  2095→  border-color: rgba(52, 211, 153, 0.4);
+  2096→  color: #34d399;
+  2097→}
+  2098→.prose-custom .pre-wrapper .copy-btn.copied .copy-icon,
+  2099→.prose-custom .pre-wrapper .copy-btn.copied .copy-label {
+  2100→  display: none;
+  2101→}
+  2102→.prose-custom .pre-wrapper .copy-btn.copied .check-icon,
+  2103→.prose-custom .pre-wrapper .copy-btn.copied .copied-label {
+  2104→  display: inline;
+  2105→}
+  2106→
+  2107→.prose-custom img {
+  2108→  border-radius: 0.85rem;
+  2109→  border: 1px solid rgba(255,255,255,0.06);
+  2110→  margin: 1.5em 0;
+  2111→  box-shadow: 0 20px 50px -20px rgba(0,0,0,0.7);
+  2112→}
+  2113→
+  2114→/* ─── Cover image zoom ─── */
+  2115→.cover-zoom-wrapper {
+  2116→  position: relative;
+  2117→  aspect-ratio: 16 / 9;
+  2118→  border-radius: 1rem;
+  2119→  overflow: hidden;
+  2120→  margin-bottom: 2.5rem;
+  2121→  border: 1px solid rgba(255, 255, 255, 0.06);
+  2122→  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.7);
+  2123→  cursor: pointer;
+  2124→}
+  2125→@media (min-width: 640px) {
+  2126→  .cover-zoom-wrapper {
+  2127→    border-radius: 1.25rem;
+  2128→    margin-bottom: 3rem;
+  2129→  }
+  2130→}
+  2131→.cover-zoom-overlay {
+  2132→  position: absolute;
+  2133→  inset: 0;
+  2134→  display: flex;
+  2135→  align-items: center;
+  2136→  justify-content: center;
+  2137→  background: rgba(0, 0, 0, 0.25);
+  2138→  opacity: 0;
+  2139→  transition: opacity 0.25s ease;
+  2140→  z-index: 2;
+  2141→}
+  2142→.cover-zoom-wrapper:hover .cover-zoom-overlay {
+  2143→  opacity: 1;
+  2144→}
+  2145→.cover-zoom-icon {
+  2146→  width: 2.25rem;
+  2147→  height: 2.25rem;
+  2148→  color: white;
+  2149→  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
+  2150→  transform: scale(0.8);
+  2151→  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  2152→}
+  2153→.cover-zoom-wrapper:hover .cover-zoom-icon {
+  2154→  transform: scale(1);
+  2155→}
+  2156→
+  2157→.prose-custom hr {
+  2158→  border: none;
+  2159→  height: 1px;
+  2160→  background: linear-gradient(90deg, transparent, rgba(52,211,153,0.3), transparent);
+  2161→  margin: 2em 0;
+  2162→}
+  2163→.prose-custom table {
+  2164→  width: 100%;
+  2165→  border-collapse: separate;
+  2166→  border-spacing: 0;
+  2167→  margin: 1.5em -0.5rem;
+  2168→  font-size: 0.8rem;
+  2169→  overflow-x: auto;
+  2170→  -webkit-overflow-scrolling: touch;
+  2171→}
+  2172→.prose-custom table thead { }
+  2173→.prose-custom table tbody { }
+  2174→.prose-custom table tr { transition: background 0.15s ease; }
+  2175→.prose-custom table th, .prose-custom table td { }
+  2176→.prose-custom th {
+  2177→  text-align: left;
+  2178→  padding: 0.6em 0.75em;
+  2179→  background: rgba(52, 211, 153, 0.08);
+  2180→  color: #6ee7b7;
+  2181→  font-weight: 600;
+  2182→  font-size: 0.72rem;
+  2183→  text-transform: uppercase;
+  2184→  letter-spacing: 0.06em;
+  2185→  border-bottom: 1px solid rgba(52, 211, 153, 0.18);
+  2186→  border-top: 1px solid rgba(52, 211, 153, 0.12);
+  2187→  white-space: nowrap;
+  2188→}
+  2189→.prose-custom th:first-child { border-left: 1px solid rgba(52, 211, 153, 0.12); border-top-left-radius: 0.75rem; }
+  2190→.prose-custom th:last-child { border-right: 1px solid rgba(52, 211, 153, 0.12); border-top-right-radius: 0.75rem; }
+  2191→.prose-custom td {
+  2192→  padding: 0.5em 0.75em;
+  2193→  border-bottom: 1px solid rgba(255,255,255,0.04);
+  2194→  border-left: 1px solid rgba(52, 211, 153, 0.06);
+  2195→  border-right: 1px solid rgba(52, 211, 153, 0.06);
+  2196→  color: rgba(236, 232, 223, 0.78);
+  2197→  text-align: center;
+  2198→  font-size: 0.8rem;
+  2199→  word-break: break-word;
+  2200→}
+  2201→.prose-custom td:first-child, .prose-custom th:first-child {
+  2202→  text-align: left;
+  2203→  font-weight: 500;
+  2204→  color: rgba(236, 232, 223, 0.9);
+  2205→  border-left: 1px solid rgba(52, 211, 153, 0.12);
+  2206→}
+  2207→.prose-custom td:last-child, .prose-custom th:last-child {
+  2208→  border-right: 1px solid rgba(52, 211, 153, 0.12);
+  2209→}
+  2210→.prose-custom tbody tr:last-child td { border-bottom: none; }
+  2211→.prose-custom tbody tr:last-child td:first-child { border-bottom-left-radius: 0.75rem; }
+  2212→.prose-custom tbody tr:last-child td:last-child { border-bottom-right-radius: 0.75rem; }
+  2213→.prose-custom tbody tr:hover td { background: rgba(52, 211, 153, 0.05); }
+  2214→.prose-custom tbody tr:nth-child(even) td { background: rgba(255,255,255,0.012); }
+  2215→.prose-custom tbody tr:nth-child(even):hover td { background: rgba(52, 211, 153, 0.05); }
+  2216→
+  2217→/* ─── Table Status Icons ───────────────────── */
+  2218→.t-check,
+  2219→.t-cross,
+  2220→.t-partial {
+  2221→  display: inline-flex;
+  2222→  align-items: center;
+  2223→  justify-content: center;
+  2224→  width: 20px;
+  2225→  height: 20px;
+  2226→  border-radius: 50%;
+  2227→  font-size: 11px;
+  2228→  font-weight: 700;
+  2229→  line-height: 1;
+  2230→  vertical-align: middle;
+  2231→  margin: 0 2px;
+  2232→}
+  2233→.t-check {
+  2234→  background: rgba(34, 197, 94, 0.15);
+  2235→  color: #4ade80;
+  2236→  box-shadow: inset 0 0 0 1px rgba(34, 197, 94, 0.3);
+  2237→}
+  2238→.t-check::after {
+  2239→  content: "✓";
+  2240→}
+  2241→.t-cross {
+  2242→  background: rgba(239, 68, 68, 0.15);
+  2243→  color: #f87171;
+  2244→  box-shadow: inset 0 0 0 1px rgba(239, 68, 68, 0.3);
+  2245→}
+  2246→.t-cross::after {
+  2247→  content: "✕";
+  2248→}
+  2249→.t-partial {
+  2250→  background: rgba(110, 231, 183, 0.15);
+  2251→  color: #6ee7b7;
+  2252→  box-shadow: inset 0 0 0 1px rgba(110, 231, 183, 0.3);
+  2253→}
+  2254→.t-partial::after {
+  2255→  content: "~";
+  2256→}
+  2257→
+  2258→/* ─── Cinematic Vignette ───────────────────── */
+  2259→.cinema-vignette {
+  2260→  position: fixed;
+  2261→  inset: 0;
+  2262→  z-index: 1;
+  2263→  pointer-events: none;
+  2264→  background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.55) 100%);
+  2265→}
+  2266→
+  2267→/* ─── Animated Film Grain ──────────────────── */
+  2268→.cinema-grain {
+  2269→  position: fixed;
+  2270→  inset: -50%;
+  2271→  z-index: 2;
+  2272→  pointer-events: none;
+  2273→  width: 200%;
+  2274→  height: 200%;
+  2275→  opacity: 0.045;
+  2276→  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  2277→  animation: grain-shift 0.4s steps(5) infinite;
+  2278→}
+  2279→@keyframes grain-shift {
+  2280→  0%, 100% { transform: translate(0, 0); }
+  2281→  20% { transform: translate(-5%, -8%); }
+  2282→  40% { transform: translate(3%, -4%); }
+  2283→  60% { transform: translate(-8%, 5%); }
+  2284→  80% { transform: translate(6%, 3%); }
+  2285→}
+  2286→
+  2287→/* ─── Light Leaks ──────────────────────────── */
+  2288→.light-leak {
+  2289→  position: fixed;
+  2290→  z-index: 2;
+  2291→  pointer-events: none;
+  2292→  border-radius: 50%;
+  2293→  filter: blur(90px);
+  2294→  mix-blend-mode: screen;
+  2295→  opacity: 0;
+  2296→}
+  2297→.light-leak--emerald {
+  2298→  width: 600px; height: 600px;
+  2299→  background: radial-gradient(circle, rgba(52,211,153,0.18) 0%, transparent 70%);
+  2300→  top: -10%; right: -10%;
+  2301→  animation: leak-drift-1 14s ease-in-out infinite;
+  2302→}
+  2303→.light-leak--rose {
+  2304→  width: 500px; height: 500px;
+  2305→  background: radial-gradient(circle, rgba(244,63,94,0.12) 0%, transparent 70%);
+  2306→  bottom: 15%; left: -8%;
+  2307→  animation: leak-drift-2 18s ease-in-out infinite;
+  2308→}
+  2309→.light-leak--sky {
+  2310→  width: 420px; height: 420px;
+  2311→  background: radial-gradient(circle, rgba(56,189,248,0.10) 0%, transparent 70%);
+  2312→  top: 40%; right: 8%;
+  2313→  animation: leak-drift-3 22s ease-in-out infinite;
+  2314→}
+  2315→@keyframes leak-drift-1 {
+  2316→  0%, 100% { opacity: 0; transform: translate(0, 0) scale(1); }
+  2317→  30% { opacity: 0.6; }
+  2318→  55% { opacity: 0.35; transform: translate(-50px, 35px) scale(1.15); }
+  2319→  80% { opacity: 0.7; }
+  2320→}
+  2321→@keyframes leak-drift-2 {
+  2322→  0%, 100% { opacity: 0; transform: translate(0, 0) scale(1); }
+  2323→  35% { opacity: 0.4; }
+  2324→  65% { opacity: 0.5; transform: translate(40px, -25px) scale(1.1); }
+  2325→}
+  2326→@keyframes leak-drift-3 {
+  2327→  0%, 100% { opacity: 0; transform: translate(0, 0) scale(0.95); }
+  2328→  45% { opacity: 0.35; transform: translate(-25px, 15px) scale(1.08); }
+  2329→  75% { opacity: 0.5; }
+  2330→}
+  2331→
+  2332→/* ─── Bokeh Canvas ─────────────────────────── */
+  2333→.bokeh-canvas {
+  2334→  position: fixed;
+  2335→  inset: 0;
+  2336→  z-index: 2;
+  2337→  pointer-events: none;
+  2338→  opacity: 0.45;
+  2339→}
+  2340→
+  2341→/* ─── Welcome Screen (first-visit) ─────────── */
+  2342→.welcome-overlay {
+  2343→  position: fixed;
+  2344→  inset: 0;
+  2345→  z-index: 100;
+  2346→  background: var(--background);
+  2347→  display: flex;
+  2348→  align-items: center;
+  2349→  justify-content: center;
+  2350→  flex-direction: column;
+  2351→  overflow: hidden;
+  2352→  will-change: opacity, transform;
+  2353→}
+  2354→.welcome-enter {
+  2355→  animation: welcome-fade-in 0.5s ease-out both;
+  2356→}
+  2357→.welcome-hold {
+  2358→  opacity: 1;
+  2359→}
+  2360→.welcome-exit {
+  2361→  animation: welcome-fade-out 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  2362→}
+  2363→@keyframes welcome-fade-in {
+  2364→  from { opacity: 0; }
+  2365→  to   { opacity: 1; }
+  2366→}
+  2367→@keyframes welcome-fade-out {
+  2368→  0%   { opacity: 1; filter: blur(0); transform: scale(1); }
+  2369→  100% { opacity: 0; filter: blur(6px); transform: scale(1.04); }
+  2370→}
+  2371→
+  2372→/* Letterbox bars */
+  2373→.welcome-letterbox {
+  2374→  position: absolute;
+  2375→  left: 0;
+  2376→  right: 0;
+  2377→  height: 0;
+  2378→  background: var(--background);
+  2379→  z-index: 2;
+  2380→  transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  2381→}
+  2382→.welcome-enter .welcome-letterbox--top {
+  2383→  animation: letterbox-in-top 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+  2384→}
+  2385→.welcome-enter .welcome-letterbox--bottom {
+  2386→  animation: letterbox-in-bottom 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+  2387→}
+  2388→.welcome-exit .welcome-letterbox {
+  2389→  height: 0 !important;
+  2390→  transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.15s;
+  2391→}
+  2392→@keyframes letterbox-in-top {
+  2393→  from { height: 0; }
+  2394→  to   { height: 48px; }
+  2395→}
+  2396→@keyframes letterbox-in-bottom {
+  2397→  from { height: 0; }
+  2398→  to   { height: 48px; }
+  2399→}
+  2400→
+  2401→/* Vignette for welcome */
+  2402→.welcome-vignette {
+  2403→  position: absolute;
+  2404→  inset: 0;
+  2405→  background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.7) 100%);
+  2406→  z-index: 1;
+  2407→  pointer-events: none;
+  2408→}
+  2409→
+  2410→/* Ambient glow behind logo */
+  2411→.welcome-glow {
+  2412→  position: absolute;
+  2413→  width: 320px;
+  2414→  height: 320px;
+  2415→  border-radius: 50%;
+  2416→  background: radial-gradient(circle, rgba(52, 211, 153, 0.15) 0%, rgba(52, 211, 153, 0.04) 40%, transparent 70%);
+  2417→  filter: blur(40px);
+  2418→  z-index: 1;
+  2419→  animation: welcome-glow-pulse 2.5s ease-in-out infinite;
+  2420→}
+  2421→@keyframes welcome-glow-pulse {
+  2422→  0%, 100% { transform: scale(1); opacity: 0.8; }
+  2423→  50%      { transform: scale(1.15); opacity: 1; }
+  2424→}
+  2425→
+  2426→/* Content group */
+  2427→.welcome-content {
+  2428→  position: relative;
+  2429→  z-index: 3;
+  2430→  display: flex;
+  2431→  flex-direction: column;
+  2432→  align-items: center;
+  2433→  gap: 1.25rem;
+  2434→}
+  2435→
+  2436→/* Logo wrapper */
+  2437→.welcome-logo-wrap {
+  2438→  opacity: 0;
+  2439→  transform: scale(0.7) translateY(12px);
+  2440→  filter: blur(10px);
+  2441→}
+  2442→.welcome-enter .welcome-logo-wrap {
+  2443→  animation: welcome-logo-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+  2444→}
+  2445→.welcome-exit .welcome-logo-wrap {
+  2446→  animation: welcome-element-out 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+  2447→}
+  2448→@keyframes welcome-logo-in {
+  2449→  0%   { opacity: 0; transform: scale(0.7) translateY(12px); filter: blur(10px); }
+  2450→  100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+  2451→}
+  2452→
+  2453→/* Avatar circle for returning user */
+  2454→.welcome-avatar-circle {
+  2455→  width: 80px;
+  2456→  height: 80px;
+  2457→  border-radius: 50%;
+  2458→  overflow: hidden;
+  2459→  border: 2px solid rgba(52, 211, 153, 0.3);
+  2460→  box-shadow: 0 0 30px rgba(52, 211, 153, 0.15), 0 0 60px rgba(52, 211, 153, 0.08);
+  2461→}
+  2462→@media (min-width: 640px) {
+  2463→  .welcome-avatar-circle {
+  2464→    width: 96px;
+  2465→    height: 96px;
+  2466→  }
+  2467→}
+  2468→.welcome-avatar-circle--fallback {
+  2469→  display: flex;
+  2470→  align-items: center;
+  2471→  justify-content: center;
+  2472→  background: linear-gradient(135deg, rgba(52, 211, 153, 0.15), rgba(52, 211, 153, 0.05));
+  2473→  border: 2px solid rgba(52, 211, 153, 0.25);
+  2474→}
+  2475→
+  2476→/* Title */
+  2477→.welcome-title {
+  2478→  font-size: 2.5rem;
+  2479→  font-weight: 800;
+  2480→  letter-spacing: -0.03em;
+  2481→  line-height: 1.1;
+  2482→  opacity: 0;
+  2483→  transform: translateY(16px);
+  2484→  filter: blur(8px);
+  2485→}
+  2486→.welcome-enter .welcome-title {
+  2487→  animation: welcome-text-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.65s both;
+  2488→}
+  2489→.welcome-exit .welcome-title {
+  2490→  animation: welcome-element-out 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  2491→}
+  2492→.welcome-title--tech {
+  2493→  color: rgba(255, 255, 255, 0.9);
+  2494→}
+  2495→.welcome-title--mate {
+  2496→  font-size: 2.5rem;
+  2497→  font-weight: 800;
+  2498→}
+  2499→@keyframes welcome-text-in {
+  2500→  0%   { opacity: 0; transform: translateY(16px); filter: blur(8px); }
+  2501→  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+  2502→}
+  2503→
+  2504→/* Tagline */
+  2505→.welcome-tagline {
+  2506→  color: var(--muted);
+  2507→  font-size: 0.95rem;
+  2508→  font-weight: 400;
+  2509→  letter-spacing: 0.02em;
+  2510→  text-align: center;
+  2511→  opacity: 0;
+  2512→  transform: translateY(10px);
+  2513→}
+  2514→.welcome-enter .welcome-tagline {
+  2515→  animation: welcome-text-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) 1s both;
+  2516→}
+  2517→.welcome-exit .welcome-tagline {
+  2518→  animation: welcome-element-out 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  2519→}
+  2520→@keyframes welcome-element-out {
+  2521→  0%   { opacity: 1; transform: translateY(0); filter: blur(0); }
+  2522→  100% { opacity: 0; transform: translateY(-10px); filter: blur(6px); }
+  2523→}
+  2524→
+  2525→/* Decorative line */
+  2526→.welcome-line {
+  2527→  width: 60px;
+  2528→  height: 2px;
+  2529→  background: linear-gradient(90deg, transparent, rgba(52, 211, 153, 0.5), transparent);
+  2530→  border-radius: 9999px;
+  2531→  opacity: 0;
+  2532→  transform: scaleX(0);
+  2533→}
+  2534→.welcome-enter .welcome-line {
+  2535→  animation: welcome-line-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) 1.2s both;
+  2536→}
+  2537→.welcome-exit .welcome-line {
+  2538→  animation: welcome-line-out 0.4s ease-in both;
+  2539→}
+  2540→@keyframes welcome-line-in {
+  2541→  0%   { opacity: 0; transform: scaleX(0); }
+  2542→  100% { opacity: 1; transform: scaleX(1); }
+  2543→}
+  2544→@keyframes welcome-line-out {
+  2545→  0%   { opacity: 1; transform: scaleX(1); }
+  2546→  100% { opacity: 0; transform: scaleX(0); }
+  2547→}
+  2548→
+  2549→/* Decorative rings */
+  2550→.welcome-ring {
+  2551→  position: absolute;
+  2552→  border-radius: 9999px;
+  2553→  border: 1px solid rgba(52, 211, 153, 0.06);
+  2554→  pointer-events: none;
+  2555→  z-index: 1;
+  2556→  opacity: 0;
+  2557→}
+  2558→.welcome-ring:not(.welcome-ring--outer) {
+  2559→  width: 180px;
+  2560→  height: 180px;
+  2561→}
+  2562→.welcome-ring--outer {
+  2563→  width: 260px;
+  2564→  height: 260px;
+  2565→}
+  2566→.welcome-enter .welcome-ring {
+  2567→  animation: welcome-ring-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+  2568→}
+  2569→.welcome-enter .welcome-ring--outer {
+  2570→  animation: welcome-ring-in 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
+  2571→}
+  2572→@keyframes welcome-ring-in {
+  2573→  0%   { opacity: 0; transform: scale(0.6); }
+  2574→  100% { opacity: 0.6; transform: scale(1); }
+  2575→}
+  2576→
+  2577→/* Mobile tweaks for welcome */
+  2578→@media (max-width: 640px) {
+  2579→  .welcome-letterbox--top,
+  2580→  .welcome-letterbox--bottom {
+  2581→    height: 32px !important;
+  2582→  }
+  2583→  @keyframes letterbox-in-top {
+  2584→    from { height: 0; }
+  2585→    to   { height: 32px; }
+  2586→  }
+  2587→  @keyframes letterbox-in-bottom {
+  2588→    from { height: 0; }
+  2589→    to   { height: 32px; }
+  2590→  }
+  2591→  .welcome-title {
+  2592→    font-size: 1.4rem;
+  2593→    white-space: nowrap;
+  2594→  }
+  2595→  .welcome-title--mate {
+  2596→    font-size: 1.4rem;
+  2597→  }
+  2598→  .welcome-tagline {
+  2599→    font-size: 0.875rem;
+  2600→    white-space: nowrap;
+  2601→  }
+  2602→  .welcome-glow {
+  2603→    width: 220px;
+  2604→    height: 220px;
+  2605→  }
+  2606→  .welcome-ring:not(.welcome-ring--outer) {
+  2607→    width: 140px;
+  2608→    height: 140px;
+  2609→  }
+  2610→  .welcome-ring--outer {
+  2611→    width: 200px;
+  2612→    height: 200px;
+  2613→  }
+  2614→}
+  2615→
+  2616→/* ─── Name input section ──────────────────── */
+  2617→.welcome-name-section {
+  2618→  display: flex;
+  2619→  flex-direction: column;
+  2620→  align-items: center;
+  2621→  gap: 1.25rem;
+  2622→  opacity: 0;
+  2623→  transform: translateY(16px);
+  2624→  filter: blur(8px);
+  2625→  animation: welcome-text-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+  2626→}
+  2627→.welcome-exit .welcome-name-section {
+  2628→  animation: welcome-element-out 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  2629→}
+  2630→.welcome-name-heading {
+  2631→  display: flex;
+  2632→  flex-direction: column;
+  2633→  align-items: center;
+  2634→  gap: 0.25rem;
+  2635→  font-size: 1.25rem;
+  2636→  font-weight: 600;
+  2637→  color: rgba(255, 255, 255, 0.85);
+  2638→  letter-spacing: -0.01em;
+  2639→  text-align: center;
+  2640→}
+  2641→.welcome-name-form {
+  2642→  display: flex;
+  2643→  flex-direction: column;
+  2644→  align-items: center;
+  2645→  gap: 0.75rem;
+  2646→  width: 100%;
+  2647→  max-width: 300px;
+  2648→}
+  2649→.welcome-name-input {
+  2650→  width: 100%;
+  2651→  padding: 0.7rem 1rem;
+  2652→  border-radius: 0.75rem;
+  2653→  border: 1px solid rgba(255, 255, 255, 0.12);
+  2654→  background: rgba(255, 255, 255, 0.05);
+  2655→  backdrop-filter: blur(40px);
+  2656→  -webkit-backdrop-filter: blur(40px);
+  2657→  color: rgba(255, 255, 255, 0.9);
+  2658→  font-size: 1rem;
+  2659→  font-weight: 400;
+  2660→  text-align: center;
+  2661→  outline: none;
+  2662→  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  2663→  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  2664→}
+  2665→.welcome-name-input::placeholder {
+  2666→  color: rgba(255, 255, 255, 0.25);
+  2667→}
+  2668→.welcome-name-input:focus {
+  2669→  border-color: rgba(52, 211, 153, 0.4);
+  2670→  background: rgba(255, 255, 255, 0.07);
+  2671→  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 0 0 3px rgba(52, 211, 153, 0.1);
+  2672→}
+  2673→.welcome-name-btn {
+  2674→  width: 100%;
+  2675→  padding: 0.65rem 1.5rem;
+  2676→  border-radius: 0.75rem;
+  2677→  border: 1px solid rgba(52, 211, 153, 0.25);
+  2678→  background: linear-gradient(to bottom, rgba(52, 211, 153, 0.85), rgba(52, 211, 153, 0.95));
+  2679→  color: #022c22;
+  2680→  font-size: 0.875rem;
+  2681→  font-weight: 600;
+  2682→  cursor: pointer;
+  2683→  transition: all 0.2s;
+  2684→  box-shadow: 0 4px 16px -4px rgba(52, 211, 153, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  2685→}
+  2686→.welcome-name-btn:hover:not(:disabled) {
+  2687→  background: linear-gradient(to bottom, rgba(110, 231, 183, 0.95), rgba(16, 185, 129, 0.95));
+  2688→  box-shadow: 0 8px 24px -4px rgba(52, 211, 153, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  2689→  transform: translateY(-1px);
+  2690→}
+  2691→.welcome-name-btn:active:not(:disabled) {
+  2692→  transform: translateY(0) scale(0.98);
+  2693→}
+  2694→.welcome-name-btn:disabled {
+  2695→  opacity: 0.4;
+  2696→  cursor: not-allowed;
+  2697→}
+  2698→
+  2699→/* ─── Greet section ───────────────────────── */
+  2700→.welcome-greet-section {
+  2701→  opacity: 0;
+  2702→  transform: translateY(16px);
+  2703→  filter: blur(8px);
+  2704→  animation: welcome-text-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+  2705→}
+  2706→.welcome-exit .welcome-greet-section {
+  2707→  animation: welcome-element-out 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  2708→}
+  2709→.welcome-greet-title {
+  2710→  font-size: 1.75rem !important;
+  2711→  text-align: center;
+  2712→}
+  2713→@media (max-width: 640px) {
+  2714→  .welcome-greet-title {
+  2715→    font-size: 1.35rem !important;
+  2716→  }
+  2717→  .welcome-name-section {
+  2718→    gap: 1rem;
+  2719→  }
+  2720→  .welcome-name-form {
+  2721→    max-width: 260px;
+  2722→  }
+  2723→  .welcome-name-heading {
+  2724→    font-size: 1.1rem;
+  2725→  }
+  2726→}
+  2727→
+  2728→/* ─── Photo upload section ──────────────────── */
+  2729→.welcome-photo-section {
+  2730→  display: flex;
+  2731→  flex-direction: column;
+  2732→  align-items: center;
+  2733→  gap: 1.25rem;
+  2734→  opacity: 0;
+  2735→  transform: translateY(16px);
+  2736→  filter: blur(8px);
+  2737→  animation: welcome-text-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+  2738→}
+  2739→.welcome-exit .welcome-photo-section {
+  2740→  animation: welcome-element-out 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  2741→}
+  2742→.welcome-photo-heading {
+  2743→  display: flex;
+  2744→  flex-direction: column;
+  2745→  align-items: center;
+  2746→  gap: 0.25rem;
+  2747→  font-size: 1.15rem;
+  2748→  font-weight: 600;
+  2749→  color: rgba(255, 255, 255, 0.85);
+  2750→  letter-spacing: -0.01em;
+  2751→  text-align: center;
+  2752→}
+  2753→.welcome-photo-upload-area {
+  2754→  width: 120px;
+  2755→  height: 120px;
+  2756→  border-radius: 50%;
+  2757→  border: 2px dashed rgba(52, 211, 153, 0.3);
+  2758→  display: flex;
+  2759→  align-items: center;
+  2760→  justify-content: center;
+  2761→  cursor: pointer;
+  2762→  transition: border-color 0.25s, background 0.25s, box-shadow 0.25s, transform 0.2s;
+  2763→  background: rgba(255, 255, 255, 0.03);
+  2764→  overflow: hidden;
+  2765→}
+  2766→.welcome-photo-upload-area:hover {
+  2767→  border-color: rgba(52, 211, 153, 0.5);
+  2768→  background: rgba(52, 211, 153, 0.05);
+  2769→  box-shadow: 0 0 24px rgba(52, 211, 153, 0.12);
+  2770→  transform: scale(1.04);
+  2771→}
+  2772→.welcome-photo-upload-area:active {
+  2773→  transform: scale(0.98);
+  2774→}
+  2775→.welcome-photo-preview {
+  2776→  width: 100%;
+  2777→  height: 100%;
+  2778→  border-radius: 50%;
+  2779→  border: 2px solid rgba(52, 211, 153, 0.35);
+  2780→  box-shadow: 0 0 24px rgba(52, 211, 153, 0.15);
+  2781→}
+  2782→.welcome-photo-placeholder {
+  2783→  display: flex;
+  2784→  flex-direction: column;
+  2785→  align-items: center;
+  2786→  gap: 0.4rem;
+  2787→  pointer-events: none;
+  2788→}
+  2789→.welcome-photo-upload-hint {
+  2790→  font-size: 0.7rem;
+  2791→  color: rgba(255, 255, 255, 0.3);
+  2792→  font-weight: 400;
+  2793→}
+  2794→.welcome-photo-actions {
+  2795→  display: flex;
+  2796→  flex-direction: column;
+  2797→  gap: 0.5rem;
+  2798→  width: 100%;
+  2799→  max-width: 300px;
+  2800→}
+  2801→.welcome-photo-btn {
+  2802→  width: 100%;
+  2803→  padding: 0.65rem 1.5rem;
+  2804→  border-radius: 0.75rem;
+  2805→  font-size: 0.875rem;
+  2806→  font-weight: 600;
+  2807→  cursor: pointer;
+  2808→  transition: all 0.2s;
+  2809→  text-align: center;
+  2810→}
+  2811→.welcome-photo-btn--primary {
+  2812→  border: 1px solid rgba(52, 211, 153, 0.25);
+  2813→  background: linear-gradient(to bottom, rgba(52, 211, 153, 0.85), rgba(52, 211, 153, 0.95));
+  2814→  color: #022c22;
+  2815→  box-shadow: 0 4px 16px -4px rgba(52, 211, 153, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  2816→}
+  2817→.welcome-photo-btn--primary:hover:not(:disabled) {
+  2818→  background: linear-gradient(to bottom, rgba(110, 231, 183, 0.95), rgba(16, 185, 129, 0.95));
+  2819→  box-shadow: 0 8px 24px -4px rgba(52, 211, 153, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  2820→  transform: translateY(-1px);
+  2821→}
+  2822→.welcome-photo-btn--primary:active:not(:disabled) {
+  2823→  transform: translateY(0) scale(0.98);
+  2824→}
+  2825→.welcome-photo-btn--primary:disabled {
+  2826→  opacity: 0.4;
+  2827→  cursor: not-allowed;
+  2828→}
+  2829→.welcome-photo-btn--skip {
+  2830→  border: 1px solid rgba(255, 255, 255, 0.08);
+  2831→  background: rgba(255, 255, 255, 0.04);
+  2832→  backdrop-filter: blur(40px);
+  2833→  -webkit-backdrop-filter: blur(40px);
+  2834→  color: rgba(255, 255, 255, 0.4);
+  2835→  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  2836→}
+  2837→.welcome-photo-btn--skip:hover {
+  2838→  border-color: rgba(255, 255, 255, 0.15);
+  2839→  color: rgba(255, 255, 255, 0.6);
+  2840→  background: rgba(255, 255, 255, 0.07);
+  2841→}
+  2842→.welcome-photo-btn--skip:active {
+  2843→  transform: scale(0.98);
+  2844→}
+  2845→@media (max-width: 640px) {
+  2846→  .welcome-photo-section {
+  2847→    gap: 1rem;
+  2848→  }
+  2849→  .welcome-photo-upload-area {
+  2850→    width: 100px;
+  2851→    height: 100px;
+  2852→  }
+  2853→  .welcome-photo-heading {
+  2854→    font-size: 1rem;
+  2855→  }
+  2856→  .welcome-photo-actions {
+  2857→    max-width: 260px;
+  2858→  }
+  2859→}
+  2860→
+  2861→/* ─── Cinematic Name Shine ──────────────────── */
+  2862→.welcome-name-shine {
+  2863→  background: linear-gradient(90deg, #10b981, #6ee7b7);
+  2864→  -webkit-background-clip: text;
+
+[showing lines 865-2864 of 3710; use offset=2865 with limit to continue reading]
