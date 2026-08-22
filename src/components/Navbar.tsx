@@ -231,20 +231,13 @@ export function Navbar({ allPosts }: NavbarProps) {
             <div className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
               <div
                 ref={navRef}
-                className="relative flex items-center gap-1 p-1 rounded-full
-                           backdrop-blur-[24px] saturate-[200%] contrast-[105%]
-                           bg-gradient-to-b from-white/[0.18] to-white/[0.05]
-                           border border-white/30
-                           shadow-[inset_0_1px_2px_0_rgba(255,255,255,0.6),inset_0_-1px_2px_0_rgba(0,0,0,0.1),0_20px_50px_rgba(0,0,0,0.25)]"
+                className="relative flex items-center gap-1 p-1 rounded-full liquid-glass-pill"
               >
                 <span
                   ref={indicatorRef}
                   aria-hidden="true"
                   className="absolute top-1 left-0 h-[calc(100%-8px)] rounded-full
-                             bg-gradient-to-b from-emerald-500/20 to-emerald-500/5
-                             backdrop-blur-[24px] saturate-[200%] contrast-[105%]
-                             border border-emerald-400/25
-                             shadow-[0_4px_20px_-8px_rgba(52,211,153,0.45),inset_0_1px_2px_0_rgba(255,255,255,0.6),inset_0_-1px_2px_0_rgba(0,0,0,0.1)]
+                             liquid-glass-pill
                              transition-all duration-300 ease-out pointer-events-none opacity-0"
                   style={{ willChange: "transform, width" }}
                 />

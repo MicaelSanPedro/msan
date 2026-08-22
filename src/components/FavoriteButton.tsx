@@ -46,15 +46,16 @@ export function FavoriteButton({ slug, className = "", size = "sm" }: FavoriteBu
   return (
     <button
       onClick={handleToggle}
-      className={`flex items-center justify-center transition-all duration-150 ${
+      className={`liquid-glass-pill flex items-center justify-center transition-all duration-150 ${
         size === "sm"
-          ? "w-7 h-7 sm:w-8 sm:h-8 rounded-lg"
-          : "w-9 h-9 rounded-xl"
-      } backdrop-blur-[24px] saturate-[200%] ${
-        fav
-          ? "bg-gradient-to-b from-rose-500/25 to-rose-600/10 border border-rose-400/30 shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_4px_12px_-4px_rgba(244,63,94,0.3)]"
-          : "bg-gradient-to-b from-white/[0.18] to-white/[0.05] border border-white/30 shadow-[inset_0_1px_2px_0_rgba(255,255,255,0.6),inset_0_-1px_2px_0_rgba(0,0,0,0.1),0_20px_50px_rgba(0,0,0,0.25),0_4px_12px_-4px_rgba(0,0,0,0.4)]"
+          ? "w-7 h-7 sm:w-8 sm:h-8"
+          : "w-9 h-9"
       } hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+      style={fav ? {
+        background: "linear-gradient(to bottom, rgba(244,63,94,0.25), rgba(225,29,72,0.1))",
+        borderColor: "rgba(251,113,133,0.3)",
+        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15), 0 4px 12px -4px rgba(244,63,94,0.3)",
+      } : undefined}
       title={fav ? "Remover dos favoritos" : "Adicionar aos favoritos"}
     >
       <Heart

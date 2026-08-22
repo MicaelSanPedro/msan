@@ -29,7 +29,7 @@ export function CategoryBadge({ category, className }: CategoryBadgeProps) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider border backdrop-blur-md",
+        "liquid-glass-pill inline-flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider border",
         getColorClasses(category),
         className
       )}

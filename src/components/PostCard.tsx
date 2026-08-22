@@ -33,21 +33,10 @@ export function PostCard({ post }: PostCardProps) {
       <article
         ref={cardRef}
         onMouseMove={handleMouseMove}
-        className="spotlight card-shine relative rounded-3xl overflow-hidden h-full flex flex-col
-                   transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)]
-                   active:scale-[1.005] active:border-emerald-400/30
-                   hover:border-white/30 hover:-translate-y-1.5 hover:scale-[1.015]
-                   backdrop-blur-[24px] saturate-[200%] contrast-[105%]
-                   bg-gradient-to-b from-white/[0.18] to-white/[0.05]
-                   border border-white/30
-                   shadow-[inset_0_1px_2px_0_rgba(255,255,255,0.6),inset_0_-1px_2px_0_rgba(0,0,0,0.1),0_20px_50px_rgba(0,0,0,0.25)]
-                   hover:shadow-[inset_0_1px_2px_0_rgba(255,255,255,0.6),inset_0_-1px_2px_0_rgba(0,0,0,0.1),0_30px_60px_rgba(0,0,0,0.35),0_0_0_1px_rgba(52,211,153,0.15)_inset]"
+        className="spotlight card-shine liquid-glass-card prismatic-border card-glow-hover relative rounded-3xl overflow-hidden h-full flex flex-col
+                   transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
       >
-        {/* Specular top highlight */}
-        <div className="absolute top-0 left-[8%] right-[8%] h-px bg-gradient-to-r from-transparent via-white/60 to-transparent z-[2] pointer-events-none" />
-
-        {/* Inner refraction glow */}
-        <div className="absolute inset-0 rounded-3xl bg-[radial-gradient(ellipse_at_25%_12%,rgba(255,255,255,0.10)_0%,transparent_45%)] pointer-events-none z-[1]" />
+        {/* Specular highlight & refraction glow handled by liquid-glass-card pseudo-elements */}
         {/* Cover image */}
         <div className="relative h-44 sm:h-48 overflow-hidden">
           {hasImage ? (
@@ -76,11 +65,7 @@ export function PostCard({ post }: PostCardProps) {
 
           {/* Arrow icon */}
           <div className="absolute top-3 right-3">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl
-                            backdrop-blur-[24px] saturate-[200%] contrast-[105%]
-                            bg-gradient-to-b from-white/[0.18] to-white/[0.05]
-                            border border-white/30
-                            shadow-[inset_0_1px_2px_0_rgba(255,255,255,0.6),inset_0_-1px_2px_0_rgba(0,0,0,0.1),0_20px_50px_rgba(0,0,0,0.25)]
+            <div className="glass-card w-8 h-8 sm:w-9 sm:h-9
                             flex items-center justify-center
                             opacity-70 sm:opacity-0 sm:-translate-y-1 sm:group-hover:opacity-100 sm:group-hover:translate-y-0
                             transition-all duration-300">

@@ -81,11 +81,7 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={item.label}
-                  className="w-10 h-10 inline-flex items-center justify-center rounded-2xl
-                             backdrop-blur-[24px] saturate-[200%] contrast-[105%]
-                             bg-gradient-to-b from-white/[0.18] to-white/[0.05]
-                             border border-white/30
-                             shadow-[inset_0_1px_2px_0_rgba(255,255,255,0.6),inset_0_-1px_2px_0_rgba(0,0,0,0.1),0_20px_50px_rgba(0,0,0,0.25)]
+                  className="glass-card w-10 h-10 inline-flex items-center justify-center
                              text-white/65 hover:text-emerald-300
                              hover:bg-white/[0.10] hover:border-white/45
                              active:scale-95

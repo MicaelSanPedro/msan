@@ -18,11 +18,7 @@ export function Newsletter() {
   };
 
   return (
-    <div className="relative overflow-hidden rounded-3xl p-8 sm:p-10
-                    backdrop-blur-[24px] saturate-[200%] contrast-[105%]
-                    bg-gradient-to-br from-emerald-500/[0.08] via-white/[0.03] to-white/[0.05]
-                    border border-white/30
-                    shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)]">
+    <div className="liquid-glass-panel relative overflow-hidden p-8 sm:p-10">
       {/* Specular highlight */}
       <div className="absolute top-0 left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none" />
       
@@ -48,9 +44,9 @@ export function Newsletter() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="flex-1 px-5 py-3.5 rounded-2xl bg-white/[0.03] border border-white/[0.1] 
-                         text-white placeholder:text-white/20 outline-none focus:border-emerald-500/50 
-                         transition-all focus:bg-white/[0.06]"
+              className="liquid-glass-input flex-1 px-5 py-3.5
+                         text-white placeholder:text-white/20 outline-none
+                         transition-all"
             />
             <button
               type="submit"

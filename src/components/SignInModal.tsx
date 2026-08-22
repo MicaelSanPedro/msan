@@ -49,15 +49,10 @@ export function SignInModal({ open, onClose }: SignInModalProps) {
       {/* Modal */}
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`relative w-full max-w-[380px] rounded-2xl overflow-hidden
+        className={`liquid-glass-panel relative w-full max-w-[380px] overflow-hidden
           transition-all duration-200 ${
           visible ? "scale-100 translate-y-0" : "scale-95 translate-y-4"
-        }
-          backdrop-blur-[24px] saturate-[200%] contrast-[105%]
-          bg-gradient-to-b from-white/[0.18] to-white/[0.03]
-          border border-white/30
-          shadow-[0_32px_80px_-16px_rgba(0,0,0,0.7),0_0_0_1px_rgba(255,255,255,0.05),inset_0_1px_0_rgba(255,255,255,0.15)]
-          backdrop-filter:blur(60px)`}
+        }`}
       >
         {/* Specular highlight */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200px] h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent" />
@@ -99,11 +94,8 @@ export function SignInModal({ open, onClose }: SignInModalProps) {
             <button
               onClick={handleGitHubSignIn}
               disabled={loading}
-              className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl
-                bg-gradient-to-b from-white/[0.18] to-white/[0.05] border border-white/30
-                hover:border-white/[0.2] hover:from-white/[0.12] hover:to-white/[0.04]
+              className="liquid-glass-pill w-full flex items-center justify-center gap-3 px-4 py-3.5
                 active:scale-[0.98] transition-all duration-200
-                shadow-[inset_0_1px_2px_0_rgba(255,255,255,0.6),inset_0_-1px_2px_0_rgba(0,0,0,0.1),0_20px_50px_rgba(0,0,0,0.25),0_4px_16px_-4px_rgba(0,0,0,0.4)]
                 disabled:opacity-50 disabled:cursor-not-allowed group"
             >
               <svg className="w-5 h-5 text-white/80 group-hover:text-white transition-colors" fill="currentColor" viewBox="0 0 24 24">
@@ -124,11 +116,8 @@ export function SignInModal({ open, onClose }: SignInModalProps) {
             <button
               onClick={async () => { setLoading(true); await signIn("google", { callbackUrl: window.location.pathname }); }}
               disabled={loading}
-              className="w-full flex items-center justify-center gap-3 px-4 py-3.5 rounded-xl
-                bg-gradient-to-b from-white/[0.18] to-white/[0.05] border border-white/30
-                hover:border-white/[0.2] hover:from-white/[0.12] hover:to-white/[0.04]
+              className="liquid-glass-pill w-full flex items-center justify-center gap-3 px-4 py-3.5
                 active:scale-[0.98] transition-all duration-200
-                shadow-[inset_0_1px_2px_0_rgba(255,255,255,0.6),inset_0_-1px_2px_0_rgba(0,0,0,0.1),0_20px_50px_rgba(0,0,0,0.25),0_4px_16px_-4px_rgba(0,0,0,0.4)]
                 disabled:opacity-50 disabled:cursor-not-allowed group"
             >
               <svg className="w-5 h-5 group-hover:scale-110 transition-transform" viewBox="0 0 24 24">

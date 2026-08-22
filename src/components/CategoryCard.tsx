@@ -183,7 +183,7 @@ export function CategoryCard({ name, count, size = "md", className = "" }: Categ
 
                         ${isLg ? "w-14 h-14" : "w-12 h-12"}
                         group-hover:scale-110 group-hover:-rotate-3
-                        transition-transform duration-500 backdrop-blur-[24px] saturate-[200%] contrast-[105%]`}
+                        transition-transform duration-500 liquid-glass-pill`}
             style={{
               color: theme.hex,
               background: `rgba(${theme.rgb}, 0.12)`,
@@ -201,7 +201,7 @@ export function CategoryCard({ name, count, size = "md", className = "" }: Categ
             className="flex items-center justify-center w-9 h-9 rounded-2xl
                        border opacity-60 group-hover:opacity-100
                        group-hover:translate-x-0.5 group-hover:-translate-y-0.5
-                       backdrop-blur-[24px] saturate-[200%] contrast-[105%]
+                       liquid-glass-pill
                        transition-all duration-300"
             style={{
               color: theme.hex,
@@ -238,7 +238,7 @@ export function CategoryCard({ name, count, size = "md", className = "" }: Categ
 
           <div
             className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full text-[11px] font-mono font-semibold uppercase tracking-wider
-                       backdrop-blur-[24px] saturate-[200%] contrast-[105%]"
+                       liquid-glass-pill"
             style={{
               color: theme.hex,
               background: `rgba(${theme.rgb}, 0.12)`,

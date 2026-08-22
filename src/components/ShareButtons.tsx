@@ -115,7 +115,7 @@ export function ShareButtons({ url, title, className = "" }: ShareButtonsProps) 
             className="fixed z-[9999] animate-fade-in"
             style={{ top: menuPos.top, left: menuPos.left }}
           >
-            <div className="flex flex-col gap-1 p-1.5 rounded-xl bg-neutral-900/95 border border-white/30 shadow-[0_16px_48px_-12px_rgba(0,0,0,0.7)] backdrop-blur-xl min-w-[180px]">
+            <div className="liquid-glass-panel flex flex-col gap-1 p-1.5 min-w-[180px]">
               <button
                 onClick={copyLink}
                 className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-xs text-white/70 hover:bg-emerald-500/10 hover:text-emerald-300 transition-all"

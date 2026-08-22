@@ -35,20 +35,10 @@ export function FeaturedPost({ post, variant = "hero" }: FeaturedPostProps) {
         <article
           ref={cardRef}
           onMouseMove={handleMouseMove}
-          className="spotlight card-shine relative rounded-3xl overflow-hidden h-full flex flex-col
-                     transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)]
-                     active:scale-[1.005]
-                     hover:border-white/30 hover:-translate-y-1.5 hover:scale-[1.015]
-                     backdrop-blur-[24px] saturate-[200%] contrast-[105%]
-                     bg-gradient-to-br from-white/[0.18] to-white/[0.05]
-                     border border-white/30
-                     shadow-[inset_0_1px_2px_0_rgba(255,255,255,0.6),inset_0_-1px_2px_0_rgba(0,0,0,0.1),0_20px_50px_rgba(0,0,0,0.25)]
-                     hover:shadow-[inset_0_1px_2px_0_rgba(255,255,255,0.6),inset_0_-1px_2px_0_rgba(0,0,0,0.1),0_30px_60px_rgba(0,0,0,0.35),0_24px_60px_-20px_rgba(52,211,153,0.18),0_0_0_1px_rgba(52,211,153,0.15)_inset]"
+          className="spotlight card-shine liquid-glass-card prismatic-border card-glow-hover relative rounded-3xl overflow-hidden h-full flex flex-col
+                     transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
         >
-          {/* Specular top highlight */}
-          <div className="absolute top-0 left-[8%] right-[8%] h-px bg-gradient-to-r from-transparent via-white/50 to-transparent z-[2] pointer-events-none" />
-          {/* Inner refraction glow */}
-          <div className="absolute inset-0 rounded-3xl bg-[radial-gradient(ellipse_at_25%_12%,rgba(255,255,255,0.10)_0%,transparent_45%)] pointer-events-none z-[1]" />
+          {/* Specular highlight & refraction glow handled by liquid-glass-card pseudo-elements */}
           {/* Background image */}
           <div className="relative h-40 sm:h-48 overflow-hidden">
             {hasImage ? (
@@ -101,11 +91,8 @@ export function FeaturedPost({ post, variant = "hero" }: FeaturedPostProps) {
       <article
         ref={cardRef}
         onMouseMove={handleMouseMove}
-        className="spotlight card-shine relative rounded-3xl sm:rounded-[32px] overflow-hidden border border-white/30
-                   transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)] h-full min-h-[360px] sm:min-h-[440px] lg:min-h-[480px]
-                   active:scale-[1.005]
-                   hover:border-white/45
-                   hover:shadow-[inset_0_1px_2px_0_rgba(255,255,255,0.6),inset_0_-1px_2px_0_rgba(0,0,0,0.1),0_40px_100px_-20px_rgba(52,211,153,0.3),0_0_0_1px_rgba(52,211,153,0.15)_inset]"
+        className="spotlight card-shine liquid-glass-card prismatic-border card-glow-hover relative rounded-3xl sm:rounded-[32px] overflow-hidden
+                   transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)] h-full min-h-[360px] sm:min-h-[440px] lg:min-h-[480px]"
       >
         {/* Background image */}
         {hasImage && (
@@ -122,8 +109,7 @@ export function FeaturedPost({ post, variant = "hero" }: FeaturedPostProps) {
         {/* Gradient overlays for text readability */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#060a08] via-[#060a08]/60 to-[#060a08]/40 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-tr from-emerald-900/15 via-transparent to-rose-900/10 pointer-events-none" />
-        {/* Specular highlight at top */}
-        <div className="absolute top-0 left-[5%] right-[5%] h-px bg-gradient-to-r from-transparent via-white/30 to-transparent z-[3] pointer-events-none" />
+        {/* Specular highlight handled by liquid-glass-card pseudo-element */}
 
         <div className="relative z-[2] p-5 sm:p-8 lg:p-10 flex flex-col justify-end h-full">
           <div className="flex items-center gap-3 mb-3 sm:mb-4">

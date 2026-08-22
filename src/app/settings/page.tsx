@@ -475,8 +475,8 @@ export default function SettingsPage() {
           <Link
             href="/"
             className="flex items-center justify-center w-10 h-10 rounded-xl
-                       backdrop-blur-[24px] bg-white/[0.05] border border-white/30
-                       hover:bg-white/[0.08] hover:border-white/[0.18] active:scale-95
+                       liquid-glass-pill
+                       hover:bg-white/[0.08] active:scale-95
                        transition-all duration-200"
           >
             <ArrowLeft className="w-4 h-4 text-white/60" />

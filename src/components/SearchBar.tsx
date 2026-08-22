@@ -119,11 +119,7 @@ export function SearchBar({ allPosts, alwaysOpen = false }: SearchBarProps) {
     return (
       <button
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 px-3 py-2 rounded-xl relative overflow-hidden
-                   backdrop-blur-[24px] saturate-[200%] contrast-[105%]
-                   bg-gradient-to-b from-white/[0.18] to-white/[0.05]
-                   border border-white/30
-                   shadow-[inset_0_1px_2px_0_rgba(255,255,255,0.6),inset_0_-1px_2px_0_rgba(0,0,0,0.1),0_20px_50px_rgba(0,0,0,0.25)]
+        className="glass-card flex items-center gap-2 px-3 py-2 relative overflow-hidden
                    text-white/55 hover:text-white/70 hover:border-white/45
                    active:scale-95 transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)] text-sm"
         aria-label="Buscar artigos"
