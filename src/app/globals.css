@@ -3687,6 +3687,296 @@ button, a, [role="button"] {
   }
 }
 
+/* ─── Physical 3D Toggle Sliders ────────────────────── */
+/* Hidden real checkbox */
+.toggle-input {
+  position: absolute;
+  left: -9999px;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* ═══ Shared track base ═══ */
+.toggle-track {
+  position: relative;
+  display: block;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: all 350ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ═══════════════════════════════════════════════════
+   SLIDER v1 — Dual-Dot Physical Toggle
+   Track + moving thumb + static off-state dot ════════════════════════════════════════════════════ */
+.toggle-v1 {
+  width: 4.25em;
+  height: 2.25em;
+  border-radius: 1.125em;
+  background: linear-gradient(
+    rgba(255, 255, 255, 0.07),
+    rgba(255, 255, 255, 0.02)
+  ), rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow:
+    0 0.07em 0.1em -0.1em rgba(0, 0, 0, 0.4) inset,
+    0 0.05em 0.08em -0.01em rgba(255, 255, 255, 0.7),
+    0 0 0 0 rgba(52, 211, 153, 0);
+  transition: all 350ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Thumb (moves) */
+.toggle-v1::before {
+  position: absolute;
+  content: "";
+  width: 1.6em;
+  height: 1.6em;
+  top: 0.325em;
+  left: 0.325em;
+  border-radius: 50%;
+  transition: all 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  background: linear-gradient(
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0.08) 100%
+  ), rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow:
+    0 0.1em 0.15em -0.05em rgba(255, 255, 255, 0.5) inset,
+    0 0.5em 0.3em -0.1em rgba(0, 0, 0, 0.25);
+}
+
+/* Off-state static dot (right side) */
+.toggle-v1::after {
+  position: absolute;
+  content: "";
+  width: 0.8em;
+  height: 0.8em;
+  top: 0.725em;
+  left: 4.8em;
+  border-radius: 50%;
+  transition: all 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  background: linear-gradient(
+    rgba(0, 0, 0, 0.07),
+    rgba(255, 255, 255, 0.1)
+  ), rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 0.08em 0.15em -0.1em rgba(0, 0, 0, 0.5) inset,
+    0 0.05em 0.08em -0.01em rgba(255, 255, 255, 0.5),
+    -5.8em 0 0 -0.25em rgba(0, 0, 0, 0.15);
+}
+
+/* ── v1 ON state ── */
+.toggle-input:checked + .toggle-v1::before {
+  left: 2.3em;
+  background: linear-gradient(
+    rgba(255, 255, 255, 0.35) 0%,
+    rgba(52, 211, 153, 0.6) 100%
+  ), rgba(52, 211, 153, 0.8);
+  border-color: rgba(52, 211, 153, 0.5);
+  box-shadow:
+    0 0.1em 0.15em -0.05em rgba(255, 255, 255, 0.6) inset,
+    0 0.5em 0.3em -0.1em rgba(5, 150, 105, 0.4),
+    0 0 12px rgba(52, 211, 153, 0.3);
+}
+
+.toggle-input:checked + .toggle-v1::after {
+  background: linear-gradient(
+    rgba(0, 0, 0, 0.07),
+    rgba(255, 255, 255, 0.1)
+  ), rgba(52, 211, 153, 0.8);
+  border-color: rgba(52, 211, 153, 0.3);
+  box-shadow:
+    0 0.08em 0.15em -0.1em rgba(0, 0, 0, 0.5) inset,
+    0 0.05em 0.08em -0.01em rgba(255, 255, 255, 0.5),
+    -5.8em 0 0 -0.25em rgba(5, 150, 105, 0.1);
+}
+
+.toggle-input:checked + .toggle-v1 {
+  border-color: rgba(52, 211, 153, 0.25);
+  box-shadow:
+    0 0.07em 0.1em -0.1em rgba(0, 0, 0, 0.4) inset,
+    0 0.05em 0.08em -0.01em rgba(255, 255, 255, 0.7),
+    0 0 20px rgba(52, 211, 153, 0.15);
+}
+
+/* ═══════════════════════════════════════════════════
+   SLIDER v2 — Channel-Glow Physical Toggle
+   Track + moving thumb + internal channel glow ════════════════════════════════════════════════════ */
+.toggle-v2 {
+  width: 4.25em;
+  height: 2.25em;
+  border-radius: 1.125em;
+  background: linear-gradient(
+    rgba(255, 255, 255, 0.07),
+    rgba(255, 255, 255, 0.02)
+  ), rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow:
+    0 0.07em 0.1em -0.1em rgba(0, 0, 0, 0.4) inset,
+    0 0.05em 0.08em -0.01em rgba(255, 255, 255, 0.7);
+}
+
+/* Thumb (moves) */
+.toggle-v2::after {
+  position: absolute;
+  content: "";
+  width: 1.6em;
+  height: 1.6em;
+  top: 0.325em;
+  left: 0.325em;
+  border-radius: 50%;
+  transition: all 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  background: linear-gradient(
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0.08) 100%
+  ), rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow:
+    0 0.1em 0.15em -0.05em rgba(255, 255, 255, 0.5) inset,
+    0 0.2em 0.2em -0.12em rgba(0, 0, 0, 0.5);
+}
+
+/* Internal channel (glow bar) */
+.toggle-v2::before {
+  position: absolute;
+  content: "";
+  width: 3.1em;
+  height: 1.05em;
+  top: 0.6em;
+  left: 0.575em;
+  border-radius: 0.525em;
+  transition: all 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  background: linear-gradient(
+    rgba(0, 0, 0, 0.07),
+    rgba(255, 255, 255, 0.1)
+  ), rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 0.08em 0.15em -0.1em rgba(0, 0, 0, 0.5) inset,
+    0 0.05em 0.08em -0.01em rgba(255, 255, 255, 0.5),
+    0 0 0 0 rgba(52, 211, 153, 0) inset;
+}
+
+/* ── v2 ON state ── */
+.toggle-input:checked + .toggle-v2::after {
+  left: 2.3em;
+  background: linear-gradient(
+    rgba(255, 255, 255, 0.35) 0%,
+    rgba(52, 211, 153, 0.6) 100%
+  ), rgba(52, 211, 153, 0.8);
+  border-color: rgba(52, 211, 153, 0.5);
+  box-shadow:
+    0 0.1em 0.15em -0.05em rgba(255, 255, 255, 0.6) inset,
+    0 0.2em 0.2em -0.12em rgba(5, 150, 105, 0.4),
+    0 0 10px rgba(52, 211, 153, 0.25);
+}
+
+.toggle-input:checked + .toggle-v2::before {
+  box-shadow:
+    0 0.08em 0.15em -0.1em rgba(0, 0, 0, 0.5) inset,
+    0 0.05em 0.08em -0.01em rgba(255, 255, 255, 0.5),
+    2.5em 0 0 0 rgba(52, 211, 153, 0.5) inset;
+}
+
+.toggle-input:checked + .toggle-v2 {
+  border-color: rgba(52, 211, 153, 0.25);
+  box-shadow:
+    0 0.07em 0.1em -0.1em rgba(0, 0, 0, 0.4) inset,
+    0 0.05em 0.08em -0.01em rgba(255, 255, 255, 0.7),
+    0 0 20px rgba(52, 211, 153, 0.15);
+}
+
+/* ═══════════════════════════════════════════════════
+   SLIDER v3 — Morph-Pill Physical Toggle
+   Thumb morphs from circle to rounded rectangle ════════════════════════════════════════════════════ */
+.toggle-v3 {
+  width: 5.5em;
+  height: 2.25em;
+  border-radius: 1.125em;
+  cursor: pointer;
+  transition: all 350ms cubic-bezier(0.16, 1, 0.3, 1);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow:
+    0 0.07em 0.1em -0.1em rgba(0, 0, 0, 0.4) inset,
+    0 0.05em 0.08em -0.01em rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px) saturate(180%);
+}
+
+/* Thumb — OFF: small circle */
+.toggle-v3::after {
+  position: absolute;
+  content: "";
+  width: 1.6em;
+  height: 1.6em;
+  top: 0.325em;
+  left: 0.325em;
+  border-radius: 50%;
+  transition:
+    width 200ms cubic-bezier(0.16, 1, 0.3, 1),
+    height 300ms 50ms cubic-bezier(0.16, 1, 0.3, 1),
+    top 300ms 50ms cubic-bezier(0.16, 1, 0.3, 1),
+    left 250ms 50ms cubic-bezier(0.16, 1, 0.3, 1),
+    background 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-radius 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  background: linear-gradient(
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.06) 100%
+  ), rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    0 0.1em 0.15em -0.05em rgba(255, 255, 255, 0.5) inset,
+    0 0 0 1.5em rgba(255, 255, 255, 0.03) inset,
+    0 0.3em 0.2em -0.08em rgba(0, 0, 0, 0.3);
+}
+
+/* Thumb — ON: morphs to large pill that fills the track */
+.toggle-input:checked + .toggle-v3::after {
+  width: 4.85em;
+  height: 1.85em;
+  top: 0.2em;
+  left: 0.325em;
+  border-radius: 0.925em;
+  background: linear-gradient(
+    135deg,
+    rgba(110, 231, 183, 0.9) 0%,
+    rgba(52, 211, 153, 0.95) 40%,
+    rgba(5, 150, 105, 0.9) 100%
+  );
+  border-color: rgba(52, 211, 153, 0.4);
+  box-shadow:
+    0 0.15em 0.2em -0.05em rgba(255, 255, 255, 0.4) inset,
+    0 0 0 0 rgba(255, 255, 255, 0) inset,
+    0 0.4em 0.3em -0.1em rgba(5, 150, 105, 0.4),
+    0 0 16px rgba(52, 211, 153, 0.25);
+}
+
+.toggle-input:checked + .toggle-v3 {
+  border-color: rgba(52, 211, 153, 0.2);
+  box-shadow:
+    0 0.07em 0.1em -0.1em rgba(0, 0, 0, 0.3) inset,
+    0 0.05em 0.08em -0.01em rgba(255, 255, 255, 0.5),
+    0 0 24px rgba(52, 211, 153, 0.15);
+}
+
+/* ── Active press states ── */
+.toggle-v1:active::before,
+.toggle-v2:active::after,
+.toggle-v3:active::after {
+  transform: scale(0.92);
+}
+
+/* ── Focus visible for keyboard accessibility ── */
+.toggle-input:focus-visible + .toggle-track {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
 /* ─── Medium Zoom ────────────────── */
 .medium-zoom-overlay {
   z-index: 99;

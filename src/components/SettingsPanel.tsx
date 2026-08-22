@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Settings, User, Trash2, Moon, Sun, ChevronRight } from "lucide-react";
+import { ToggleSlider } from "@/components/ToggleSlider";
 
 const STORAGE_KEY = "techmate_username";
 const THEME_KEY = "techmate_theme";
@@ -149,36 +150,24 @@ export function SettingsPanel({ userName, onNameChange, isOpen, onClose }: Setti
       <div className="settings-divider" />
 
       {/* Theme toggle */}
-      <div className="px-4 py-3">
-        <button
-          onClick={handleThemeToggle}
-          className="w-full flex items-center justify-between group"
-          type="button"
-        >
-          <div className="flex items-center gap-3">
-            <div className={`w-8 h-8 rounded-lg flex items-center justify-center border
-                        ${theme === "dark"
-                          ? "bg-indigo-500/[0.08] border-indigo-500/15"
-                          : "bg-yellow-500/[0.08] border-yellow-500/15"}`}>
-              {theme === "dark"
-                ? <Moon className="w-4 h-4 text-indigo-400" />
-                : <Sun className="w-4 h-4 text-yellow-400" />}
-            </div>
-            <div className="text-left">
-              <p className="text-xs text-white/40 mb-0.5">Tema</p>
-              <p className="text-sm font-medium text-white/80">
-                {theme === "dark" ? "Escuro" : "Claro"}
-              </p>
-            </div>
+      <div className="px-4 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className={`w-8 h-8 rounded-lg flex items-center justify-center border
+                      ${theme === "dark"
+                        ? "bg-indigo-500/[0.08] border-indigo-500/15"
+                        : "bg-yellow-500/[0.08] border-yellow-500/15"}`}>
+            {theme === "dark"
+              ? <Moon className="w-4 h-4 text-indigo-400" />
+              : <Sun className="w-4 h-4 text-yellow-400" />}
           </div>
-          <div className={`w-10 h-5 rounded-full p-0.5 transition-colors cursor-pointer
-                      ${theme === "dark" ? "bg-indigo-500/30" : "bg-yellow-500/30"}`}>
-            <div className={`w-4 h-4 rounded-full transition-transform
-                        ${theme === "dark"
-                          ? "translate-x-0 bg-indigo-400"
-                          : "translate-x-5 bg-yellow-400"}`} />
+          <div className="text-left">
+            <p className="text-xs text-white/40 mb-0.5">Tema</p>
+            <p className="text-sm font-medium text-white/80">
+              {theme === "dark" ? "Escuro" : "Claro"}
+            </p>
           </div>
-        </button>
+        </div>
+        <ToggleSlider checked={theme === "light"} onChange={() => handleThemeToggle()} variant="v3" aria-label="Alternar tema" />
       </div>
 
       <div className="settings-divider" />

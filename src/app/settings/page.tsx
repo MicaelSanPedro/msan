@@ -32,6 +32,7 @@ import {
   Eye,
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
+import { ToggleSlider } from "@/components/ToggleSlider";
 import { useSession } from "next-auth/react";
 
 /* ─── Storage helpers ─── */
@@ -139,30 +140,7 @@ function SettingLabel({ label, description }: { label: string; description?: str
   );
 }
 
-function Toggle({
-  checked,
-  onChange,
-}: {
-  checked: boolean;
-  onChange: (val: boolean) => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={() => onChange(!checked)}
-      className={`relative w-11 h-6 rounded-full transition-colors duration-300 flex-shrink-0 cursor-pointer
-                  ${checked ? "bg-emerald-500/40" : "bg-white/[0.08] border border-white/30"}`}
-      role="switch"
-      aria-checked={checked}
-    >
-      <div className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full transition-all duration-300
-                      ${checked
-                        ? "translate-x-5 bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.5)]"
-                        : "bg-white/40"}`}
-      />
-    </button>
-  );
-}
+/* Toggle component replaced by ToggleSlider (v1/v2/v3 physical sliders) */
 
 function DangerButton({ onClick, children }: { onClick: () => void; children: React.ReactNode }) {
   const [confirm, setConfirm] = useState(false);
@@ -582,7 +560,7 @@ export default function SettingsPage() {
                   : "Ideal para uso diurno e ambientes claros"}
               />
             </div>
-            <Toggle checked={theme === "light"} onChange={handleThemeToggle} />
+            <ToggleSlider checked={theme === "light"} onChange={handleThemeToggle} variant="v3" aria-label="Alternar tema claro/escuro" />
           </SettingRow>
 
           <Divider />
@@ -681,7 +659,7 @@ export default function SettingsPage() {
                   : "Ative para reduzir animacoes e efeitos visuais"}
               />
             </div>
-            <Toggle checked={reducedMotion} onChange={handleReducedMotionToggle} />
+            <ToggleSlider checked={reducedMotion} onChange={handleReducedMotionToggle} variant="v2" aria-label="Animações reduzidas" />
           </SettingRow>
 
           <Divider />
@@ -702,7 +680,7 @@ export default function SettingsPage() {
                   : "Ative para reduzir espaçamentos e mostrar mais conteúdo"}
               />
             </div>
-            <Toggle checked={compactMode} onChange={handleCompactModeToggle} />
+            <ToggleSlider checked={compactMode} onChange={handleCompactModeToggle} variant="v1" aria-label="Modo compacto" />
           </SettingRow>
 
           <Divider />
