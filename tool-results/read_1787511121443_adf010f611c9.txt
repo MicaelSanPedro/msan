@@ -1,0 +1,2002 @@
+  1768→  display: inline-flex;
+  1769→  align-items: center;
+  1770→  gap: 0.5rem;
+  1771→  padding: 0.7rem 1.4rem;
+  1772→  border-radius: 9999px;
+  1773→  font-weight: 600;
+  1774→  font-size: 0.9rem;
+  1775→  color: #022c22;
+  1776→  background: linear-gradient(135deg, #a7f3d0 0%, #6ee7b7 45%, #34d399 100%);
+  1777→  box-shadow:
+  1778→    0 2px 4px 0 rgba(255,255,255,0.9) inset,
+  1779→    0 -3px 8px 0 rgba(0,0,0,0.2) inset,
+  1780→    0 12px 32px -8px rgba(52, 211, 153, 0.45),
+  1781→    0 0 0 1px rgba(52, 211, 153, 0.4);
+  1782→  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, filter 0.2s ease;
+  1783→  overflow: hidden;
+  1784→  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  1785→}
+  1786→/* Glass sheen overlay on btn-primary */
+  1787→.btn-primary::before {
+  1788→  content: '';
+  1789→  position: absolute;
+  1790→  inset: 0;
+  1791→  border-radius: inherit;
+  1792→  background: linear-gradient(
+  1793→    135deg,
+  1794→    rgba(255, 255, 255, 0.45) 0%,
+  1795→    rgba(255, 255, 255, 0.12) 35%,
+  1796→    rgba(255, 255, 255, 0.0) 100%
+  1797→  );
+  1798→  pointer-events: none;
+  1799→  z-index: 1;
+  1800→}
+  1801→/* Specular top highlight on btn-primary */
+  1802→.btn-primary::after {
+  1803→  content: '';
+  1804→  position: absolute;
+  1805→  top: 0;
+  1806→  left: 15%;
+  1807→  right: 15%;
+  1808→  height: 1.5px;
+  1809→  background: linear-gradient(
+  1810→    90deg,
+  1811→    transparent 0%,
+  1812→    rgba(255, 255, 255, 0.7) 25%,
+  1813→    rgba(255, 255, 255, 0.95) 50%,
+  1814→    rgba(255, 255, 255, 0.7) 75%,
+  1815→    transparent 100%
+  1816→  );
+  1817→  z-index: 2;
+  1818→  pointer-events: none;
+  1819→}
+  1820→.btn-primary:hover {
+  1821→  transform: translateY(-2px) scale(1.03);
+  1822→  filter: brightness(1.08);
+  1823→  box-shadow:
+  1824→    0 2px 4px 0 rgba(255,255,255,1) inset,
+  1825→    0 -3px 8px 0 rgba(0,0,0,0.25) inset,
+  1826→    0 20px 40px -6px rgba(52, 211, 153, 0.6),
+  1827→    0 0 0 1.5px rgba(52, 211, 153, 0.6);
+  1828→}
+  1829→.btn-primary:active {
+  1830→  transform: translateY(1px) scale(0.97);
+  1831→  box-shadow:
+  1832→    0 1px 2px 0 rgba(255,255,255,0.5) inset,
+  1833→    0 -1px 4px 0 rgba(0,0,0,0.3) inset,
+  1834→    0 4px 12px -4px rgba(52, 211, 153, 0.4);
+  1835→}
+  1836→.btn-primary > * { position: relative; z-index: 3; }
+  1837→
+  1838→.btn-secondary {
+  1839→  position: relative;
+  1840→  display: inline-flex;
+  1841→  align-items: center;
+  1842→  gap: 0.5rem;
+  1843→  padding: 0.7rem 1.4rem;
+  1844→  border-radius: 9999px;
+  1845→  font-weight: 500;
+  1846→  font-size: 0.9rem;
+  1847→  color: rgba(255,255,255,0.85);
+  1848→  background: linear-gradient(
+  1849→    var(--glass-bg-angle, 135deg),
+  1850→    var(--glass-bg-1) 0%,
+  1851→    var(--glass-bg-2) 50%,
+  1852→    var(--glass-bg-3) 100%
+  1853→  );
+  1854→  border: 1.5px solid rgba(255, 255, 255, var(--glass-border-opacity));
+  1855→  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  1856→  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  1857→  box-shadow: var(--glass-volumetric);
+  1858→  transition: var(--glass-transition);
+  1859→  overflow: hidden;
+  1860→}
+  1861→.btn-secondary::before {
+  1862→  content: '';
+  1863→  position: absolute;
+  1864→  top: 0;
+  1865→  left: 12%;
+  1866→  right: 12%;
+  1867→  height: 1.5px;
+  1868→  background: linear-gradient(
+  1869→    90deg,
+  1870→    transparent 0%,
+  1871→    rgba(255, 255, 255, 0.5) 25%,
+  1872→    rgba(255, 255, 255, 0.7) 50%,
+  1873→    rgba(255, 255, 255, 0.5) 75%,
+  1874→    transparent 100%
+  1875→  );
+  1876→  z-index: 1;
+  1877→  pointer-events: none;
+  1878→}
+  1879→.btn-secondary::after {
+  1880→  content: '';
+  1881→  position: absolute;
+  1882→  inset: 0;
+  1883→  border-radius: inherit;
+  1884→  background: radial-gradient(
+  1885→    ellipse 50% 35% at var(--light-x, 50%) var(--light-y, 20%),
+  1886→    rgba(255, 255, 255, 0.1) 0%,
+  1887→    transparent 55%
+  1888→  );
+  1889→  pointer-events: none;
+  1890→  z-index: 0;
+  1891→}
+  1892→.btn-secondary:hover {
+  1893→  background: linear-gradient(
+  1894→    var(--glass-bg-angle, 135deg),
+  1895→    rgba(255, 255, 255, 0.22) 0%,
+  1896→    rgba(255, 255, 255, 0.1) 100%
+  1897→  );
+  1898→  border-color: rgba(255, 255, 255, 0.5);
+  1899→  box-shadow: var(--glass-volumetric-hover);
+  1900→  color: #fff;
+  1901→  transform: translateY(-2px) scale(1.03);
+  1902→}
+  1903→.btn-secondary:active {
+  1904→  transform: translateY(1px) scale(0.97);
+  1905→  box-shadow:
+  1906→    inset 0 1px 2px 0 rgba(255, 255, 255, 0.4),
+  1907→    inset 0 -2px 6px 0 rgba(0, 0, 0, 0.2),
+  1908→    0 8px 20px -6px rgba(0, 0, 0, 0.3);
+  1909→}
+  1910→.btn-secondary > * { position: relative; z-index: 2; }
+  1911→
+  1912→
+  1913→/* ─── Live dot ─────────────────────────────── */
+  1914→.live-dot {
+  1915→  display: inline-block;
+  1916→  width: 6px;
+  1917→  height: 6px;
+  1918→  border-radius: 50%;
+  1919→  background: #22c55e;
+  1920→  animation: pulse-dot 2s ease-out infinite;
+  1921→}
+  1922→
+  1923→/* ─── Rating stars ─────────────────────────── */
+  1924→.star-filled { color: #34d399; fill: #34d399; }
+  1925→.star-empty { color: #3a3830; }
+  1926→
+  1927→/* ─── Blog Prose ────────────────────────────── */
+  1928→.prose-custom {
+  1929→  color: #ece8df;
+  1930→  line-height: 1.8;
+  1931→  font-size: 1.05rem;
+  1932→}
+  1933→.prose-custom h1,
+  1934→.prose-custom h2,
+  1935→.prose-custom h3,
+  1936→.prose-custom h4 {
+  1937→  color: #fff;
+  1938→  font-weight: 700;
+  1939→  margin-top: 2em;
+  1940→  margin-bottom: 0.75em;
+  1941→  line-height: 1.25;
+  1942→  letter-spacing: -0.01em;
+  1943→}
+  1944→.prose-custom h1 { font-size: 2rem; letter-spacing: -0.025em; }
+  1945→.prose-custom h2 {
+  1946→  font-size: 1.6rem;
+  1947→  padding-bottom: 0.5em;
+  1948→  border-bottom: 1px solid rgba(52, 211, 153, 0.15);
+  1949→}
+  1950→.prose-custom h3 { font-size: 1.3rem; font-style: italic; }
+  1951→.prose-custom h4 { font-size: 1.1rem; font-style: italic; }
+  1952→.prose-custom p {
+  1953→  margin-bottom: 1.25em;
+  1954→  color: rgba(236, 232, 223, 0.78);
+  1955→}
+  1956→.prose-custom a {
+  1957→  color: #6ee7b7;
+  1958→  text-decoration: none;
+  1959→  background-image: linear-gradient(currentColor, currentColor);
+  1960→  background-size: 100% 1px;
+  1961→  background-repeat: no-repeat;
+  1962→  background-position: 0 100%;
+  1963→  transition: color 0.2s, background-size 0.2s, gap 0.2s;
+  1964→  display: inline-flex;
+  1965→  align-items: center;
+  1966→  gap: 0.2em;
+  1967→}
+  1968→.prose-custom a:hover {
+  1969→  color: #a7f3d0;
+  1970→  background-size: 100% 2px;
+  1971→}
+  1972→.prose-custom a::after {
+  1973→  content: "";
+  1974→  display: inline-block;
+  1975→  width: 14px;
+  1976→  height: 14px;
+  1977→  min-width: 14px;
+  1978→  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236ee7b7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17L17 7'/%3E%3Cpath d='M7 7h10v10'/%3E%3C/svg%3E");
+  1979→  background-repeat: no-repeat;
+  1980→  background-position: center;
+  1981→  opacity: 0.85;
+  1982→  transition: opacity 0.2s, transform 0.2s;
+  1983→  vertical-align: middle;
+  1984→}
+  1985→.prose-custom a:hover::after {
+  1986→  opacity: 1;
+  1987→  transform: translate(2px, -2px);
+  1988→}
+  1989→@media (hover: none) {
+  1990→  .prose-custom a::after {
+  1991→    opacity: 1;
+  1992→  }
+  1993→}
+  1994→.prose-custom strong { color: #fff; font-weight: 600; }
+  1995→.prose-custom ul, .prose-custom ol { margin-bottom: 1.25em; padding-left: 1.5em; }
+  1996→.prose-custom ul { list-style-type: disc; }
+  1997→.prose-custom ol { list-style-type: decimal; }
+  1998→.prose-custom li { margin-bottom: 0.5em; color: rgba(236, 232, 223, 0.72); }
+  1999→.prose-custom blockquote {
+  2000→  border-left: 3px solid rgba(52, 211, 153, 0.5);
+  2001→  padding: 0.75em 1.25em;
+  2002→  margin: 1.5em 0;
+  2003→  background: linear-gradient(90deg, rgba(52,211,153,0.05), transparent);
+  2004→  border-radius: 0 0.5rem 0.5rem 0;
+  2005→}
+  2006→.prose-custom blockquote p { color: rgba(236, 232, 223, 0.65); font-style: italic; }
+  2007→.prose-custom pre {
+  2008→  background: rgba(0, 0, 0, 0.7);
+  2009→  border: 1px solid rgba(52, 211, 153, 0.14);
+  2010→  border-radius: 0.85rem;
+  2011→  padding: 1.25rem 1.5rem;
+  2012→  margin: 1.5em 0;
+  2013→  overflow-x: auto;
+  2014→  max-width: 100%;
+  2015→  width: 100%;
+  2016→  font-family: var(--font-jetbrains-mono), 'JetBrains Mono', monospace;
+  2017→  font-size: 0.875rem;
+  2018→  line-height: 1.65;
+  2019→  box-shadow: 0 8px 24px -12px rgba(0,0,0,0.8);
+  2020→}
+  2021→/* Shiki support */
+  2022→.prose-custom pre.shiki {
+  2023→  background-color: #1a1b26 !important; /* Tokyo Night background */
+  2024→  margin: 1.5em 0;
+  2025→  overflow-x: auto !important;
+  2026→  max-width: 100% !important;
+  2027→}
+  2028→.prose-custom pre.shiki code {
+  2029→  color: inherit;
+  2030→  display: block;
+  2031→  width: fit-content;
+  2032→  min-width: 100%;
+  2033→}
+  2034→.prose-custom code { font-family: var(--font-jetbrains-mono), 'JetBrains Mono', monospace; font-size: 0.875em; }
+  2035→.prose-custom :not(pre) > code {
+  2036→  background: rgba(52, 211, 153, 0.1);
+  2037→  color: #6ee7b7;
+  2038→  padding: 0.15em 0.45em;
+  2039→  border-radius: 0.3rem;
+  2040→  border: 1px solid rgba(52, 211, 153, 0.15);
+  2041→}
+  2042→.prose-custom pre code { background: none; color: #d4c8b8; padding: 0; border: 0; }
+  2043→
+  2044→/* ─── Pre wrapper (holds copy button outside scroll) ── */
+  2045→.prose-custom .pre-wrapper {
+  2046→  position: relative;
+  2047→}
+  2048→
+  2049→/* ─── Code copy button ───────────────── */
+  2050→.prose-custom .pre-wrapper .copy-btn {
+  2051→  position: absolute;
+  2052→  top: 0.75rem;
+  2053→  right: 0.75rem;
+  2054→  display: flex;
+  2055→  align-items: center;
+  2056→  justify-content: center;
+  2057→  gap: 0.35rem;
+  2058→  padding: 0.4rem 0.55rem;
+  2059→  border-radius: 0.5rem;
+  2060→  border: 1px solid rgba(52, 211, 153, 0.2);
+  2061→  background: rgba(0, 0, 0, 0.6);
+  2062→  color: rgba(52, 211, 153, 0.6);
+  2063→  font-size: 0.7rem;
+  2064→  font-family: inherit;
+  2065→  cursor: pointer;
+  2066→  opacity: 1;
+  2067→  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  2068→  backdrop-filter: blur(8px);
+  2069→  z-index: 2;
+  2070→}
+  2071→.prose-custom .pre-wrapper .copy-btn:hover {
+  2072→  background: rgba(52, 211, 153, 0.15);
+  2073→  color: #6ee7b7;
+  2074→  border-color: rgba(52, 211, 153, 0.4);
+  2075→}
+  2076→.prose-custom .pre-wrapper .copy-btn .check-icon,
+  2077→.prose-custom .pre-wrapper .copy-btn .copied-label {
+  2078→  display: none;
+  2079→}
+  2080→.prose-custom .pre-wrapper .copy-btn .copy-label {
+  2081→  display: inline;
+  2082→}
+  2083→.prose-custom .pre-wrapper .copy-btn.copied {
+  2084→  opacity: 1;
+  2085→  background: rgba(52, 211, 153, 0.15);
+  2086→  border-color: rgba(52, 211, 153, 0.4);
+  2087→  color: #34d399;
+  2088→}
+  2089→.prose-custom .pre-wrapper .copy-btn.copied .copy-icon,
+  2090→.prose-custom .pre-wrapper .copy-btn.copied .copy-label {
+  2091→  display: none;
+  2092→}
+  2093→.prose-custom .pre-wrapper .copy-btn.copied .check-icon,
+  2094→.prose-custom .pre-wrapper .copy-btn.copied .copied-label {
+  2095→  display: inline;
+  2096→}
+  2097→
+  2098→.prose-custom img {
+  2099→  border-radius: 0.85rem;
+  2100→  border: 1px solid rgba(255,255,255,0.06);
+  2101→  margin: 1.5em 0;
+  2102→  box-shadow: 0 20px 50px -20px rgba(0,0,0,0.7);
+  2103→}
+  2104→
+  2105→/* ─── Cover image zoom ─── */
+  2106→.cover-zoom-wrapper {
+  2107→  position: relative;
+  2108→  aspect-ratio: 16 / 9;
+  2109→  border-radius: 1rem;
+  2110→  overflow: hidden;
+  2111→  margin-bottom: 2.5rem;
+  2112→  border: 1px solid rgba(255, 255, 255, 0.06);
+  2113→  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.7);
+  2114→  cursor: pointer;
+  2115→}
+  2116→@media (min-width: 640px) {
+  2117→  .cover-zoom-wrapper {
+  2118→    border-radius: 1.25rem;
+  2119→    margin-bottom: 3rem;
+  2120→  }
+  2121→}
+  2122→.cover-zoom-overlay {
+  2123→  position: absolute;
+  2124→  inset: 0;
+  2125→  display: flex;
+  2126→  align-items: center;
+  2127→  justify-content: center;
+  2128→  background: rgba(0, 0, 0, 0.25);
+  2129→  opacity: 0;
+  2130→  transition: opacity 0.25s ease;
+  2131→  z-index: 2;
+  2132→}
+  2133→.cover-zoom-wrapper:hover .cover-zoom-overlay {
+  2134→  opacity: 1;
+  2135→}
+  2136→.cover-zoom-icon {
+  2137→  width: 2.25rem;
+  2138→  height: 2.25rem;
+  2139→  color: white;
+  2140→  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
+  2141→  transform: scale(0.8);
+  2142→  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  2143→}
+  2144→.cover-zoom-wrapper:hover .cover-zoom-icon {
+  2145→  transform: scale(1);
+  2146→}
+  2147→
+  2148→.prose-custom hr {
+  2149→  border: none;
+  2150→  height: 1px;
+  2151→  background: linear-gradient(90deg, transparent, rgba(52,211,153,0.3), transparent);
+  2152→  margin: 2em 0;
+  2153→}
+  2154→.prose-custom table {
+  2155→  width: 100%;
+  2156→  border-collapse: separate;
+  2157→  border-spacing: 0;
+  2158→  margin: 1.5em -0.5rem;
+  2159→  font-size: 0.8rem;
+  2160→  overflow-x: auto;
+  2161→  -webkit-overflow-scrolling: touch;
+  2162→}
+  2163→.prose-custom table thead { }
+  2164→.prose-custom table tbody { }
+  2165→.prose-custom table tr { transition: background 0.15s ease; }
+  2166→.prose-custom table th, .prose-custom table td { }
+  2167→.prose-custom th {
+  2168→  text-align: left;
+  2169→  padding: 0.6em 0.75em;
+  2170→  background: rgba(52, 211, 153, 0.08);
+  2171→  color: #6ee7b7;
+  2172→  font-weight: 600;
+  2173→  font-size: 0.72rem;
+  2174→  text-transform: uppercase;
+  2175→  letter-spacing: 0.06em;
+  2176→  border-bottom: 1px solid rgba(52, 211, 153, 0.18);
+  2177→  border-top: 1px solid rgba(52, 211, 153, 0.12);
+  2178→  white-space: nowrap;
+  2179→}
+  2180→.prose-custom th:first-child { border-left: 1px solid rgba(52, 211, 153, 0.12); border-top-left-radius: 0.75rem; }
+  2181→.prose-custom th:last-child { border-right: 1px solid rgba(52, 211, 153, 0.12); border-top-right-radius: 0.75rem; }
+  2182→.prose-custom td {
+  2183→  padding: 0.5em 0.75em;
+  2184→  border-bottom: 1px solid rgba(255,255,255,0.04);
+  2185→  border-left: 1px solid rgba(52, 211, 153, 0.06);
+  2186→  border-right: 1px solid rgba(52, 211, 153, 0.06);
+  2187→  color: rgba(236, 232, 223, 0.78);
+  2188→  text-align: center;
+  2189→  font-size: 0.8rem;
+  2190→  word-break: break-word;
+  2191→}
+  2192→.prose-custom td:first-child, .prose-custom th:first-child {
+  2193→  text-align: left;
+  2194→  font-weight: 500;
+  2195→  color: rgba(236, 232, 223, 0.9);
+  2196→  border-left: 1px solid rgba(52, 211, 153, 0.12);
+  2197→}
+  2198→.prose-custom td:last-child, .prose-custom th:last-child {
+  2199→  border-right: 1px solid rgba(52, 211, 153, 0.12);
+  2200→}
+  2201→.prose-custom tbody tr:last-child td { border-bottom: none; }
+  2202→.prose-custom tbody tr:last-child td:first-child { border-bottom-left-radius: 0.75rem; }
+  2203→.prose-custom tbody tr:last-child td:last-child { border-bottom-right-radius: 0.75rem; }
+  2204→.prose-custom tbody tr:hover td { background: rgba(52, 211, 153, 0.05); }
+  2205→.prose-custom tbody tr:nth-child(even) td { background: rgba(255,255,255,0.012); }
+  2206→.prose-custom tbody tr:nth-child(even):hover td { background: rgba(52, 211, 153, 0.05); }
+  2207→
+  2208→/* ─── Table Status Icons ───────────────────── */
+  2209→.t-check,
+  2210→.t-cross,
+  2211→.t-partial {
+  2212→  display: inline-flex;
+  2213→  align-items: center;
+  2214→  justify-content: center;
+  2215→  width: 20px;
+  2216→  height: 20px;
+  2217→  border-radius: 50%;
+  2218→  font-size: 11px;
+  2219→  font-weight: 700;
+  2220→  line-height: 1;
+  2221→  vertical-align: middle;
+  2222→  margin: 0 2px;
+  2223→}
+  2224→.t-check {
+  2225→  background: rgba(34, 197, 94, 0.15);
+  2226→  color: #4ade80;
+  2227→  box-shadow: inset 0 0 0 1px rgba(34, 197, 94, 0.3);
+  2228→}
+  2229→.t-check::after {
+  2230→  content: "✓";
+  2231→}
+  2232→.t-cross {
+  2233→  background: rgba(239, 68, 68, 0.15);
+  2234→  color: #f87171;
+  2235→  box-shadow: inset 0 0 0 1px rgba(239, 68, 68, 0.3);
+  2236→}
+  2237→.t-cross::after {
+  2238→  content: "✕";
+  2239→}
+  2240→.t-partial {
+  2241→  background: rgba(110, 231, 183, 0.15);
+  2242→  color: #6ee7b7;
+  2243→  box-shadow: inset 0 0 0 1px rgba(110, 231, 183, 0.3);
+  2244→}
+  2245→.t-partial::after {
+  2246→  content: "~";
+  2247→}
+  2248→
+  2249→/* ─── Cinematic Vignette ───────────────────── */
+  2250→.cinema-vignette {
+  2251→  position: fixed;
+  2252→  inset: 0;
+  2253→  z-index: 1;
+  2254→  pointer-events: none;
+  2255→  background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.55) 100%);
+  2256→}
+  2257→
+  2258→/* ─── Animated Film Grain ──────────────────── */
+  2259→.cinema-grain {
+  2260→  position: fixed;
+  2261→  inset: -50%;
+  2262→  z-index: 2;
+  2263→  pointer-events: none;
+  2264→  width: 200%;
+  2265→  height: 200%;
+  2266→  opacity: 0.045;
+  2267→  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  2268→  animation: grain-shift 0.4s steps(5) infinite;
+  2269→}
+  2270→@keyframes grain-shift {
+  2271→  0%, 100% { transform: translate(0, 0); }
+  2272→  20% { transform: translate(-5%, -8%); }
+  2273→  40% { transform: translate(3%, -4%); }
+  2274→  60% { transform: translate(-8%, 5%); }
+  2275→  80% { transform: translate(6%, 3%); }
+  2276→}
+  2277→
+  2278→/* ─── Light Leaks ──────────────────────────── */
+  2279→.light-leak {
+  2280→  position: fixed;
+  2281→  z-index: 2;
+  2282→  pointer-events: none;
+  2283→  border-radius: 50%;
+  2284→  filter: blur(90px);
+  2285→  mix-blend-mode: screen;
+  2286→  opacity: 0;
+  2287→}
+  2288→.light-leak--emerald {
+  2289→  width: 600px; height: 600px;
+  2290→  background: radial-gradient(circle, rgba(52,211,153,0.18) 0%, transparent 70%);
+  2291→  top: -10%; right: -10%;
+  2292→  animation: leak-drift-1 14s ease-in-out infinite;
+  2293→}
+  2294→.light-leak--rose {
+  2295→  width: 500px; height: 500px;
+  2296→  background: radial-gradient(circle, rgba(244,63,94,0.12) 0%, transparent 70%);
+  2297→  bottom: 15%; left: -8%;
+  2298→  animation: leak-drift-2 18s ease-in-out infinite;
+  2299→}
+  2300→.light-leak--sky {
+  2301→  width: 420px; height: 420px;
+  2302→  background: radial-gradient(circle, rgba(56,189,248,0.10) 0%, transparent 70%);
+  2303→  top: 40%; right: 8%;
+  2304→  animation: leak-drift-3 22s ease-in-out infinite;
+  2305→}
+  2306→@keyframes leak-drift-1 {
+  2307→  0%, 100% { opacity: 0; transform: translate(0, 0) scale(1); }
+  2308→  30% { opacity: 0.6; }
+  2309→  55% { opacity: 0.35; transform: translate(-50px, 35px) scale(1.15); }
+  2310→  80% { opacity: 0.7; }
+  2311→}
+  2312→@keyframes leak-drift-2 {
+  2313→  0%, 100% { opacity: 0; transform: translate(0, 0) scale(1); }
+  2314→  35% { opacity: 0.4; }
+  2315→  65% { opacity: 0.5; transform: translate(40px, -25px) scale(1.1); }
+  2316→}
+  2317→@keyframes leak-drift-3 {
+  2318→  0%, 100% { opacity: 0; transform: translate(0, 0) scale(0.95); }
+  2319→  45% { opacity: 0.35; transform: translate(-25px, 15px) scale(1.08); }
+  2320→  75% { opacity: 0.5; }
+  2321→}
+  2322→
+  2323→/* ─── Bokeh Canvas ─────────────────────────── */
+  2324→.bokeh-canvas {
+  2325→  position: fixed;
+  2326→  inset: 0;
+  2327→  z-index: 2;
+  2328→  pointer-events: none;
+  2329→  opacity: 0.45;
+  2330→}
+  2331→
+  2332→/* ─── Welcome Screen (first-visit) ─────────── */
+  2333→.welcome-overlay {
+  2334→  position: fixed;
+  2335→  inset: 0;
+  2336→  z-index: 100;
+  2337→  background: var(--background);
+  2338→  display: flex;
+  2339→  align-items: center;
+  2340→  justify-content: center;
+  2341→  flex-direction: column;
+  2342→  overflow: hidden;
+  2343→  will-change: opacity, transform;
+  2344→}
+  2345→.welcome-enter {
+  2346→  animation: welcome-fade-in 0.5s ease-out both;
+  2347→}
+  2348→.welcome-hold {
+  2349→  opacity: 1;
+  2350→}
+  2351→.welcome-exit {
+  2352→  animation: welcome-fade-out 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  2353→}
+  2354→@keyframes welcome-fade-in {
+  2355→  from { opacity: 0; }
+  2356→  to   { opacity: 1; }
+  2357→}
+  2358→@keyframes welcome-fade-out {
+  2359→  0%   { opacity: 1; filter: blur(0); transform: scale(1); }
+  2360→  100% { opacity: 0; filter: blur(6px); transform: scale(1.04); }
+  2361→}
+  2362→
+  2363→/* Letterbox bars */
+  2364→.welcome-letterbox {
+  2365→  position: absolute;
+  2366→  left: 0;
+  2367→  right: 0;
+  2368→  height: 0;
+  2369→  background: var(--background);
+  2370→  z-index: 2;
+  2371→  transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  2372→}
+  2373→.welcome-enter .welcome-letterbox--top {
+  2374→  animation: letterbox-in-top 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+  2375→}
+  2376→.welcome-enter .welcome-letterbox--bottom {
+  2377→  animation: letterbox-in-bottom 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+  2378→}
+  2379→.welcome-exit .welcome-letterbox {
+  2380→  height: 0 !important;
+  2381→  transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.15s;
+  2382→}
+  2383→@keyframes letterbox-in-top {
+  2384→  from { height: 0; }
+  2385→  to   { height: 48px; }
+  2386→}
+  2387→@keyframes letterbox-in-bottom {
+  2388→  from { height: 0; }
+  2389→  to   { height: 48px; }
+  2390→}
+  2391→
+  2392→/* Vignette for welcome */
+  2393→.welcome-vignette {
+  2394→  position: absolute;
+  2395→  inset: 0;
+  2396→  background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.7) 100%);
+  2397→  z-index: 1;
+  2398→  pointer-events: none;
+  2399→}
+  2400→
+  2401→/* Ambient glow behind logo */
+  2402→.welcome-glow {
+  2403→  position: absolute;
+  2404→  width: 320px;
+  2405→  height: 320px;
+  2406→  border-radius: 50%;
+  2407→  background: radial-gradient(circle, rgba(52, 211, 153, 0.15) 0%, rgba(52, 211, 153, 0.04) 40%, transparent 70%);
+  2408→  filter: blur(40px);
+  2409→  z-index: 1;
+  2410→  animation: welcome-glow-pulse 2.5s ease-in-out infinite;
+  2411→}
+  2412→@keyframes welcome-glow-pulse {
+  2413→  0%, 100% { transform: scale(1); opacity: 0.8; }
+  2414→  50%      { transform: scale(1.15); opacity: 1; }
+  2415→}
+  2416→
+  2417→/* Content group */
+  2418→.welcome-content {
+  2419→  position: relative;
+  2420→  z-index: 3;
+  2421→  display: flex;
+  2422→  flex-direction: column;
+  2423→  align-items: center;
+  2424→  gap: 1.25rem;
+  2425→}
+  2426→
+  2427→/* Logo wrapper */
+  2428→.welcome-logo-wrap {
+  2429→  opacity: 0;
+  2430→  transform: scale(0.7) translateY(12px);
+  2431→  filter: blur(10px);
+  2432→}
+  2433→.welcome-enter .welcome-logo-wrap {
+  2434→  animation: welcome-logo-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+  2435→}
+  2436→.welcome-exit .welcome-logo-wrap {
+  2437→  animation: welcome-element-out 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+  2438→}
+  2439→@keyframes welcome-logo-in {
+  2440→  0%   { opacity: 0; transform: scale(0.7) translateY(12px); filter: blur(10px); }
+  2441→  100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+  2442→}
+  2443→
+  2444→/* Avatar circle for returning user */
+  2445→.welcome-avatar-circle {
+  2446→  width: 80px;
+  2447→  height: 80px;
+  2448→  border-radius: 50%;
+  2449→  overflow: hidden;
+  2450→  border: 2px solid rgba(52, 211, 153, 0.3);
+  2451→  box-shadow: 0 0 30px rgba(52, 211, 153, 0.15), 0 0 60px rgba(52, 211, 153, 0.08);
+  2452→}
+  2453→@media (min-width: 640px) {
+  2454→  .welcome-avatar-circle {
+  2455→    width: 96px;
+  2456→    height: 96px;
+  2457→  }
+  2458→}
+  2459→.welcome-avatar-circle--fallback {
+  2460→  display: flex;
+  2461→  align-items: center;
+  2462→  justify-content: center;
+  2463→  background: linear-gradient(135deg, rgba(52, 211, 153, 0.15), rgba(52, 211, 153, 0.05));
+  2464→  border: 2px solid rgba(52, 211, 153, 0.25);
+  2465→}
+  2466→
+  2467→/* Title */
+  2468→.welcome-title {
+  2469→  font-size: 2.5rem;
+  2470→  font-weight: 800;
+  2471→  letter-spacing: -0.03em;
+  2472→  line-height: 1.1;
+  2473→  opacity: 0;
+  2474→  transform: translateY(16px);
+  2475→  filter: blur(8px);
+  2476→}
+  2477→.welcome-enter .welcome-title {
+  2478→  animation: welcome-text-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.65s both;
+  2479→}
+  2480→.welcome-exit .welcome-title {
+  2481→  animation: welcome-element-out 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  2482→}
+  2483→.welcome-title--tech {
+  2484→  color: rgba(255, 255, 255, 0.9);
+  2485→}
+  2486→.welcome-title--mate {
+  2487→  font-size: 2.5rem;
+  2488→  font-weight: 800;
+  2489→}
+  2490→@keyframes welcome-text-in {
+  2491→  0%   { opacity: 0; transform: translateY(16px); filter: blur(8px); }
+  2492→  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+  2493→}
+  2494→
+  2495→/* Tagline */
+  2496→.welcome-tagline {
+  2497→  color: var(--muted);
+  2498→  font-size: 0.95rem;
+  2499→  font-weight: 400;
+  2500→  letter-spacing: 0.02em;
+  2501→  text-align: center;
+  2502→  opacity: 0;
+  2503→  transform: translateY(10px);
+  2504→}
+  2505→.welcome-enter .welcome-tagline {
+  2506→  animation: welcome-text-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) 1s both;
+  2507→}
+  2508→.welcome-exit .welcome-tagline {
+  2509→  animation: welcome-element-out 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  2510→}
+  2511→@keyframes welcome-element-out {
+  2512→  0%   { opacity: 1; transform: translateY(0); filter: blur(0); }
+  2513→  100% { opacity: 0; transform: translateY(-10px); filter: blur(6px); }
+  2514→}
+  2515→
+  2516→/* Decorative line */
+  2517→.welcome-line {
+  2518→  width: 60px;
+  2519→  height: 2px;
+  2520→  background: linear-gradient(90deg, transparent, rgba(52, 211, 153, 0.5), transparent);
+  2521→  border-radius: 9999px;
+  2522→  opacity: 0;
+  2523→  transform: scaleX(0);
+  2524→}
+  2525→.welcome-enter .welcome-line {
+  2526→  animation: welcome-line-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) 1.2s both;
+  2527→}
+  2528→.welcome-exit .welcome-line {
+  2529→  animation: welcome-line-out 0.4s ease-in both;
+  2530→}
+  2531→@keyframes welcome-line-in {
+  2532→  0%   { opacity: 0; transform: scaleX(0); }
+  2533→  100% { opacity: 1; transform: scaleX(1); }
+  2534→}
+  2535→@keyframes welcome-line-out {
+  2536→  0%   { opacity: 1; transform: scaleX(1); }
+  2537→  100% { opacity: 0; transform: scaleX(0); }
+  2538→}
+  2539→
+  2540→/* Decorative rings */
+  2541→.welcome-ring {
+  2542→  position: absolute;
+  2543→  border-radius: 9999px;
+  2544→  border: 1px solid rgba(52, 211, 153, 0.06);
+  2545→  pointer-events: none;
+  2546→  z-index: 1;
+  2547→  opacity: 0;
+  2548→}
+  2549→.welcome-ring:not(.welcome-ring--outer) {
+  2550→  width: 180px;
+  2551→  height: 180px;
+  2552→}
+  2553→.welcome-ring--outer {
+  2554→  width: 260px;
+  2555→  height: 260px;
+  2556→}
+  2557→.welcome-enter .welcome-ring {
+  2558→  animation: welcome-ring-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+  2559→}
+  2560→.welcome-enter .welcome-ring--outer {
+  2561→  animation: welcome-ring-in 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
+  2562→}
+  2563→@keyframes welcome-ring-in {
+  2564→  0%   { opacity: 0; transform: scale(0.6); }
+  2565→  100% { opacity: 0.6; transform: scale(1); }
+  2566→}
+  2567→
+  2568→/* Mobile tweaks for welcome */
+  2569→@media (max-width: 640px) {
+  2570→  .welcome-letterbox--top,
+  2571→  .welcome-letterbox--bottom {
+  2572→    height: 32px !important;
+  2573→  }
+  2574→  @keyframes letterbox-in-top {
+  2575→    from { height: 0; }
+  2576→    to   { height: 32px; }
+  2577→  }
+  2578→  @keyframes letterbox-in-bottom {
+  2579→    from { height: 0; }
+  2580→    to   { height: 32px; }
+  2581→  }
+  2582→  .welcome-title {
+  2583→    font-size: 1.4rem;
+  2584→    white-space: nowrap;
+  2585→  }
+  2586→  .welcome-title--mate {
+  2587→    font-size: 1.4rem;
+  2588→  }
+  2589→  .welcome-tagline {
+  2590→    font-size: 0.875rem;
+  2591→    white-space: nowrap;
+  2592→  }
+  2593→  .welcome-glow {
+  2594→    width: 220px;
+  2595→    height: 220px;
+  2596→  }
+  2597→  .welcome-ring:not(.welcome-ring--outer) {
+  2598→    width: 140px;
+  2599→    height: 140px;
+  2600→  }
+  2601→  .welcome-ring--outer {
+  2602→    width: 200px;
+  2603→    height: 200px;
+  2604→  }
+  2605→}
+  2606→
+  2607→/* ─── Name input section ──────────────────── */
+  2608→.welcome-name-section {
+  2609→  display: flex;
+  2610→  flex-direction: column;
+  2611→  align-items: center;
+  2612→  gap: 1.25rem;
+  2613→  opacity: 0;
+  2614→  transform: translateY(16px);
+  2615→  filter: blur(8px);
+  2616→  animation: welcome-text-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+  2617→}
+  2618→.welcome-exit .welcome-name-section {
+  2619→  animation: welcome-element-out 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  2620→}
+  2621→.welcome-name-heading {
+  2622→  display: flex;
+  2623→  flex-direction: column;
+  2624→  align-items: center;
+  2625→  gap: 0.25rem;
+  2626→  font-size: 1.25rem;
+  2627→  font-weight: 600;
+  2628→  color: rgba(255, 255, 255, 0.85);
+  2629→  letter-spacing: -0.01em;
+  2630→  text-align: center;
+  2631→}
+  2632→.welcome-name-form {
+  2633→  display: flex;
+  2634→  flex-direction: column;
+  2635→  align-items: center;
+  2636→  gap: 0.75rem;
+  2637→  width: 100%;
+  2638→  max-width: 300px;
+  2639→}
+  2640→.welcome-name-input {
+  2641→  width: 100%;
+  2642→  padding: 0.7rem 1rem;
+  2643→  border-radius: 0.75rem;
+  2644→  border: 1px solid rgba(255, 255, 255, 0.12);
+  2645→  background: rgba(255, 255, 255, 0.05);
+  2646→  backdrop-filter: blur(12px);
+  2647→  -webkit-backdrop-filter: blur(12px);
+  2648→  color: rgba(255, 255, 255, 0.9);
+  2649→  font-size: 1rem;
+  2650→  font-weight: 400;
+  2651→  text-align: center;
+  2652→  outline: none;
+  2653→  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  2654→  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  2655→}
+  2656→.welcome-name-input::placeholder {
+  2657→  color: rgba(255, 255, 255, 0.25);
+  2658→}
+  2659→.welcome-name-input:focus {
+  2660→  border-color: rgba(52, 211, 153, 0.4);
+  2661→  background: rgba(255, 255, 255, 0.07);
+  2662→  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 0 0 3px rgba(52, 211, 153, 0.1);
+  2663→}
+  2664→.welcome-name-btn {
+  2665→  width: 100%;
+  2666→  padding: 0.65rem 1.5rem;
+  2667→  border-radius: 0.75rem;
+  2668→  border: 1px solid rgba(52, 211, 153, 0.25);
+  2669→  background: linear-gradient(to bottom, rgba(52, 211, 153, 0.85), rgba(52, 211, 153, 0.95));
+  2670→  color: #022c22;
+  2671→  font-size: 0.875rem;
+  2672→  font-weight: 600;
+  2673→  cursor: pointer;
+  2674→  transition: all 0.2s;
+  2675→  box-shadow: 0 4px 16px -4px rgba(52, 211, 153, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  2676→}
+  2677→.welcome-name-btn:hover:not(:disabled) {
+  2678→  background: linear-gradient(to bottom, rgba(110, 231, 183, 0.95), rgba(16, 185, 129, 0.95));
+  2679→  box-shadow: 0 8px 24px -4px rgba(52, 211, 153, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  2680→  transform: translateY(-1px);
+  2681→}
+  2682→.welcome-name-btn:active:not(:disabled) {
+  2683→  transform: translateY(0) scale(0.98);
+  2684→}
+  2685→.welcome-name-btn:disabled {
+  2686→  opacity: 0.4;
+  2687→  cursor: not-allowed;
+  2688→}
+  2689→
+  2690→/* ─── Greet section ───────────────────────── */
+  2691→.welcome-greet-section {
+  2692→  opacity: 0;
+  2693→  transform: translateY(16px);
+  2694→  filter: blur(8px);
+  2695→  animation: welcome-text-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+  2696→}
+  2697→.welcome-exit .welcome-greet-section {
+  2698→  animation: welcome-element-out 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  2699→}
+  2700→.welcome-greet-title {
+  2701→  font-size: 1.75rem !important;
+  2702→  text-align: center;
+  2703→}
+  2704→@media (max-width: 640px) {
+  2705→  .welcome-greet-title {
+  2706→    font-size: 1.35rem !important;
+  2707→  }
+  2708→  .welcome-name-section {
+  2709→    gap: 1rem;
+  2710→  }
+  2711→  .welcome-name-form {
+  2712→    max-width: 260px;
+  2713→  }
+  2714→  .welcome-name-heading {
+  2715→    font-size: 1.1rem;
+  2716→  }
+  2717→}
+  2718→
+  2719→/* ─── Photo upload section ──────────────────── */
+  2720→.welcome-photo-section {
+  2721→  display: flex;
+  2722→  flex-direction: column;
+  2723→  align-items: center;
+  2724→  gap: 1.25rem;
+  2725→  opacity: 0;
+  2726→  transform: translateY(16px);
+  2727→  filter: blur(8px);
+  2728→  animation: welcome-text-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+  2729→}
+  2730→.welcome-exit .welcome-photo-section {
+  2731→  animation: welcome-element-out 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  2732→}
+  2733→.welcome-photo-heading {
+  2734→  display: flex;
+  2735→  flex-direction: column;
+  2736→  align-items: center;
+  2737→  gap: 0.25rem;
+  2738→  font-size: 1.15rem;
+  2739→  font-weight: 600;
+  2740→  color: rgba(255, 255, 255, 0.85);
+  2741→  letter-spacing: -0.01em;
+  2742→  text-align: center;
+  2743→}
+  2744→.welcome-photo-upload-area {
+  2745→  width: 120px;
+  2746→  height: 120px;
+  2747→  border-radius: 50%;
+  2748→  border: 2px dashed rgba(52, 211, 153, 0.3);
+  2749→  display: flex;
+  2750→  align-items: center;
+  2751→  justify-content: center;
+  2752→  cursor: pointer;
+  2753→  transition: border-color 0.25s, background 0.25s, box-shadow 0.25s, transform 0.2s;
+  2754→  background: rgba(255, 255, 255, 0.03);
+  2755→  overflow: hidden;
+  2756→}
+  2757→.welcome-photo-upload-area:hover {
+  2758→  border-color: rgba(52, 211, 153, 0.5);
+  2759→  background: rgba(52, 211, 153, 0.05);
+  2760→  box-shadow: 0 0 24px rgba(52, 211, 153, 0.12);
+  2761→  transform: scale(1.04);
+  2762→}
+  2763→.welcome-photo-upload-area:active {
+  2764→  transform: scale(0.98);
+  2765→}
+  2766→.welcome-photo-preview {
+  2767→  width: 100%;
+  2768→  height: 100%;
+  2769→  border-radius: 50%;
+  2770→  border: 2px solid rgba(52, 211, 153, 0.35);
+  2771→  box-shadow: 0 0 24px rgba(52, 211, 153, 0.15);
+  2772→}
+  2773→.welcome-photo-placeholder {
+  2774→  display: flex;
+  2775→  flex-direction: column;
+  2776→  align-items: center;
+  2777→  gap: 0.4rem;
+  2778→  pointer-events: none;
+  2779→}
+  2780→.welcome-photo-upload-hint {
+  2781→  font-size: 0.7rem;
+  2782→  color: rgba(255, 255, 255, 0.3);
+  2783→  font-weight: 400;
+  2784→}
+  2785→.welcome-photo-actions {
+  2786→  display: flex;
+  2787→  flex-direction: column;
+  2788→  gap: 0.5rem;
+  2789→  width: 100%;
+  2790→  max-width: 300px;
+  2791→}
+  2792→.welcome-photo-btn {
+  2793→  width: 100%;
+  2794→  padding: 0.65rem 1.5rem;
+  2795→  border-radius: 0.75rem;
+  2796→  font-size: 0.875rem;
+  2797→  font-weight: 600;
+  2798→  cursor: pointer;
+  2799→  transition: all 0.2s;
+  2800→  text-align: center;
+  2801→}
+  2802→.welcome-photo-btn--primary {
+  2803→  border: 1px solid rgba(52, 211, 153, 0.25);
+  2804→  background: linear-gradient(to bottom, rgba(52, 211, 153, 0.85), rgba(52, 211, 153, 0.95));
+  2805→  color: #022c22;
+  2806→  box-shadow: 0 4px 16px -4px rgba(52, 211, 153, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  2807→}
+  2808→.welcome-photo-btn--primary:hover:not(:disabled) {
+  2809→  background: linear-gradient(to bottom, rgba(110, 231, 183, 0.95), rgba(16, 185, 129, 0.95));
+  2810→  box-shadow: 0 8px 24px -4px rgba(52, 211, 153, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  2811→  transform: translateY(-1px);
+  2812→}
+  2813→.welcome-photo-btn--primary:active:not(:disabled) {
+  2814→  transform: translateY(0) scale(0.98);
+  2815→}
+  2816→.welcome-photo-btn--primary:disabled {
+  2817→  opacity: 0.4;
+  2818→  cursor: not-allowed;
+  2819→}
+  2820→.welcome-photo-btn--skip {
+  2821→  border: 1px solid rgba(255, 255, 255, 0.08);
+  2822→  background: rgba(255, 255, 255, 0.04);
+  2823→  backdrop-filter: blur(12px);
+  2824→  -webkit-backdrop-filter: blur(12px);
+  2825→  color: rgba(255, 255, 255, 0.4);
+  2826→  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  2827→}
+  2828→.welcome-photo-btn--skip:hover {
+  2829→  border-color: rgba(255, 255, 255, 0.15);
+  2830→  color: rgba(255, 255, 255, 0.6);
+  2831→  background: rgba(255, 255, 255, 0.07);
+  2832→}
+  2833→.welcome-photo-btn--skip:active {
+  2834→  transform: scale(0.98);
+  2835→}
+  2836→@media (max-width: 640px) {
+  2837→  .welcome-photo-section {
+  2838→    gap: 1rem;
+  2839→  }
+  2840→  .welcome-photo-upload-area {
+  2841→    width: 100px;
+  2842→    height: 100px;
+  2843→  }
+  2844→  .welcome-photo-heading {
+  2845→    font-size: 1rem;
+  2846→  }
+  2847→  .welcome-photo-actions {
+  2848→    max-width: 260px;
+  2849→  }
+  2850→}
+  2851→
+  2852→/* ─── Cinematic Name Shine ──────────────────── */
+  2853→.welcome-name-shine {
+  2854→  background: linear-gradient(90deg, #10b981, #6ee7b7);
+  2855→  -webkit-background-clip: text;
+  2856→  background-clip: text;
+  2857→  -webkit-text-fill-color: transparent;
+  2858→  color: transparent;
+  2859→}
+  2860→
+  2861→/* ─── Welcome Progress Bar ──────────────────── */
+  2862→.welcome-progress-wrap {
+  2863→  width: 160px;
+  2864→  opacity: 0;
+  2865→  animation: welcome-text-in 0.5s ease-out 0.4s both;
+  2866→}
+  2867→.welcome-progress-track {
+  2868→  width: 100%;
+  2869→  height: 3px;
+  2870→  border-radius: 9999px;
+  2871→  background: rgba(255, 255, 255, 0.06);
+  2872→  overflow: hidden;
+  2873→}
+  2874→.welcome-progress-bar {
+  2875→  height: 100%;
+  2876→  border-radius: 9999px;
+  2877→  background: linear-gradient(90deg, #10b981, #6ee7b7);
+  2878→  box-shadow: 0 0 8px rgba(52, 211, 153, 0.5);
+  2879→  transition: width 0.3s ease-out;
+  2880→}
+  2881→.welcome-exit .welcome-progress-wrap {
+  2882→  animation: welcome-element-out 0.3s ease-in both;
+  2883→}
+  2884→
+  2885→/* ─── Settings Panel ────────────────────────── */
+  2886→.settings-panel {
+  2887→  position: fixed;
+  2888→  top: calc(3.5rem + 8px);
+  2889→  right: 0.75rem;
+  2890→  width: 280px;
+  2891→  z-index: 100;
+  2892→  border-radius: 1rem;
+  2893→  backdrop-filter: blur(12px) saturate(200%);
+  2894→  -webkit-backdrop-filter: blur(12px) saturate(200%);
+  2895→  background: rgba(15, 13, 18, 0.85);
+  2896→  border: 1px solid rgba(255, 255, 255, 0.08);
+  2897→  box-shadow:
+  2898→    0 20px 60px -12px rgba(0, 0, 0, 0.6),
+  2899→    0 8px 24px -8px rgba(0, 0, 0, 0.4),
+  2900→    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  2901→  animation: settings-in 0.2s ease-out both;
+  2902→}
+  2903→@keyframes settings-in {
+  2904→  from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+  2905→  to   { opacity: 1; transform: translateY(0) scale(1); }
+  2906→}
+  2907→.settings-divider {
+  2908→  height: 1px;
+  2909→  margin: 0 1rem;
+  2910→  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+  2911→}
+  2912→.settings-input {
+  2913→  width: 100%;
+  2914→  padding: 0.45rem 0.7rem;
+  2915→  border-radius: 0.5rem;
+  2916→  border: 1px solid rgba(255, 255, 255, 0.10);
+  2917→  background: rgba(255, 255, 255, 0.04);
+  2918→  backdrop-filter: blur(20px);
+  2919→  color: rgba(255, 255, 255, 0.85);
+  2920→  font-size: 0.8rem;
+  2921→  outline: none;
+  2922→  transition: border-color 0.2s, box-shadow 0.2s;
+  2923→}
+  2924→.settings-input:focus {
+  2925→  border-color: rgba(52, 211, 153, 0.35);
+  2926→  box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.08);
+  2927→}
+  2928→.settings-btn-sm {
+  2929→  padding: 0.35rem 0.65rem;
+  2930→  border-radius: 0.4rem;
+  2931→  border: 1px solid rgba(52, 211, 153, 0.25);
+  2932→  background: rgba(52, 211, 153, 0.15);
+  2933→  color: #6ee7b7;
+  2934→  font-size: 0.7rem;
+  2935→  font-weight: 600;
+  2936→  cursor: pointer;
+  2937→  transition: all 0.15s;
+  2938→}
+  2939→.settings-btn-sm:hover {
+  2940→  background: rgba(52, 211, 153, 0.25);
+  2941→}
+  2942→.settings-btn-cancel {
+  2943→  border-color: rgba(255, 255, 255, 0.08);
+  2944→  background: rgba(255, 255, 255, 0.04);
+  2945→  color: rgba(255, 255, 255, 0.5);
+  2946→}
+  2947→.settings-btn-cancel:hover {
+  2948→  background: rgba(255, 255, 255, 0.08);
+  2949→}
+  2950→.settings-btn-danger {
+  2951→  padding: 0.4rem 0.8rem;
+  2952→  border-radius: 0.4rem;
+  2953→  border: 1px solid rgba(239, 68, 68, 0.25);
+  2954→  background: rgba(239, 68, 68, 0.12);
+  2955→  color: #f87171;
+  2956→  font-size: 0.7rem;
+  2957→  font-weight: 600;
+  2958→  cursor: pointer;
+  2959→  transition: all 0.15s;
+  2960→}
+  2961→.settings-btn-danger:hover {
+  2962→  background: rgba(239, 68, 68, 0.22);
+  2963→}
+  2964→/* Mobile: center panel as overlay */
+  2965→@media (min-width: 640px) {
+  2966→  .settings-panel {
+  2967→    top: calc(4rem + 8px);
+  2968→    right: 1.5rem;
+  2969→  }
+  2970→}
+  2971→@media (min-width: 1024px) {
+  2972→  .settings-panel {
+  2973→    top: calc(4.5rem + 8px);
+  2974→  }
+  2975→}
+  2976→@media (max-width: 640px) {
+  2977→  .settings-panel-mobile {
+  2978→    position: fixed !important;
+  2979→    top: auto !important;
+  2980→    right: 1rem !important;
+  2981→    left: 1rem !important;
+  2982→    bottom: 2rem !important;
+  2983→    width: auto !important;
+  2984→    animation: settings-mobile-in 0.25s ease-out both !important;
+  2985→  }
+  2986→  @keyframes settings-mobile-in {
+  2987→    from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  2988→    to   { opacity: 1; transform: translateY(0) scale(1); }
+  2989→  }
+  2990→}
+  2991→@keyframes page-enter {
+  2992→  0% {
+  2993→    opacity: 0;
+  2994→    transform: translateY(16px) scale(0.99);
+  2995→    filter: blur(8px);
+  2996→    clip-path: inset(4px 0 4px 0);
+  2997→  }
+  2998→  100% {
+  2999→    opacity: 1;
+  3000→    transform: translateY(0) scale(1);
+  3001→    filter: blur(0);
+  3002→    clip-path: inset(0 0 0 0);
+  3003→  }
+  3004→}
+  3005→.page-transition {
+  3006→  animation: page-enter 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  3007→}
+  3008→
+  3009→
+  3010→/* ─── 404 page animations ────────────────────── */
+  3011→@keyframes shimmer-404 {
+  3012→  0% { background-position: -200% center; }
+  3013→  100% { background-position: 200% center; }
+  3014→}
+  3015→@keyframes glitch-1 {
+  3016→  0%, 90%, 100% { transform: translate(0); }
+  3017→  92% { transform: translate(-3px, 1px); }
+  3018→  94% { transform: translate(3px, -1px); }
+  3019→  96% { transform: translate(-2px, -1px); }
+  3020→  98% { transform: translate(2px, 1px); }
+  3021→}
+  3022→@keyframes glitch-2 {
+  3023→  0%, 88%, 100% { transform: translate(0); }
+  3024→  90% { transform: translate(3px, -1px); }
+  3025→  93% { transform: translate(-3px, 1px); }
+  3026→  95% { transform: translate(2px, 2px); }
+  3027→  97% { transform: translate(-1px, -2px); }
+  3028→}
+  3029→@keyframes float-particle {
+  3030→  0% { transform: translateY(0) scale(1); opacity: var(--p-opacity, 0.2); }
+  3031→  50% { transform: translateY(-30px) scale(1.3); opacity: calc(var(--p-opacity, 0.2) * 2); }
+  3032→  100% { transform: translateY(-60px) scale(0.8); opacity: 0; }
+  3033→}
+  3034→
+  3035→/* ─── Mobile Search Bar (Liquid Glass Droplet) ─── */
+  3036→.mobile-search-bar {
+  3037→  display: inline-flex;
+  3038→  align-items: center;
+  3039→  width: 145px;
+  3040→  border-radius: 9999px;
+  3041→  background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
+  3042→  border: 1.5px solid rgba(255,255,255, var(--glass-border-opacity));
+  3043→  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  3044→  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  3045→  box-shadow: var(--glass-volumetric);
+  3046→  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+  3047→              box-shadow 0.3s ease, border-color 0.3s ease;
+  3048→  position: relative;
+  3049→  overflow: hidden;
+  3050→}
+  3051→.mobile-search-bar::before {
+  3052→  content: '';
+  3053→  position: absolute;
+  3054→  top: 0;
+  3055→  left: 15%;
+  3056→  right: 15%;
+  3057→  height: 1px;
+  3058→  background: linear-gradient(
+  3059→    90deg,
+  3060→    transparent 0%,
+  3061→    rgba(255, 255, 255, 0.4) 25%,
+  3062→    rgba(255, 255, 255, 0.6) 50%,
+  3063→    rgba(255, 255, 255, 0.4) 75%,
+  3064→    transparent 100%
+  3065→  );
+  3066→  z-index: 2;
+  3067→  pointer-events: none;
+  3068→}
+  3069→.mobile-search-bar::after {
+  3070→  content: '';
+  3071→  position: absolute;
+  3072→  inset: 0;
+  3073→  border-radius: inherit;
+  3074→  background: radial-gradient(
+  3075→    ellipse 50% 35% at 30% 20%,
+  3076→    rgba(255, 255, 255, 0.08) 0%,
+  3077→    transparent 55%
+  3078→  );
+  3079→  pointer-events: none;
+  3080→  z-index: 1;
+  3081→}
+  3082→.mobile-search-bar > * {
+  3083→  position: relative;
+  3084→  z-index: 2;
+  3085→}
+  3086→
+  3087→
+  3088→/* Completely strip native button styling inside search bar */
+  3089→.mobile-search-bar button {
+  3090→  -webkit-appearance: none;
+  3091→  appearance: none;
+  3092→  border: none !important;
+  3093→  background: transparent !important;
+  3094→  outline: none !important;
+  3095→  box-shadow: none !important;
+  3096→  -webkit-tap-highlight-color: transparent;
+  3097→  padding: 0;
+  3098→  margin: 0;
+  3099→  cursor: pointer;
+  3100→}
+  3101→
+  3102→/* Strip native input styling */
+  3103→.mobile-search-bar input {
+  3104→  -webkit-appearance: none;
+  3105→  appearance: none;
+  3106→  border: none !important;
+  3107→  background: transparent !important;
+  3108→  outline: none !important;
+  3109→  box-shadow: none !important;
+  3110→}
+  3111→
+  3112→/* Expanded state when focused */
+  3113→.mobile-search-bar.expanded {
+  3114→  width: calc(100vw - 2rem);
+  3115→  border-radius: 14px;
+  3116→}
+  3117→
+  3118→.mobile-search-bar .mobile-search-input-wrap {
+  3119→  flex: 0 1 auto;
+  3120→  transition: flex 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  3121→}
+  3122→.mobile-search-bar .mobile-search-input-wrap input {
+  3123→  width: 70px;
+  3124→  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+  3125→              opacity 0.3s ease;
+  3126→}
+  3127→.mobile-search-bar.expanded .mobile-search-input-wrap {
+  3128→  flex: 1 1 0%;
+  3129→}
+  3130→.mobile-search-bar.expanded .mobile-search-input-wrap input {
+  3131→  width: 100%;
+  3132→}
+  3133→
+  3134→.mobile-search-bar:focus-within {
+  3135→  box-shadow:
+  3136→    0 8px 40px -4px rgba(52, 211, 153, 0.2),
+  3137→    0 2px 8px -2px rgba(0, 0, 0, 0.3);
+  3138→}
+  3139→
+  3140→.mobile-search-divider {
+  3141→  width: 1px;
+  3142→  height: 14px;
+  3143→  background: rgba(255, 255, 255, 0.15);
+  3144→  flex-shrink: 0;
+  3145→}
+  3146→
+  3147→/* Mobile search results dropdown — Liquid Glass 3D */
+  3148→.mobile-search-results {
+  3149→  position: relative;
+  3150→  background: linear-gradient(
+  3151→    180deg,
+  3152→    rgba(18, 18, 22, 0.92) 0%,
+  3153→    rgba(12, 12, 14, 0.96) 100%
+  3154→  );
+  3155→  backdrop-filter: blur(12px) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  3156→  -webkit-backdrop-filter: blur(12px) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  3157→  border: 1.5px solid rgba(255, 255, 255, var(--glass-border-opacity));
+  3158→  border-radius: 20px;
+  3159→  box-shadow: var(--glass-volumetric);
+  3160→  overflow: hidden;
+  3161→}
+  3162→.mobile-search-results::before {
+  3163→  content: "";
+  3164→  position: absolute;
+  3165→  top: 0;
+  3166→  left: 10%;
+  3167→  right: 10%;
+  3168→  height: 1.5px;
+  3169→  background: linear-gradient(
+  3170→    90deg,
+  3171→    transparent 0%,
+  3172→    rgba(255, 255, 255, 0.25) 20%,
+  3173→    rgba(52, 211, 153, 0.15) 45%,
+  3174→    rgba(255, 255, 255, 0.4) 50%,
+  3175→    rgba(56, 189, 248, 0.08) 55%,
+  3176→    rgba(255, 255, 255, 0.25) 80%,
+  3177→    transparent 100%
+  3178→  );
+  3179→  pointer-events: none;
+  3180→  z-index: 3;
+  3181→}
+  3182→
+  3183→
+  3184→/* Light mode for mobile floating search bar */
+  3185→html:not(.dark) .mobile-search-bar {
+  3186→  background: rgba(30, 30, 30, 0.85);
+  3187→  box-shadow:
+  3188→    0 8px 32px -4px rgba(0, 0, 0, 0.2),
+  3189→    0 2px 8px -2px rgba(0, 0, 0, 0.1);
+  3190→}
+  3191→
+  3192→html:not(.dark) .mobile-search-bar:focus-within {
+  3193→  box-shadow:
+  3194→    0 8px 40px -4px rgba(4, 120, 87, 0.15),
+  3195→    0 2px 8px -2px rgba(0, 0, 0, 0.1);
+  3196→}
+  3197→
+  3198→html:not(.dark) .mobile-search-divider {
+  3199→  background: rgba(0, 0, 0, 0.08);
+  3200→}
+  3201→
+  3202→html:not(.dark) .mobile-search-results {
+  3203→  background: linear-gradient(
+  3204→    180deg,
+  3205→    rgba(240, 245, 242, 0.98) 0%,
+  3206→    rgba(244, 248, 246, 0.99) 100%
+  3207→  );
+  3208→  border-color: rgba(0, 0, 0, 0.08);
+  3209→  box-shadow: 0 -8px 40px -8px rgba(0, 0, 0, 0.12);
+  3210→}
+  3211→
+  3212→html:not(.dark) .mobile-search-results::before {
+  3213→  background: linear-gradient(
+  3214→    90deg,
+  3215→    transparent 0%,
+  3216→    rgba(0, 0, 0, 0.06) 30%,
+  3217→    rgba(0, 0, 0, 0.1) 50%,
+  3218→    rgba(0, 0, 0, 0.06) 70%,
+  3219→    transparent 100%
+  3220→  );
+  3221→}
+  3222→
+  3223→/* ─── Mobile Fullscreen Menu Overlay ─── */
+  3224→.mobile-menu-overlay {
+  3225→  position: fixed;
+  3226→  inset: 0;
+  3227→  z-index: 60;
+  3228→  pointer-events: none;
+  3229→  visibility: hidden;
+  3230→  transition: visibility 0s linear 0.35s;
+  3231→}
+  3232→
+  3233→.mobile-menu-overlay.mobile-menu-open {
+  3234→  pointer-events: auto;
+  3235→  visibility: visible;
+  3236→  transition: visibility 0s linear 0s;
+  3237→}
+  3238→
+  3239→/* Backdrop */
+  3240→.mobile-menu-backdrop {
+  3241→  position: absolute;
+  3242→  inset: 0;
+  3243→  background: rgba(0, 0, 0, 0.7);
+  3244→  backdrop-filter: blur(8px) saturate(120%);
+  3245→  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  3246→  opacity: 0;
+  3247→  transition: opacity 0.35s ease;
+  3248→}
+  3249→
+  3250→.mobile-menu-open .mobile-menu-backdrop {
+  3251→  opacity: 1;
+  3252→}
+  3253→
+  3254→/* Content panel */
+  3255→.mobile-menu-content {
+  3256→  position: absolute;
+  3257→  inset: 0;
+  3258→  background: linear-gradient(
+  3259→    180deg,
+  3260→    rgba(14, 14, 18, 0.97) 0%,
+  3261→    rgba(10, 10, 12, 0.99) 100%
+  3262→  );
+  3263→  backdrop-filter: blur(14px) saturate(200%) brightness(108%);
+  3264→  -webkit-backdrop-filter: blur(14px) saturate(200%) brightness(108%);
+  3265→  display: flex;
+  3266→  flex-direction: column;
+  3267→  align-items: center;
+  3268→  overflow-y: auto;
+  3269→  padding: 0 1.5rem;
+  3270→  transform: translateY(-100%);
+  3271→  opacity: 0;
+  3272→  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+  3273→}
+  3274→
+  3275→.mobile-menu-open .mobile-menu-content {
+  3276→  transform: translateY(0);
+  3277→  opacity: 1;
+  3278→}
+  3279→
+  3280→/* Top shine line */
+  3281→.mobile-menu-content::before {
+  3282→  content: "";
+  3283→  position: absolute;
+  3284→  top: 0;
+  3285→  left: 15%;
+  3286→  right: 15%;
+  3287→  height: 1px;
+  3288→  background: linear-gradient(
+  3289→    90deg,
+  3290→    transparent 0%,
+  3291→    rgba(255, 255, 255, 0.2) 20%,
+  3292→    rgba(52, 211, 153, 0.35) 50%,
+  3293→    rgba(255, 255, 255, 0.2) 80%,
+  3294→    transparent 100%
+  3295→  );
+  3296→  pointer-events: none;
+  3297→}
+  3298→
+  3299→/* Close button */
+  3300→.mobile-menu-close {
+  3301→  position: absolute;
+  3302→  top: 1rem;
+  3303→  right: 1rem;
+  3304→  display: flex;
+  3305→  align-items: center;
+  3306→  justify-content: center;
+  3307→  width: 44px;
+  3308→  height: 44px;
+  3309→  border-radius: 16px;
+  3310→  border: 1.5px solid rgba(255, 255, 255, var(--glass-border-opacity));
+  3311→  background: linear-gradient(135deg, var(--glass-bg-1), var(--glass-bg-2));
+  3312→  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  3313→  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  3314→  color: rgba(255, 255, 255, 0.6);
+  3315→  cursor: pointer;
+  3316→  transition: var(--glass-transition);
+  3317→  box-shadow: var(--glass-volumetric);
+  3318→}
+  3319→
+  3320→.mobile-menu-close:hover {
+  3321→  background: rgba(255, 255, 255, 0.1);
+  3322→  border-color: rgba(255, 255, 255, 0.2);
+  3323→  color: rgba(255, 255, 255, 0.9);
+  3324→  transform: scale(1.05);
+  3325→}
+  3326→
+  3327→.mobile-menu-close:active {
+  3328→  transform: scale(0.95);
+  3329→}
+  3330→
+  3331→/* Links container */
+  3332→.mobile-menu-links {
+  3333→  display: flex;
+  3334→  flex-direction: column;
+  3335→  align-items: center;
+  3336→  justify-content: center;
+  3337→  flex: 1;
+  3338→  width: 100%;
+  3339→  max-width: 400px;
+  3340→  padding-top: 4rem;
+  3341→}
+  3342→
+  3343→/* User section */
+  3344→.mobile-menu-user {
+  3345→  margin-bottom: 2rem;
+  3346→  opacity: 0;
+  3347→  animation: mobile-menu-item-in 0.4s ease forwards;
+  3348→  animation-delay: 0ms;
+  3349→}
+  3350→
+  3351→/* Nav links */
+  3352→.mobile-menu-nav {
+  3353→  width: 100%;
+  3354→  display: flex;
+  3355→  flex-direction: column;
+  3356→  gap: 0.5rem;
+  3357→}
+  3358→
+  3359→/* Individual link */
+  3360→.mobile-menu-link {
+  3361→  display: flex;
+  3362→  align-items: center;
+  3363→  justify-content: space-between;
+  3364→  width: 100%;
+  3365→  padding: 1rem 1.25rem;
+  3366→  border-radius: 14px;
+  3367→  font-size: 1.05rem;
+  3368→  font-weight: 500;
+  3369→  color: rgba(255, 255, 255, 0.75);
+  3370→  border: 1px solid transparent;
+  3371→  transition: all 0.2s ease;
+  3372→  cursor: pointer;
+  3373→  text-decoration: none;
+  3374→  opacity: 0;
+  3375→  animation: mobile-menu-item-in 0.4s ease forwards;
+  3376→}
+  3377→
+  3378→.mobile-menu-link:hover {
+  3379→  color: rgba(255, 255, 255, 1);
+  3380→  background: rgba(255, 255, 255, 0.05);
+  3381→  border-color: rgba(255, 255, 255, 0.08);
+  3382→}
+  3383→
+  3384→.mobile-menu-link.active {
+  3385→  color: rgba(110, 231, 183, 0.95);
+  3386→  background: rgba(52, 211, 153, 0.1);
+  3387→  border-color: rgba(52, 211, 153, 0.2);
+  3388→  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  3389→}
+  3390→
+  3391→.mobile-menu-link-secondary {
+  3392→  margin-top: 0.5rem;
+  3393→  padding-top: 1.25rem;
+  3394→  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  3395→  color: rgba(255, 255, 255, 0.45);
+  3396→}
+  3397→
+  3398→.mobile-menu-link-secondary:hover {
+  3399→  color: rgba(255, 255, 255, 0.65);
+  3400→}
+  3401→
+  3402→/* CTA section */
+  3403→.mobile-menu-cta {
+  3404→  width: 100%;
+  3405→  margin-top: 2rem;
+  3406→  padding-bottom: 2rem;
+  3407→  opacity: 0;
+  3408→  animation: mobile-menu-item-in 0.4s ease forwards;
+  3409→}
+  3410→
+  3411→.mobile-menu-cta-btn {
+  3412→  display: flex;
+  3413→  align-items: center;
+  3414→  justify-content: center;
+  3415→  gap: 0.5rem;
+  3416→  width: 100%;
+  3417→  padding: 0.85rem 1.5rem;
+  3418→  border-radius: 9999px;
+  3419→  font-size: 0.9rem;
+  3420→  font-weight: 600;
+  3421→  color: #052e16;
+  3422→  background: linear-gradient(180deg, rgba(110, 231, 183, 0.9) 0%, rgba(16, 185, 129, 0.95) 100%);
+  3423→  border: 1px solid rgba(110, 231, 183, 0.3);
+  3424→  box-shadow:
+  3425→    0 4px 16px -4px rgba(52, 211, 153, 0.5),
+  3426→    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  3427→  transition: all 0.2s ease;
+  3428→  text-decoration: none;
+  3429→}
+  3430→
+  3431→.mobile-menu-cta-btn:hover {
+  3432→  box-shadow:
+  3433→    0 8px 24px -4px rgba(52, 211, 153, 0.7),
+  3434→    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  3435→  transform: translateY(-1px);
+  3436→}
+  3437→
+  3438→.mobile-menu-cta-btn:active {
+  3439→  transform: translateY(0) scale(0.98);
+  3440→}
+  3441→
+  3442→@keyframes mobile-menu-item-in {
+  3443→  0% {
+  3444→    opacity: 0;
+  3445→    transform: translateY(16px);
+  3446→  }
+  3447→  100% {
+  3448→    opacity: 1;
+  3449→    transform: translateY(0);
+  3450→  }
+  3451→}
+  3452→
+  3453→/* Light mode adjustments */
+  3454→html:not(.dark) .mobile-menu-backdrop {
+  3455→  background: rgba(255, 255, 255, 0.6);
+  3456→}
+  3457→
+  3458→html:not(.dark) .mobile-menu-content {
+  3459→  background: linear-gradient(
+  3460→    180deg,
+  3461→    rgba(240, 245, 242, 0.98) 0%,
+  3462→    rgba(244, 248, 246, 0.99) 100%
+  3463→  );
+  3464→}
+  3465→
+  3466→html:not(.dark) .mobile-menu-content::before {
+  3467→  background: linear-gradient(
+  3468→    90deg,
+  3469→    transparent 0%,
+  3470→    rgba(0, 0, 0, 0.08) 20%,
+  3471→    rgba(4, 120, 87, 0.15) 50%,
+  3472→    rgba(0, 0, 0, 0.08) 80%,
+  3473→    transparent 100%
+  3474→  );
+  3475→}
+  3476→
+  3477→html:not(.dark) .mobile-menu-close {
+  3478→  border-color: rgba(0, 0, 0, 0.1);
+  3479→  background: rgba(0, 0, 0, 0.04);
+  3480→  color: rgba(0, 0, 0, 0.5);
+  3481→}
+  3482→
+  3483→html:not(.dark) .mobile-menu-close:hover {
+  3484→  background: rgba(0, 0, 0, 0.08);
+  3485→  border-color: rgba(0, 0, 0, 0.15);
+  3486→  color: rgba(0, 0, 0, 0.8);
+  3487→}
+  3488→
+  3489→html:not(.dark) .mobile-menu-link {
+  3490→  color: rgba(30, 30, 30, 0.7);
+  3491→}
+  3492→
+  3493→html:not(.dark) .mobile-menu-link:hover {
+  3494→  color: rgba(30, 30, 30, 0.95);
+  3495→  background: rgba(0, 0, 0, 0.04);
+  3496→  border-color: rgba(0, 0, 0, 0.06);
+  3497→}
+  3498→
+  3499→html:not(.dark) .mobile-menu-link.active {
+  3500→  color: rgba(4, 120, 87, 0.95);
+  3501→  background: rgba(4, 120, 87, 0.08);
+  3502→  border-color: rgba(4, 120, 87, 0.15);
+  3503→}
+  3504→
+  3505→html:not(.dark) .mobile-menu-link-secondary {
+  3506→  border-top-color: rgba(0, 0, 0, 0.06);
+  3507→  color: rgba(30, 30, 30, 0.4);
+  3508→}
+  3509→
+  3510→html:not(.dark) .mobile-menu-link-secondary:hover {
+  3511→  color: rgba(30, 30, 30, 0.65);
+  3512→}
+  3513→
+  3514→/* ─── Reduce motion (user toggle & system) ── */
+  3515→.reduced-motion *,
+  3516→.reduced-motion *::before,
+  3517→.reduced-motion *::after {
+  3518→  animation-duration: 0.01ms !important;
+  3519→  animation-iteration-count: 1 !important;
+  3520→  transition-duration: 0.01ms !important;
+  3521→  scroll-behavior: auto !important;
+  3522→}
+  3523→.reduced-motion .ambient-orb,
+  3524→.reduced-motion .cinema-grain,
+  3525→.reduced-motion .light-leak,
+  3526→.reduced-motion .bokeh-particle,
+  3527→.reduced-motion .welcome-ring {
+  3528→  display: none !important;
+  3529→}
+  3530→@media (prefers-reduced-motion: reduce) {
+  3531→  *, *::before, *::after {
+  3532→    animation-duration: 0.01ms !important;
+  3533→    animation-iteration-count: 1 !important;
+  3534→    transition-duration: 0.01ms !important;
+  3535→    scroll-behavior: auto !important;
+  3536→  }
+  3537→}
+  3538→
+  3539→/* ─── User font size scaling ─────────────────── */
+  3540→html {
+  3541→  --user-font-scale: 1;
+  3542→}
+  3543→html:not([style*="--user-font-scale"]) {
+  3544→  --user-font-scale: 1;
+  3545→}
+  3546→
+  3547→/* ─── Compact mode ────────────────────────────── */
+  3548→.compact-mode .liquid-glass-card {
+  3549→  padding-top: 0.75rem;
+  3550→  padding-bottom: 0.75rem;
+  3551→}
+  3552→.compact-mode [class*="py-3.5"],
+  3553→.compact-mode [class*="py-4"] {
+  3554→  padding-top: 0.5rem;
+  3555→  padding-bottom: 0.5rem;
+  3556→}
+  3557→.compact-mode section {
+  3558→  margin-bottom: 0.75rem !important;
+  3559→}
+  3560→
+  3561→/* ─────────────────────────────────────────────
+  3562→   Mobile / responsive refinements
+  3563→   ───────────────────────────────────────────── */
+  3564→
+  3565→/* Prevent iOS zoom on input focus (min 16px) */
+  3566→input, textarea, select {
+  3567→  font-size: 16px;
+  3568→}
+  3569→@media (min-width: 640px) {
+  3570→  input, textarea, select {
+  3571→    font-size: inherit;
+  3572→  }
+  3573→}
+  3574→
+  3575→/* Remove tap highlight, use our own active states */
+  3576→* {
+  3577→  -webkit-tap-highlight-color: transparent;
+  3578→}
+  3579→
+  3580→/* Better touch behavior */
+  3581→html {
+  3582→  overscroll-behavior-y: none;
+  3583→  -webkit-text-size-adjust: 100%;
+  3584→}
+  3585→
+  3586→/* Safe area for notched devices (iOS) */
+  3587→body {
+  3588→  padding-left: env(safe-area-inset-left);
+  3589→  padding-right: env(safe-area-inset-right);
+  3590→}
+  3591→
+  3592→/* Hide scrollbar utility (used in filter pills) */
+  3593→.scrollbar-thin::-webkit-scrollbar {
+  3594→  height: 4px;
+  3595→}
+  3596→.scrollbar-thin::-webkit-scrollbar-track {
+  3597→  background: transparent;
+  3598→}
+  3599→.scrollbar-thin::-webkit-scrollbar-thumb {
+  3600→  background: rgba(52, 211, 153, 0.2);
+  3601→  border-radius: 10px;
+  3602→}
+  3603→@media (max-width: 640px) {
+  3604→  .scrollbar-thin::-webkit-scrollbar {
+  3605→    display: none;
+  3606→  }
+  3607→  .scrollbar-thin {
+  3608→    scrollbar-width: none;
+  3609→  }
+  3610→}
+  3611→
+  3612→/* Mobile prose adjustments */
+  3613→@media (max-width: 640px) {
+  3614→  .prose-custom {
+  3615→    font-size: 1rem;
+  3616→    line-height: 1.7;
+  3617→  }
+  3618→  .prose-custom h1 { font-size: 1.625rem; }
+  3619→  .prose-custom h2 { font-size: 1.375rem; }
+  3620→  .prose-custom h3 { font-size: 1.15rem; }
+  3621→  .prose-custom h4 { font-size: 1rem; }
+  3622→  .prose-custom pre {
+  3623→    padding: 1rem;
+  3624→    font-size: 0.8125rem;
+  3625→    border-radius: 0.65rem;
+  3626→    margin-left: 0;
+  3627→    margin-right: 0;
+  3628→  }
+  3629→  .prose-custom blockquote {
+  3630→    padding: 0.6em 1em;
+  3631→    margin: 1.25em -0.25em;
+  3632→  }
+  3633→  .prose-custom :not(pre) > code {
+  3634→    font-size: 0.85em;
+  3635→    word-break: break-word;
+  3636→  }
+  3637→}
+  3638→
+  3639→/* Buttons - mobile-friendly sizes (44px tap target) */
+  3640→@media (max-width: 640px) {
+  3641→  .btn-primary, .btn-secondary {
+  3642→    padding: 0.75rem 1.25rem;
+  3643→    font-size: 0.875rem;
+  3644→    min-height: 44px;
+  3645→  }
+  3646→}
+  3647→
+  3648→/* Disable hover-only effects on touch devices */
+  3649→@media (hover: none) {
+  3650→  .card-shine::after {
+  3651→    display: none;
+  3652→  }
+  3653→  .spotlight::before {
+  3654→    display: none;
+  3655→  }
+  3656→  .card-glow-hover:hover {
+  3657→    box-shadow: none;
+  3658→  }
+  3659→}
+  3660→
+  3661→/* Smooth momentum scroll on iOS */
+  3662→.overflow-x-auto, .overflow-y-auto {
+  3663→  -webkit-overflow-scrolling: touch;
+  3664→}
+  3665→
+  3666→/* Disable double-tap zoom on interactive elements */
+  3667→button, a, [role="button"] {
+  3668→  touch-action: manipulation;
+  3669→}
+  3670→
+  3671→/* ═══════════════════════════════════════════════════
+  3672→   MOBILE PERFORMANCE — Aggressive GPU savings ═════════════════════════════════════════════════════ */
+  3673→@media (max-width: 640px) {
+  3674→  /* ── 1. Slash blur intensity (biggest GPU saver) ── */
+  3675→  :root {
+  3676→    --glass-blur: 6px;
+  3677→    --glass-saturate: 120%;
+  3678→    --glass-volumetric:
+  3679→      inset 0 1px 2px 0 rgba(255, 255, 255, 0.5),
+  3680→      0 8px 24px -8px rgba(0, 0, 0, 0.3);
+  3681→    --glass-volumetric-hover:
+  3682→      inset 0 1px 2px 0 rgba(255, 255, 255, 0.6),
+  3683→      0 12px 32px -8px rgba(0, 0, 0, 0.35);
+  3684→  }
+  3685→
+  3686→  /* ── 2. Kill the refraction-pulse animation (animates backdrop-filter) ── */
+  3687→  .liquid-glass,
+  3688→  .liquid-glass-card,
+  3689→  .liquid-glass-pill,
+  3690→  .liquid-glass-nav,
+  3691→  .glass-card,
+  3692→  .glass-nav {
+  3693→    animation: none !important;
+  3694→  }
+  3695→
+  3696→  /* ── 3. Strip decorative pseudo-elements from glass cards/pills ── */
+  3697→  .liquid-glass::before,
+  3698→  .liquid-glass::after,
+  3699→  .liquid-glass-card::before,
+  3700→  .liquid-glass-card::after,
+  3701→  .liquid-glass-pill::before,
+  3702→  .liquid-glass-pill::after,
+  3703→  .liquid-glass-panel::before,
+  3704→  .liquid-glass-panel::after,
+  3705→  .liquid-glass-input::before,
+  3706→  .liquid-glass-input::after,
+  3707→  .glass-card::before,
+  3708→  .glass-card::after,
+  3709→  .glass-nav::before,
+  3710→  .glass-nav::after,
+  3711→  .glass-input::before,
+  3712→  .glass-input::after,
+  3713→  .liquid-glass-mobile-menu::before,
+  3714→  .liquid-glass-mobile-menu::after {
+  3715→    display: none !important;
+  3716→  }
+  3717→
+  3718→  /* ── 4. Remove SVG refraction filter ── */
+  3719→  .liquid-refraction {
+  3720→    filter: none !important;
+  3721→  }
+  3722→
+  3723→  /* ── 5. Remove prismatic/conic borders ── */
+  3724→  .prismatic-border::before,
+  3725→  .liquid-glass-prismatic::before,
+  3726→  .conic-border::before {
+  3727→    display: none !important;
+  3728→  }
+  3729→
+  3730→  /* ── 6. Hide decorative overlays ── */
+  3731→  .cinema-grain,
+  3732→  .light-leak,
+  3733→  .bokeh-canvas {
+  3734→    display: none !important;
+  3735→  }
+  3736→
+  3737→  /* ── 7. Simplify button pseudo-elements ── */
+  3738→  .btn-primary::before,
+  3739→  .btn-primary::after,
+  3740→  .btn-secondary::before,
+  3741→  .btn-secondary::after,
+  3742→  .searchbar-input-wrap::before,
+  3743→  .searchbar-input-wrap::after,
+  3744→  .mobile-search-bar::before,
+  3745→  .mobile-search-bar::after {
+  3746→    display: none !important;
+  3747→  }
+  3748→  .btn-primary,
+  3749→  .btn-secondary {
+  3750→    backdrop-filter: blur(8px);
+  3751→  }
+  3752→
+  3753→  /* ── 8. Reduce specific heavy blurs ── */
+  3754→  .settings-panel {
+  3755→    backdrop-filter: blur(16px) !important;
+  3756→  }
+  3757→  .settings-input {
+  3758→    backdrop-filter: blur(6px) !important;
+  3759→  }
+  3760→  .mobile-search-results {
+  3761→    backdrop-filter: blur(16px) !important;
+  3762→  }
+  3763→  .mobile-menu-content {
+  3764→    backdrop-filter: blur(20px) !important;
+  3765→  }
+  3766→  .mobile-menu-close {
+  3767→    backdrop-filter: blur(8px) !important;
+
+[showing lines 1768-3767 of 4154; use offset=3768 with limit to continue reading]

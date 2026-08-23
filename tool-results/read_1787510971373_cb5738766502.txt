@@ -1,0 +1,2002 @@
+  1750→    0 15px 30px -8px rgba(0, 0, 0, 0.3);
+  1751→}
+  1752→
+  1753→
+  1754→/* ─── Hero ring decoration ──────────────────── */
+  1755→.hero-ring {
+  1756→  position: absolute;
+  1757→  border-radius: 9999px;
+  1758→  border: 1px solid rgba(52, 211, 153, 0.08);
+  1759→  pointer-events: none;
+  1760→}
+  1761→
+  1762→/* ─── Buttons (Liquid Glass Droplets) ───── */
+  1763→.btn-primary {
+  1764→  position: relative;
+  1765→  display: inline-flex;
+  1766→  align-items: center;
+  1767→  gap: 0.5rem;
+  1768→  padding: 0.7rem 1.4rem;
+  1769→  border-radius: 9999px;
+  1770→  font-weight: 600;
+  1771→  font-size: 0.9rem;
+  1772→  color: #022c22;
+  1773→  background: linear-gradient(135deg, #a7f3d0 0%, #6ee7b7 45%, #34d399 100%);
+  1774→  box-shadow:
+  1775→    0 2px 4px 0 rgba(255,255,255,0.9) inset,
+  1776→    0 -3px 8px 0 rgba(0,0,0,0.2) inset,
+  1777→    0 12px 32px -8px rgba(52, 211, 153, 0.45),
+  1778→    0 0 0 1px rgba(52, 211, 153, 0.4);
+  1779→  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, filter 0.2s ease;
+  1780→  overflow: hidden;
+  1781→  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  1782→}
+  1783→/* Glass sheen overlay on btn-primary */
+  1784→.btn-primary::before {
+  1785→  content: '';
+  1786→  position: absolute;
+  1787→  inset: 0;
+  1788→  border-radius: inherit;
+  1789→  background: linear-gradient(
+  1790→    135deg,
+  1791→    rgba(255, 255, 255, 0.45) 0%,
+  1792→    rgba(255, 255, 255, 0.12) 35%,
+  1793→    rgba(255, 255, 255, 0.0) 100%
+  1794→  );
+  1795→  pointer-events: none;
+  1796→  z-index: 1;
+  1797→}
+  1798→/* Specular top highlight on btn-primary */
+  1799→.btn-primary::after {
+  1800→  content: '';
+  1801→  position: absolute;
+  1802→  top: 0;
+  1803→  left: 15%;
+  1804→  right: 15%;
+  1805→  height: 1.5px;
+  1806→  background: linear-gradient(
+  1807→    90deg,
+  1808→    transparent 0%,
+  1809→    rgba(255, 255, 255, 0.7) 25%,
+  1810→    rgba(255, 255, 255, 0.95) 50%,
+  1811→    rgba(255, 255, 255, 0.7) 75%,
+  1812→    transparent 100%
+  1813→  );
+  1814→  z-index: 2;
+  1815→  pointer-events: none;
+  1816→}
+  1817→.btn-primary:hover {
+  1818→  transform: translateY(-2px) scale(1.03);
+  1819→  filter: brightness(1.08);
+  1820→  box-shadow:
+  1821→    0 2px 4px 0 rgba(255,255,255,1) inset,
+  1822→    0 -3px 8px 0 rgba(0,0,0,0.25) inset,
+  1823→    0 20px 40px -6px rgba(52, 211, 153, 0.6),
+  1824→    0 0 0 1.5px rgba(52, 211, 153, 0.6);
+  1825→}
+  1826→.btn-primary:active {
+  1827→  transform: translateY(1px) scale(0.97);
+  1828→  box-shadow:
+  1829→    0 1px 2px 0 rgba(255,255,255,0.5) inset,
+  1830→    0 -1px 4px 0 rgba(0,0,0,0.3) inset,
+  1831→    0 4px 12px -4px rgba(52, 211, 153, 0.4);
+  1832→}
+  1833→.btn-primary > * { position: relative; z-index: 3; }
+  1834→
+  1835→.btn-secondary {
+  1836→  position: relative;
+  1837→  display: inline-flex;
+  1838→  align-items: center;
+  1839→  gap: 0.5rem;
+  1840→  padding: 0.7rem 1.4rem;
+  1841→  border-radius: 9999px;
+  1842→  font-weight: 500;
+  1843→  font-size: 0.9rem;
+  1844→  color: rgba(255,255,255,0.85);
+  1845→  background: linear-gradient(
+  1846→    var(--glass-bg-angle, 135deg),
+  1847→    var(--glass-bg-1) 0%,
+  1848→    var(--glass-bg-2) 50%,
+  1849→    var(--glass-bg-3) 100%
+  1850→  );
+  1851→  border: 1.5px solid rgba(255, 255, 255, var(--glass-border-opacity));
+  1852→  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  1853→  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  1854→  box-shadow: var(--glass-volumetric);
+  1855→  transition: var(--glass-transition);
+  1856→  overflow: hidden;
+  1857→}
+  1858→.btn-secondary::before {
+  1859→  content: '';
+  1860→  position: absolute;
+  1861→  top: 0;
+  1862→  left: 12%;
+  1863→  right: 12%;
+  1864→  height: 1.5px;
+  1865→  background: linear-gradient(
+  1866→    90deg,
+  1867→    transparent 0%,
+  1868→    rgba(255, 255, 255, 0.5) 25%,
+  1869→    rgba(255, 255, 255, 0.7) 50%,
+  1870→    rgba(255, 255, 255, 0.5) 75%,
+  1871→    transparent 100%
+  1872→  );
+  1873→  z-index: 1;
+  1874→  pointer-events: none;
+  1875→}
+  1876→.btn-secondary::after {
+  1877→  content: '';
+  1878→  position: absolute;
+  1879→  inset: 0;
+  1880→  border-radius: inherit;
+  1881→  background: radial-gradient(
+  1882→    ellipse 50% 35% at var(--light-x, 50%) var(--light-y, 20%),
+  1883→    rgba(255, 255, 255, 0.1) 0%,
+  1884→    transparent 55%
+  1885→  );
+  1886→  pointer-events: none;
+  1887→  z-index: 0;
+  1888→}
+  1889→.btn-secondary:hover {
+  1890→  background: linear-gradient(
+  1891→    var(--glass-bg-angle, 135deg),
+  1892→    rgba(255, 255, 255, 0.22) 0%,
+  1893→    rgba(255, 255, 255, 0.1) 100%
+  1894→  );
+  1895→  border-color: rgba(255, 255, 255, 0.5);
+  1896→  box-shadow: var(--glass-volumetric-hover);
+  1897→  color: #fff;
+  1898→  transform: translateY(-2px) scale(1.03);
+  1899→}
+  1900→.btn-secondary:active {
+  1901→  transform: translateY(1px) scale(0.97);
+  1902→  box-shadow:
+  1903→    inset 0 1px 2px 0 rgba(255, 255, 255, 0.4),
+  1904→    inset 0 -2px 6px 0 rgba(0, 0, 0, 0.2),
+  1905→    0 8px 20px -6px rgba(0, 0, 0, 0.3);
+  1906→}
+  1907→.btn-secondary > * { position: relative; z-index: 2; }
+  1908→
+  1909→
+  1910→/* ─── Live dot ─────────────────────────────── */
+  1911→.live-dot {
+  1912→  display: inline-block;
+  1913→  width: 6px;
+  1914→  height: 6px;
+  1915→  border-radius: 50%;
+  1916→  background: #22c55e;
+  1917→  animation: pulse-dot 2s ease-out infinite;
+  1918→}
+  1919→
+  1920→/* ─── Rating stars ─────────────────────────── */
+  1921→.star-filled { color: #34d399; fill: #34d399; }
+  1922→.star-empty { color: #3a3830; }
+  1923→
+  1924→/* ─── Blog Prose ────────────────────────────── */
+  1925→.prose-custom {
+  1926→  color: #ece8df;
+  1927→  line-height: 1.8;
+  1928→  font-size: 1.05rem;
+  1929→}
+  1930→.prose-custom h1,
+  1931→.prose-custom h2,
+  1932→.prose-custom h3,
+  1933→.prose-custom h4 {
+  1934→  color: #fff;
+  1935→  font-weight: 700;
+  1936→  margin-top: 2em;
+  1937→  margin-bottom: 0.75em;
+  1938→  line-height: 1.25;
+  1939→  letter-spacing: -0.01em;
+  1940→}
+  1941→.prose-custom h1 { font-size: 2rem; letter-spacing: -0.025em; }
+  1942→.prose-custom h2 {
+  1943→  font-size: 1.6rem;
+  1944→  padding-bottom: 0.5em;
+  1945→  border-bottom: 1px solid rgba(52, 211, 153, 0.15);
+  1946→}
+  1947→.prose-custom h3 { font-size: 1.3rem; font-style: italic; }
+  1948→.prose-custom h4 { font-size: 1.1rem; font-style: italic; }
+  1949→.prose-custom p {
+  1950→  margin-bottom: 1.25em;
+  1951→  color: rgba(236, 232, 223, 0.78);
+  1952→}
+  1953→.prose-custom a {
+  1954→  color: #6ee7b7;
+  1955→  text-decoration: none;
+  1956→  background-image: linear-gradient(currentColor, currentColor);
+  1957→  background-size: 100% 1px;
+  1958→  background-repeat: no-repeat;
+  1959→  background-position: 0 100%;
+  1960→  transition: color 0.2s, background-size 0.2s, gap 0.2s;
+  1961→  display: inline-flex;
+  1962→  align-items: center;
+  1963→  gap: 0.2em;
+  1964→}
+  1965→.prose-custom a:hover {
+  1966→  color: #a7f3d0;
+  1967→  background-size: 100% 2px;
+  1968→}
+  1969→.prose-custom a::after {
+  1970→  content: "";
+  1971→  display: inline-block;
+  1972→  width: 14px;
+  1973→  height: 14px;
+  1974→  min-width: 14px;
+  1975→  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236ee7b7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17L17 7'/%3E%3Cpath d='M7 7h10v10'/%3E%3C/svg%3E");
+  1976→  background-repeat: no-repeat;
+  1977→  background-position: center;
+  1978→  opacity: 0.85;
+  1979→  transition: opacity 0.2s, transform 0.2s;
+  1980→  vertical-align: middle;
+  1981→}
+  1982→.prose-custom a:hover::after {
+  1983→  opacity: 1;
+  1984→  transform: translate(2px, -2px);
+  1985→}
+  1986→@media (hover: none) {
+  1987→  .prose-custom a::after {
+  1988→    opacity: 1;
+  1989→  }
+  1990→}
+  1991→.prose-custom strong { color: #fff; font-weight: 600; }
+  1992→.prose-custom ul, .prose-custom ol { margin-bottom: 1.25em; padding-left: 1.5em; }
+  1993→.prose-custom ul { list-style-type: disc; }
+  1994→.prose-custom ol { list-style-type: decimal; }
+  1995→.prose-custom li { margin-bottom: 0.5em; color: rgba(236, 232, 223, 0.72); }
+  1996→.prose-custom blockquote {
+  1997→  border-left: 3px solid rgba(52, 211, 153, 0.5);
+  1998→  padding: 0.75em 1.25em;
+  1999→  margin: 1.5em 0;
+  2000→  background: linear-gradient(90deg, rgba(52,211,153,0.05), transparent);
+  2001→  border-radius: 0 0.5rem 0.5rem 0;
+  2002→}
+  2003→.prose-custom blockquote p { color: rgba(236, 232, 223, 0.65); font-style: italic; }
+  2004→.prose-custom pre {
+  2005→  background: rgba(0, 0, 0, 0.7);
+  2006→  border: 1px solid rgba(52, 211, 153, 0.14);
+  2007→  border-radius: 0.85rem;
+  2008→  padding: 1.25rem 1.5rem;
+  2009→  margin: 1.5em 0;
+  2010→  overflow-x: auto;
+  2011→  max-width: 100%;
+  2012→  width: 100%;
+  2013→  font-family: var(--font-jetbrains-mono), 'JetBrains Mono', monospace;
+  2014→  font-size: 0.875rem;
+  2015→  line-height: 1.65;
+  2016→  box-shadow: 0 8px 24px -12px rgba(0,0,0,0.8);
+  2017→}
+  2018→/* Shiki support */
+  2019→.prose-custom pre.shiki {
+  2020→  background-color: #1a1b26 !important; /* Tokyo Night background */
+  2021→  margin: 1.5em 0;
+  2022→  overflow-x: auto !important;
+  2023→  max-width: 100% !important;
+  2024→}
+  2025→.prose-custom pre.shiki code {
+  2026→  color: inherit;
+  2027→  display: block;
+  2028→  width: fit-content;
+  2029→  min-width: 100%;
+  2030→}
+  2031→.prose-custom code { font-family: var(--font-jetbrains-mono), 'JetBrains Mono', monospace; font-size: 0.875em; }
+  2032→.prose-custom :not(pre) > code {
+  2033→  background: rgba(52, 211, 153, 0.1);
+  2034→  color: #6ee7b7;
+  2035→  padding: 0.15em 0.45em;
+  2036→  border-radius: 0.3rem;
+  2037→  border: 1px solid rgba(52, 211, 153, 0.15);
+  2038→}
+  2039→.prose-custom pre code { background: none; color: #d4c8b8; padding: 0; border: 0; }
+  2040→
+  2041→/* ─── Pre wrapper (holds copy button outside scroll) ── */
+  2042→.prose-custom .pre-wrapper {
+  2043→  position: relative;
+  2044→}
+  2045→
+  2046→/* ─── Code copy button ───────────────── */
+  2047→.prose-custom .pre-wrapper .copy-btn {
+  2048→  position: absolute;
+  2049→  top: 0.75rem;
+  2050→  right: 0.75rem;
+  2051→  display: flex;
+  2052→  align-items: center;
+  2053→  justify-content: center;
+  2054→  gap: 0.35rem;
+  2055→  padding: 0.4rem 0.55rem;
+  2056→  border-radius: 0.5rem;
+  2057→  border: 1px solid rgba(52, 211, 153, 0.2);
+  2058→  background: rgba(0, 0, 0, 0.6);
+  2059→  color: rgba(52, 211, 153, 0.6);
+  2060→  font-size: 0.7rem;
+  2061→  font-family: inherit;
+  2062→  cursor: pointer;
+  2063→  opacity: 1;
+  2064→  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  2065→  backdrop-filter: blur(8px);
+  2066→  z-index: 2;
+  2067→}
+  2068→.prose-custom .pre-wrapper .copy-btn:hover {
+  2069→  background: rgba(52, 211, 153, 0.15);
+  2070→  color: #6ee7b7;
+  2071→  border-color: rgba(52, 211, 153, 0.4);
+  2072→}
+  2073→.prose-custom .pre-wrapper .copy-btn .check-icon,
+  2074→.prose-custom .pre-wrapper .copy-btn .copied-label {
+  2075→  display: none;
+  2076→}
+  2077→.prose-custom .pre-wrapper .copy-btn .copy-label {
+  2078→  display: inline;
+  2079→}
+  2080→.prose-custom .pre-wrapper .copy-btn.copied {
+  2081→  opacity: 1;
+  2082→  background: rgba(52, 211, 153, 0.15);
+  2083→  border-color: rgba(52, 211, 153, 0.4);
+  2084→  color: #34d399;
+  2085→}
+  2086→.prose-custom .pre-wrapper .copy-btn.copied .copy-icon,
+  2087→.prose-custom .pre-wrapper .copy-btn.copied .copy-label {
+  2088→  display: none;
+  2089→}
+  2090→.prose-custom .pre-wrapper .copy-btn.copied .check-icon,
+  2091→.prose-custom .pre-wrapper .copy-btn.copied .copied-label {
+  2092→  display: inline;
+  2093→}
+  2094→
+  2095→.prose-custom img {
+  2096→  border-radius: 0.85rem;
+  2097→  border: 1px solid rgba(255,255,255,0.06);
+  2098→  margin: 1.5em 0;
+  2099→  box-shadow: 0 20px 50px -20px rgba(0,0,0,0.7);
+  2100→}
+  2101→
+  2102→/* ─── Cover image zoom ─── */
+  2103→.cover-zoom-wrapper {
+  2104→  position: relative;
+  2105→  aspect-ratio: 16 / 9;
+  2106→  border-radius: 1rem;
+  2107→  overflow: hidden;
+  2108→  margin-bottom: 2.5rem;
+  2109→  border: 1px solid rgba(255, 255, 255, 0.06);
+  2110→  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.7);
+  2111→  cursor: pointer;
+  2112→}
+  2113→@media (min-width: 640px) {
+  2114→  .cover-zoom-wrapper {
+  2115→    border-radius: 1.25rem;
+  2116→    margin-bottom: 3rem;
+  2117→  }
+  2118→}
+  2119→.cover-zoom-overlay {
+  2120→  position: absolute;
+  2121→  inset: 0;
+  2122→  display: flex;
+  2123→  align-items: center;
+  2124→  justify-content: center;
+  2125→  background: rgba(0, 0, 0, 0.25);
+  2126→  opacity: 0;
+  2127→  transition: opacity 0.25s ease;
+  2128→  z-index: 2;
+  2129→}
+  2130→.cover-zoom-wrapper:hover .cover-zoom-overlay {
+  2131→  opacity: 1;
+  2132→}
+  2133→.cover-zoom-icon {
+  2134→  width: 2.25rem;
+  2135→  height: 2.25rem;
+  2136→  color: white;
+  2137→  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
+  2138→  transform: scale(0.8);
+  2139→  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  2140→}
+  2141→.cover-zoom-wrapper:hover .cover-zoom-icon {
+  2142→  transform: scale(1);
+  2143→}
+  2144→
+  2145→.prose-custom hr {
+  2146→  border: none;
+  2147→  height: 1px;
+  2148→  background: linear-gradient(90deg, transparent, rgba(52,211,153,0.3), transparent);
+  2149→  margin: 2em 0;
+  2150→}
+  2151→.prose-custom table {
+  2152→  width: 100%;
+  2153→  border-collapse: separate;
+  2154→  border-spacing: 0;
+  2155→  margin: 1.5em -0.5rem;
+  2156→  font-size: 0.8rem;
+  2157→  overflow-x: auto;
+  2158→  -webkit-overflow-scrolling: touch;
+  2159→}
+  2160→.prose-custom table thead { }
+  2161→.prose-custom table tbody { }
+  2162→.prose-custom table tr { transition: background 0.15s ease; }
+  2163→.prose-custom table th, .prose-custom table td { }
+  2164→.prose-custom th {
+  2165→  text-align: left;
+  2166→  padding: 0.6em 0.75em;
+  2167→  background: rgba(52, 211, 153, 0.08);
+  2168→  color: #6ee7b7;
+  2169→  font-weight: 600;
+  2170→  font-size: 0.72rem;
+  2171→  text-transform: uppercase;
+  2172→  letter-spacing: 0.06em;
+  2173→  border-bottom: 1px solid rgba(52, 211, 153, 0.18);
+  2174→  border-top: 1px solid rgba(52, 211, 153, 0.12);
+  2175→  white-space: nowrap;
+  2176→}
+  2177→.prose-custom th:first-child { border-left: 1px solid rgba(52, 211, 153, 0.12); border-top-left-radius: 0.75rem; }
+  2178→.prose-custom th:last-child { border-right: 1px solid rgba(52, 211, 153, 0.12); border-top-right-radius: 0.75rem; }
+  2179→.prose-custom td {
+  2180→  padding: 0.5em 0.75em;
+  2181→  border-bottom: 1px solid rgba(255,255,255,0.04);
+  2182→  border-left: 1px solid rgba(52, 211, 153, 0.06);
+  2183→  border-right: 1px solid rgba(52, 211, 153, 0.06);
+  2184→  color: rgba(236, 232, 223, 0.78);
+  2185→  text-align: center;
+  2186→  font-size: 0.8rem;
+  2187→  word-break: break-word;
+  2188→}
+  2189→.prose-custom td:first-child, .prose-custom th:first-child {
+  2190→  text-align: left;
+  2191→  font-weight: 500;
+  2192→  color: rgba(236, 232, 223, 0.9);
+  2193→  border-left: 1px solid rgba(52, 211, 153, 0.12);
+  2194→}
+  2195→.prose-custom td:last-child, .prose-custom th:last-child {
+  2196→  border-right: 1px solid rgba(52, 211, 153, 0.12);
+  2197→}
+  2198→.prose-custom tbody tr:last-child td { border-bottom: none; }
+  2199→.prose-custom tbody tr:last-child td:first-child { border-bottom-left-radius: 0.75rem; }
+  2200→.prose-custom tbody tr:last-child td:last-child { border-bottom-right-radius: 0.75rem; }
+  2201→.prose-custom tbody tr:hover td { background: rgba(52, 211, 153, 0.05); }
+  2202→.prose-custom tbody tr:nth-child(even) td { background: rgba(255,255,255,0.012); }
+  2203→.prose-custom tbody tr:nth-child(even):hover td { background: rgba(52, 211, 153, 0.05); }
+  2204→
+  2205→/* ─── Table Status Icons ───────────────────── */
+  2206→.t-check,
+  2207→.t-cross,
+  2208→.t-partial {
+  2209→  display: inline-flex;
+  2210→  align-items: center;
+  2211→  justify-content: center;
+  2212→  width: 20px;
+  2213→  height: 20px;
+  2214→  border-radius: 50%;
+  2215→  font-size: 11px;
+  2216→  font-weight: 700;
+  2217→  line-height: 1;
+  2218→  vertical-align: middle;
+  2219→  margin: 0 2px;
+  2220→}
+  2221→.t-check {
+  2222→  background: rgba(34, 197, 94, 0.15);
+  2223→  color: #4ade80;
+  2224→  box-shadow: inset 0 0 0 1px rgba(34, 197, 94, 0.3);
+  2225→}
+  2226→.t-check::after {
+  2227→  content: "✓";
+  2228→}
+  2229→.t-cross {
+  2230→  background: rgba(239, 68, 68, 0.15);
+  2231→  color: #f87171;
+  2232→  box-shadow: inset 0 0 0 1px rgba(239, 68, 68, 0.3);
+  2233→}
+  2234→.t-cross::after {
+  2235→  content: "✕";
+  2236→}
+  2237→.t-partial {
+  2238→  background: rgba(110, 231, 183, 0.15);
+  2239→  color: #6ee7b7;
+  2240→  box-shadow: inset 0 0 0 1px rgba(110, 231, 183, 0.3);
+  2241→}
+  2242→.t-partial::after {
+  2243→  content: "~";
+  2244→}
+  2245→
+  2246→/* ─── Cinematic Vignette ───────────────────── */
+  2247→.cinema-vignette {
+  2248→  position: fixed;
+  2249→  inset: 0;
+  2250→  z-index: 1;
+  2251→  pointer-events: none;
+  2252→  background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.55) 100%);
+  2253→}
+  2254→
+  2255→/* ─── Animated Film Grain ──────────────────── */
+  2256→.cinema-grain {
+  2257→  position: fixed;
+  2258→  inset: -50%;
+  2259→  z-index: 2;
+  2260→  pointer-events: none;
+  2261→  width: 200%;
+  2262→  height: 200%;
+  2263→  opacity: 0.045;
+  2264→  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  2265→  animation: grain-shift 0.4s steps(5) infinite;
+  2266→}
+  2267→@keyframes grain-shift {
+  2268→  0%, 100% { transform: translate(0, 0); }
+  2269→  20% { transform: translate(-5%, -8%); }
+  2270→  40% { transform: translate(3%, -4%); }
+  2271→  60% { transform: translate(-8%, 5%); }
+  2272→  80% { transform: translate(6%, 3%); }
+  2273→}
+  2274→
+  2275→/* ─── Light Leaks ──────────────────────────── */
+  2276→.light-leak {
+  2277→  position: fixed;
+  2278→  z-index: 2;
+  2279→  pointer-events: none;
+  2280→  border-radius: 50%;
+  2281→  filter: blur(90px);
+  2282→  mix-blend-mode: screen;
+  2283→  opacity: 0;
+  2284→}
+  2285→.light-leak--emerald {
+  2286→  width: 600px; height: 600px;
+  2287→  background: radial-gradient(circle, rgba(52,211,153,0.18) 0%, transparent 70%);
+  2288→  top: -10%; right: -10%;
+  2289→  animation: leak-drift-1 14s ease-in-out infinite;
+  2290→}
+  2291→.light-leak--rose {
+  2292→  width: 500px; height: 500px;
+  2293→  background: radial-gradient(circle, rgba(244,63,94,0.12) 0%, transparent 70%);
+  2294→  bottom: 15%; left: -8%;
+  2295→  animation: leak-drift-2 18s ease-in-out infinite;
+  2296→}
+  2297→.light-leak--sky {
+  2298→  width: 420px; height: 420px;
+  2299→  background: radial-gradient(circle, rgba(56,189,248,0.10) 0%, transparent 70%);
+  2300→  top: 40%; right: 8%;
+  2301→  animation: leak-drift-3 22s ease-in-out infinite;
+  2302→}
+  2303→@keyframes leak-drift-1 {
+  2304→  0%, 100% { opacity: 0; transform: translate(0, 0) scale(1); }
+  2305→  30% { opacity: 0.6; }
+  2306→  55% { opacity: 0.35; transform: translate(-50px, 35px) scale(1.15); }
+  2307→  80% { opacity: 0.7; }
+  2308→}
+  2309→@keyframes leak-drift-2 {
+  2310→  0%, 100% { opacity: 0; transform: translate(0, 0) scale(1); }
+  2311→  35% { opacity: 0.4; }
+  2312→  65% { opacity: 0.5; transform: translate(40px, -25px) scale(1.1); }
+  2313→}
+  2314→@keyframes leak-drift-3 {
+  2315→  0%, 100% { opacity: 0; transform: translate(0, 0) scale(0.95); }
+  2316→  45% { opacity: 0.35; transform: translate(-25px, 15px) scale(1.08); }
+  2317→  75% { opacity: 0.5; }
+  2318→}
+  2319→
+  2320→/* ─── Bokeh Canvas ─────────────────────────── */
+  2321→.bokeh-canvas {
+  2322→  position: fixed;
+  2323→  inset: 0;
+  2324→  z-index: 2;
+  2325→  pointer-events: none;
+  2326→  opacity: 0.45;
+  2327→}
+  2328→
+  2329→/* ─── Welcome Screen (first-visit) ─────────── */
+  2330→.welcome-overlay {
+  2331→  position: fixed;
+  2332→  inset: 0;
+  2333→  z-index: 100;
+  2334→  background: var(--background);
+  2335→  display: flex;
+  2336→  align-items: center;
+  2337→  justify-content: center;
+  2338→  flex-direction: column;
+  2339→  overflow: hidden;
+  2340→  will-change: opacity, transform;
+  2341→}
+  2342→.welcome-enter {
+  2343→  animation: welcome-fade-in 0.5s ease-out both;
+  2344→}
+  2345→.welcome-hold {
+  2346→  opacity: 1;
+  2347→}
+  2348→.welcome-exit {
+  2349→  animation: welcome-fade-out 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  2350→}
+  2351→@keyframes welcome-fade-in {
+  2352→  from { opacity: 0; }
+  2353→  to   { opacity: 1; }
+  2354→}
+  2355→@keyframes welcome-fade-out {
+  2356→  0%   { opacity: 1; filter: blur(0); transform: scale(1); }
+  2357→  100% { opacity: 0; filter: blur(6px); transform: scale(1.04); }
+  2358→}
+  2359→
+  2360→/* Letterbox bars */
+  2361→.welcome-letterbox {
+  2362→  position: absolute;
+  2363→  left: 0;
+  2364→  right: 0;
+  2365→  height: 0;
+  2366→  background: var(--background);
+  2367→  z-index: 2;
+  2368→  transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  2369→}
+  2370→.welcome-enter .welcome-letterbox--top {
+  2371→  animation: letterbox-in-top 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+  2372→}
+  2373→.welcome-enter .welcome-letterbox--bottom {
+  2374→  animation: letterbox-in-bottom 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+  2375→}
+  2376→.welcome-exit .welcome-letterbox {
+  2377→  height: 0 !important;
+  2378→  transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.15s;
+  2379→}
+  2380→@keyframes letterbox-in-top {
+  2381→  from { height: 0; }
+  2382→  to   { height: 48px; }
+  2383→}
+  2384→@keyframes letterbox-in-bottom {
+  2385→  from { height: 0; }
+  2386→  to   { height: 48px; }
+  2387→}
+  2388→
+  2389→/* Vignette for welcome */
+  2390→.welcome-vignette {
+  2391→  position: absolute;
+  2392→  inset: 0;
+  2393→  background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.7) 100%);
+  2394→  z-index: 1;
+  2395→  pointer-events: none;
+  2396→}
+  2397→
+  2398→/* Ambient glow behind logo */
+  2399→.welcome-glow {
+  2400→  position: absolute;
+  2401→  width: 320px;
+  2402→  height: 320px;
+  2403→  border-radius: 50%;
+  2404→  background: radial-gradient(circle, rgba(52, 211, 153, 0.15) 0%, rgba(52, 211, 153, 0.04) 40%, transparent 70%);
+  2405→  filter: blur(40px);
+  2406→  z-index: 1;
+  2407→  animation: welcome-glow-pulse 2.5s ease-in-out infinite;
+  2408→}
+  2409→@keyframes welcome-glow-pulse {
+  2410→  0%, 100% { transform: scale(1); opacity: 0.8; }
+  2411→  50%      { transform: scale(1.15); opacity: 1; }
+  2412→}
+  2413→
+  2414→/* Content group */
+  2415→.welcome-content {
+  2416→  position: relative;
+  2417→  z-index: 3;
+  2418→  display: flex;
+  2419→  flex-direction: column;
+  2420→  align-items: center;
+  2421→  gap: 1.25rem;
+  2422→}
+  2423→
+  2424→/* Logo wrapper */
+  2425→.welcome-logo-wrap {
+  2426→  opacity: 0;
+  2427→  transform: scale(0.7) translateY(12px);
+  2428→  filter: blur(10px);
+  2429→}
+  2430→.welcome-enter .welcome-logo-wrap {
+  2431→  animation: welcome-logo-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+  2432→}
+  2433→.welcome-exit .welcome-logo-wrap {
+  2434→  animation: welcome-element-out 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+  2435→}
+  2436→@keyframes welcome-logo-in {
+  2437→  0%   { opacity: 0; transform: scale(0.7) translateY(12px); filter: blur(10px); }
+  2438→  100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+  2439→}
+  2440→
+  2441→/* Avatar circle for returning user */
+  2442→.welcome-avatar-circle {
+  2443→  width: 80px;
+  2444→  height: 80px;
+  2445→  border-radius: 50%;
+  2446→  overflow: hidden;
+  2447→  border: 2px solid rgba(52, 211, 153, 0.3);
+  2448→  box-shadow: 0 0 30px rgba(52, 211, 153, 0.15), 0 0 60px rgba(52, 211, 153, 0.08);
+  2449→}
+  2450→@media (min-width: 640px) {
+  2451→  .welcome-avatar-circle {
+  2452→    width: 96px;
+  2453→    height: 96px;
+  2454→  }
+  2455→}
+  2456→.welcome-avatar-circle--fallback {
+  2457→  display: flex;
+  2458→  align-items: center;
+  2459→  justify-content: center;
+  2460→  background: linear-gradient(135deg, rgba(52, 211, 153, 0.15), rgba(52, 211, 153, 0.05));
+  2461→  border: 2px solid rgba(52, 211, 153, 0.25);
+  2462→}
+  2463→
+  2464→/* Title */
+  2465→.welcome-title {
+  2466→  font-size: 2.5rem;
+  2467→  font-weight: 800;
+  2468→  letter-spacing: -0.03em;
+  2469→  line-height: 1.1;
+  2470→  opacity: 0;
+  2471→  transform: translateY(16px);
+  2472→  filter: blur(8px);
+  2473→}
+  2474→.welcome-enter .welcome-title {
+  2475→  animation: welcome-text-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.65s both;
+  2476→}
+  2477→.welcome-exit .welcome-title {
+  2478→  animation: welcome-element-out 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  2479→}
+  2480→.welcome-title--tech {
+  2481→  color: rgba(255, 255, 255, 0.9);
+  2482→}
+  2483→.welcome-title--mate {
+  2484→  font-size: 2.5rem;
+  2485→  font-weight: 800;
+  2486→}
+  2487→@keyframes welcome-text-in {
+  2488→  0%   { opacity: 0; transform: translateY(16px); filter: blur(8px); }
+  2489→  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+  2490→}
+  2491→
+  2492→/* Tagline */
+  2493→.welcome-tagline {
+  2494→  color: var(--muted);
+  2495→  font-size: 0.95rem;
+  2496→  font-weight: 400;
+  2497→  letter-spacing: 0.02em;
+  2498→  text-align: center;
+  2499→  opacity: 0;
+  2500→  transform: translateY(10px);
+  2501→}
+  2502→.welcome-enter .welcome-tagline {
+  2503→  animation: welcome-text-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) 1s both;
+  2504→}
+  2505→.welcome-exit .welcome-tagline {
+  2506→  animation: welcome-element-out 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  2507→}
+  2508→@keyframes welcome-element-out {
+  2509→  0%   { opacity: 1; transform: translateY(0); filter: blur(0); }
+  2510→  100% { opacity: 0; transform: translateY(-10px); filter: blur(6px); }
+  2511→}
+  2512→
+  2513→/* Decorative line */
+  2514→.welcome-line {
+  2515→  width: 60px;
+  2516→  height: 2px;
+  2517→  background: linear-gradient(90deg, transparent, rgba(52, 211, 153, 0.5), transparent);
+  2518→  border-radius: 9999px;
+  2519→  opacity: 0;
+  2520→  transform: scaleX(0);
+  2521→}
+  2522→.welcome-enter .welcome-line {
+  2523→  animation: welcome-line-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) 1.2s both;
+  2524→}
+  2525→.welcome-exit .welcome-line {
+  2526→  animation: welcome-line-out 0.4s ease-in both;
+  2527→}
+  2528→@keyframes welcome-line-in {
+  2529→  0%   { opacity: 0; transform: scaleX(0); }
+  2530→  100% { opacity: 1; transform: scaleX(1); }
+  2531→}
+  2532→@keyframes welcome-line-out {
+  2533→  0%   { opacity: 1; transform: scaleX(1); }
+  2534→  100% { opacity: 0; transform: scaleX(0); }
+  2535→}
+  2536→
+  2537→/* Decorative rings */
+  2538→.welcome-ring {
+  2539→  position: absolute;
+  2540→  border-radius: 9999px;
+  2541→  border: 1px solid rgba(52, 211, 153, 0.06);
+  2542→  pointer-events: none;
+  2543→  z-index: 1;
+  2544→  opacity: 0;
+  2545→}
+  2546→.welcome-ring:not(.welcome-ring--outer) {
+  2547→  width: 180px;
+  2548→  height: 180px;
+  2549→}
+  2550→.welcome-ring--outer {
+  2551→  width: 260px;
+  2552→  height: 260px;
+  2553→}
+  2554→.welcome-enter .welcome-ring {
+  2555→  animation: welcome-ring-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+  2556→}
+  2557→.welcome-enter .welcome-ring--outer {
+  2558→  animation: welcome-ring-in 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
+  2559→}
+  2560→@keyframes welcome-ring-in {
+  2561→  0%   { opacity: 0; transform: scale(0.6); }
+  2562→  100% { opacity: 0.6; transform: scale(1); }
+  2563→}
+  2564→
+  2565→/* Mobile tweaks for welcome */
+  2566→@media (max-width: 640px) {
+  2567→  .welcome-letterbox--top,
+  2568→  .welcome-letterbox--bottom {
+  2569→    height: 32px !important;
+  2570→  }
+  2571→  @keyframes letterbox-in-top {
+  2572→    from { height: 0; }
+  2573→    to   { height: 32px; }
+  2574→  }
+  2575→  @keyframes letterbox-in-bottom {
+  2576→    from { height: 0; }
+  2577→    to   { height: 32px; }
+  2578→  }
+  2579→  .welcome-title {
+  2580→    font-size: 1.4rem;
+  2581→    white-space: nowrap;
+  2582→  }
+  2583→  .welcome-title--mate {
+  2584→    font-size: 1.4rem;
+  2585→  }
+  2586→  .welcome-tagline {
+  2587→    font-size: 0.875rem;
+  2588→    white-space: nowrap;
+  2589→  }
+  2590→  .welcome-glow {
+  2591→    width: 220px;
+  2592→    height: 220px;
+  2593→  }
+  2594→  .welcome-ring:not(.welcome-ring--outer) {
+  2595→    width: 140px;
+  2596→    height: 140px;
+  2597→  }
+  2598→  .welcome-ring--outer {
+  2599→    width: 200px;
+  2600→    height: 200px;
+  2601→  }
+  2602→}
+  2603→
+  2604→/* ─── Name input section ──────────────────── */
+  2605→.welcome-name-section {
+  2606→  display: flex;
+  2607→  flex-direction: column;
+  2608→  align-items: center;
+  2609→  gap: 1.25rem;
+  2610→  opacity: 0;
+  2611→  transform: translateY(16px);
+  2612→  filter: blur(8px);
+  2613→  animation: welcome-text-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+  2614→}
+  2615→.welcome-exit .welcome-name-section {
+  2616→  animation: welcome-element-out 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  2617→}
+  2618→.welcome-name-heading {
+  2619→  display: flex;
+  2620→  flex-direction: column;
+  2621→  align-items: center;
+  2622→  gap: 0.25rem;
+  2623→  font-size: 1.25rem;
+  2624→  font-weight: 600;
+  2625→  color: rgba(255, 255, 255, 0.85);
+  2626→  letter-spacing: -0.01em;
+  2627→  text-align: center;
+  2628→}
+  2629→.welcome-name-form {
+  2630→  display: flex;
+  2631→  flex-direction: column;
+  2632→  align-items: center;
+  2633→  gap: 0.75rem;
+  2634→  width: 100%;
+  2635→  max-width: 300px;
+  2636→}
+  2637→.welcome-name-input {
+  2638→  width: 100%;
+  2639→  padding: 0.7rem 1rem;
+  2640→  border-radius: 0.75rem;
+  2641→  border: 1px solid rgba(255, 255, 255, 0.12);
+  2642→  background: rgba(255, 255, 255, 0.05);
+  2643→  backdrop-filter: blur(12px);
+  2644→  -webkit-backdrop-filter: blur(12px);
+  2645→  color: rgba(255, 255, 255, 0.9);
+  2646→  font-size: 1rem;
+  2647→  font-weight: 400;
+  2648→  text-align: center;
+  2649→  outline: none;
+  2650→  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  2651→  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  2652→}
+  2653→.welcome-name-input::placeholder {
+  2654→  color: rgba(255, 255, 255, 0.25);
+  2655→}
+  2656→.welcome-name-input:focus {
+  2657→  border-color: rgba(52, 211, 153, 0.4);
+  2658→  background: rgba(255, 255, 255, 0.07);
+  2659→  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 0 0 3px rgba(52, 211, 153, 0.1);
+  2660→}
+  2661→.welcome-name-btn {
+  2662→  width: 100%;
+  2663→  padding: 0.65rem 1.5rem;
+  2664→  border-radius: 0.75rem;
+  2665→  border: 1px solid rgba(52, 211, 153, 0.25);
+  2666→  background: linear-gradient(to bottom, rgba(52, 211, 153, 0.85), rgba(52, 211, 153, 0.95));
+  2667→  color: #022c22;
+  2668→  font-size: 0.875rem;
+  2669→  font-weight: 600;
+  2670→  cursor: pointer;
+  2671→  transition: all 0.2s;
+  2672→  box-shadow: 0 4px 16px -4px rgba(52, 211, 153, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  2673→}
+  2674→.welcome-name-btn:hover:not(:disabled) {
+  2675→  background: linear-gradient(to bottom, rgba(110, 231, 183, 0.95), rgba(16, 185, 129, 0.95));
+  2676→  box-shadow: 0 8px 24px -4px rgba(52, 211, 153, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  2677→  transform: translateY(-1px);
+  2678→}
+  2679→.welcome-name-btn:active:not(:disabled) {
+  2680→  transform: translateY(0) scale(0.98);
+  2681→}
+  2682→.welcome-name-btn:disabled {
+  2683→  opacity: 0.4;
+  2684→  cursor: not-allowed;
+  2685→}
+  2686→
+  2687→/* ─── Greet section ───────────────────────── */
+  2688→.welcome-greet-section {
+  2689→  opacity: 0;
+  2690→  transform: translateY(16px);
+  2691→  filter: blur(8px);
+  2692→  animation: welcome-text-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+  2693→}
+  2694→.welcome-exit .welcome-greet-section {
+  2695→  animation: welcome-element-out 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  2696→}
+  2697→.welcome-greet-title {
+  2698→  font-size: 1.75rem !important;
+  2699→  text-align: center;
+  2700→}
+  2701→@media (max-width: 640px) {
+  2702→  .welcome-greet-title {
+  2703→    font-size: 1.35rem !important;
+  2704→  }
+  2705→  .welcome-name-section {
+  2706→    gap: 1rem;
+  2707→  }
+  2708→  .welcome-name-form {
+  2709→    max-width: 260px;
+  2710→  }
+  2711→  .welcome-name-heading {
+  2712→    font-size: 1.1rem;
+  2713→  }
+  2714→}
+  2715→
+  2716→/* ─── Photo upload section ──────────────────── */
+  2717→.welcome-photo-section {
+  2718→  display: flex;
+  2719→  flex-direction: column;
+  2720→  align-items: center;
+  2721→  gap: 1.25rem;
+  2722→  opacity: 0;
+  2723→  transform: translateY(16px);
+  2724→  filter: blur(8px);
+  2725→  animation: welcome-text-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+  2726→}
+  2727→.welcome-exit .welcome-photo-section {
+  2728→  animation: welcome-element-out 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  2729→}
+  2730→.welcome-photo-heading {
+  2731→  display: flex;
+  2732→  flex-direction: column;
+  2733→  align-items: center;
+  2734→  gap: 0.25rem;
+  2735→  font-size: 1.15rem;
+  2736→  font-weight: 600;
+  2737→  color: rgba(255, 255, 255, 0.85);
+  2738→  letter-spacing: -0.01em;
+  2739→  text-align: center;
+  2740→}
+  2741→.welcome-photo-upload-area {
+  2742→  width: 120px;
+  2743→  height: 120px;
+  2744→  border-radius: 50%;
+  2745→  border: 2px dashed rgba(52, 211, 153, 0.3);
+  2746→  display: flex;
+  2747→  align-items: center;
+  2748→  justify-content: center;
+  2749→  cursor: pointer;
+  2750→  transition: border-color 0.25s, background 0.25s, box-shadow 0.25s, transform 0.2s;
+  2751→  background: rgba(255, 255, 255, 0.03);
+  2752→  overflow: hidden;
+  2753→}
+  2754→.welcome-photo-upload-area:hover {
+  2755→  border-color: rgba(52, 211, 153, 0.5);
+  2756→  background: rgba(52, 211, 153, 0.05);
+  2757→  box-shadow: 0 0 24px rgba(52, 211, 153, 0.12);
+  2758→  transform: scale(1.04);
+  2759→}
+  2760→.welcome-photo-upload-area:active {
+  2761→  transform: scale(0.98);
+  2762→}
+  2763→.welcome-photo-preview {
+  2764→  width: 100%;
+  2765→  height: 100%;
+  2766→  border-radius: 50%;
+  2767→  border: 2px solid rgba(52, 211, 153, 0.35);
+  2768→  box-shadow: 0 0 24px rgba(52, 211, 153, 0.15);
+  2769→}
+  2770→.welcome-photo-placeholder {
+  2771→  display: flex;
+  2772→  flex-direction: column;
+  2773→  align-items: center;
+  2774→  gap: 0.4rem;
+  2775→  pointer-events: none;
+  2776→}
+  2777→.welcome-photo-upload-hint {
+  2778→  font-size: 0.7rem;
+  2779→  color: rgba(255, 255, 255, 0.3);
+  2780→  font-weight: 400;
+  2781→}
+  2782→.welcome-photo-actions {
+  2783→  display: flex;
+  2784→  flex-direction: column;
+  2785→  gap: 0.5rem;
+  2786→  width: 100%;
+  2787→  max-width: 300px;
+  2788→}
+  2789→.welcome-photo-btn {
+  2790→  width: 100%;
+  2791→  padding: 0.65rem 1.5rem;
+  2792→  border-radius: 0.75rem;
+  2793→  font-size: 0.875rem;
+  2794→  font-weight: 600;
+  2795→  cursor: pointer;
+  2796→  transition: all 0.2s;
+  2797→  text-align: center;
+  2798→}
+  2799→.welcome-photo-btn--primary {
+  2800→  border: 1px solid rgba(52, 211, 153, 0.25);
+  2801→  background: linear-gradient(to bottom, rgba(52, 211, 153, 0.85), rgba(52, 211, 153, 0.95));
+  2802→  color: #022c22;
+  2803→  box-shadow: 0 4px 16px -4px rgba(52, 211, 153, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  2804→}
+  2805→.welcome-photo-btn--primary:hover:not(:disabled) {
+  2806→  background: linear-gradient(to bottom, rgba(110, 231, 183, 0.95), rgba(16, 185, 129, 0.95));
+  2807→  box-shadow: 0 8px 24px -4px rgba(52, 211, 153, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  2808→  transform: translateY(-1px);
+  2809→}
+  2810→.welcome-photo-btn--primary:active:not(:disabled) {
+  2811→  transform: translateY(0) scale(0.98);
+  2812→}
+  2813→.welcome-photo-btn--primary:disabled {
+  2814→  opacity: 0.4;
+  2815→  cursor: not-allowed;
+  2816→}
+  2817→.welcome-photo-btn--skip {
+  2818→  border: 1px solid rgba(255, 255, 255, 0.08);
+  2819→  background: rgba(255, 255, 255, 0.04);
+  2820→  backdrop-filter: blur(12px);
+  2821→  -webkit-backdrop-filter: blur(12px);
+  2822→  color: rgba(255, 255, 255, 0.4);
+  2823→  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  2824→}
+  2825→.welcome-photo-btn--skip:hover {
+  2826→  border-color: rgba(255, 255, 255, 0.15);
+  2827→  color: rgba(255, 255, 255, 0.6);
+  2828→  background: rgba(255, 255, 255, 0.07);
+  2829→}
+  2830→.welcome-photo-btn--skip:active {
+  2831→  transform: scale(0.98);
+  2832→}
+  2833→@media (max-width: 640px) {
+  2834→  .welcome-photo-section {
+  2835→    gap: 1rem;
+  2836→  }
+  2837→  .welcome-photo-upload-area {
+  2838→    width: 100px;
+  2839→    height: 100px;
+  2840→  }
+  2841→  .welcome-photo-heading {
+  2842→    font-size: 1rem;
+  2843→  }
+  2844→  .welcome-photo-actions {
+  2845→    max-width: 260px;
+  2846→  }
+  2847→}
+  2848→
+  2849→/* ─── Cinematic Name Shine ──────────────────── */
+  2850→.welcome-name-shine {
+  2851→  background: linear-gradient(90deg, #10b981, #6ee7b7);
+  2852→  -webkit-background-clip: text;
+  2853→  background-clip: text;
+  2854→  -webkit-text-fill-color: transparent;
+  2855→  color: transparent;
+  2856→}
+  2857→
+  2858→/* ─── Welcome Progress Bar ──────────────────── */
+  2859→.welcome-progress-wrap {
+  2860→  width: 160px;
+  2861→  opacity: 0;
+  2862→  animation: welcome-text-in 0.5s ease-out 0.4s both;
+  2863→}
+  2864→.welcome-progress-track {
+  2865→  width: 100%;
+  2866→  height: 3px;
+  2867→  border-radius: 9999px;
+  2868→  background: rgba(255, 255, 255, 0.06);
+  2869→  overflow: hidden;
+  2870→}
+  2871→.welcome-progress-bar {
+  2872→  height: 100%;
+  2873→  border-radius: 9999px;
+  2874→  background: linear-gradient(90deg, #10b981, #6ee7b7);
+  2875→  box-shadow: 0 0 8px rgba(52, 211, 153, 0.5);
+  2876→  transition: width 0.3s ease-out;
+  2877→}
+  2878→.welcome-exit .welcome-progress-wrap {
+  2879→  animation: welcome-element-out 0.3s ease-in both;
+  2880→}
+  2881→
+  2882→/* ─── Settings Panel ────────────────────────── */
+  2883→.settings-panel {
+  2884→  position: fixed;
+  2885→  top: calc(3.5rem + 8px);
+  2886→  right: 0.75rem;
+  2887→  width: 280px;
+  2888→  z-index: 100;
+  2889→  border-radius: 1rem;
+  2890→  backdrop-filter: blur(12px) saturate(200%);
+  2891→  -webkit-backdrop-filter: blur(12px) saturate(200%);
+  2892→  background: rgba(15, 13, 18, 0.85);
+  2893→  border: 1px solid rgba(255, 255, 255, 0.08);
+  2894→  box-shadow:
+  2895→    0 20px 60px -12px rgba(0, 0, 0, 0.6),
+  2896→    0 8px 24px -8px rgba(0, 0, 0, 0.4),
+  2897→    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  2898→  animation: settings-in 0.2s ease-out both;
+  2899→}
+  2900→@keyframes settings-in {
+  2901→  from { opacity: 0; transform: translateY(-8px) scale(0.97); }
+  2902→  to   { opacity: 1; transform: translateY(0) scale(1); }
+  2903→}
+  2904→.settings-divider {
+  2905→  height: 1px;
+  2906→  margin: 0 1rem;
+  2907→  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+  2908→}
+  2909→.settings-input {
+  2910→  width: 100%;
+  2911→  padding: 0.45rem 0.7rem;
+  2912→  border-radius: 0.5rem;
+  2913→  border: 1px solid rgba(255, 255, 255, 0.10);
+  2914→  background: rgba(255, 255, 255, 0.04);
+  2915→  backdrop-filter: blur(20px);
+  2916→  color: rgba(255, 255, 255, 0.85);
+  2917→  font-size: 0.8rem;
+  2918→  outline: none;
+  2919→  transition: border-color 0.2s, box-shadow 0.2s;
+  2920→}
+  2921→.settings-input:focus {
+  2922→  border-color: rgba(52, 211, 153, 0.35);
+  2923→  box-shadow: 0 0 0 2px rgba(52, 211, 153, 0.08);
+  2924→}
+  2925→.settings-btn-sm {
+  2926→  padding: 0.35rem 0.65rem;
+  2927→  border-radius: 0.4rem;
+  2928→  border: 1px solid rgba(52, 211, 153, 0.25);
+  2929→  background: rgba(52, 211, 153, 0.15);
+  2930→  color: #6ee7b7;
+  2931→  font-size: 0.7rem;
+  2932→  font-weight: 600;
+  2933→  cursor: pointer;
+  2934→  transition: all 0.15s;
+  2935→}
+  2936→.settings-btn-sm:hover {
+  2937→  background: rgba(52, 211, 153, 0.25);
+  2938→}
+  2939→.settings-btn-cancel {
+  2940→  border-color: rgba(255, 255, 255, 0.08);
+  2941→  background: rgba(255, 255, 255, 0.04);
+  2942→  color: rgba(255, 255, 255, 0.5);
+  2943→}
+  2944→.settings-btn-cancel:hover {
+  2945→  background: rgba(255, 255, 255, 0.08);
+  2946→}
+  2947→.settings-btn-danger {
+  2948→  padding: 0.4rem 0.8rem;
+  2949→  border-radius: 0.4rem;
+  2950→  border: 1px solid rgba(239, 68, 68, 0.25);
+  2951→  background: rgba(239, 68, 68, 0.12);
+  2952→  color: #f87171;
+  2953→  font-size: 0.7rem;
+  2954→  font-weight: 600;
+  2955→  cursor: pointer;
+  2956→  transition: all 0.15s;
+  2957→}
+  2958→.settings-btn-danger:hover {
+  2959→  background: rgba(239, 68, 68, 0.22);
+  2960→}
+  2961→/* Mobile: center panel as overlay */
+  2962→@media (min-width: 640px) {
+  2963→  .settings-panel {
+  2964→    top: calc(4rem + 8px);
+  2965→    right: 1.5rem;
+  2966→  }
+  2967→}
+  2968→@media (min-width: 1024px) {
+  2969→  .settings-panel {
+  2970→    top: calc(4.5rem + 8px);
+  2971→  }
+  2972→}
+  2973→@media (max-width: 640px) {
+  2974→  .settings-panel-mobile {
+  2975→    position: fixed !important;
+  2976→    top: auto !important;
+  2977→    right: 1rem !important;
+  2978→    left: 1rem !important;
+  2979→    bottom: 2rem !important;
+  2980→    width: auto !important;
+  2981→    animation: settings-mobile-in 0.25s ease-out both !important;
+  2982→  }
+  2983→  @keyframes settings-mobile-in {
+  2984→    from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  2985→    to   { opacity: 1; transform: translateY(0) scale(1); }
+  2986→  }
+  2987→}
+  2988→@keyframes page-enter {
+  2989→  0% {
+  2990→    opacity: 0;
+  2991→    transform: translateY(16px) scale(0.99);
+  2992→    filter: blur(8px);
+  2993→    clip-path: inset(4px 0 4px 0);
+  2994→  }
+  2995→  100% {
+  2996→    opacity: 1;
+  2997→    transform: translateY(0) scale(1);
+  2998→    filter: blur(0);
+  2999→    clip-path: inset(0 0 0 0);
+  3000→  }
+  3001→}
+  3002→.page-transition {
+  3003→  animation: page-enter 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  3004→}
+  3005→
+  3006→
+  3007→/* ─── 404 page animations ────────────────────── */
+  3008→@keyframes shimmer-404 {
+  3009→  0% { background-position: -200% center; }
+  3010→  100% { background-position: 200% center; }
+  3011→}
+  3012→@keyframes glitch-1 {
+  3013→  0%, 90%, 100% { transform: translate(0); }
+  3014→  92% { transform: translate(-3px, 1px); }
+  3015→  94% { transform: translate(3px, -1px); }
+  3016→  96% { transform: translate(-2px, -1px); }
+  3017→  98% { transform: translate(2px, 1px); }
+  3018→}
+  3019→@keyframes glitch-2 {
+  3020→  0%, 88%, 100% { transform: translate(0); }
+  3021→  90% { transform: translate(3px, -1px); }
+  3022→  93% { transform: translate(-3px, 1px); }
+  3023→  95% { transform: translate(2px, 2px); }
+  3024→  97% { transform: translate(-1px, -2px); }
+  3025→}
+  3026→@keyframes float-particle {
+  3027→  0% { transform: translateY(0) scale(1); opacity: var(--p-opacity, 0.2); }
+  3028→  50% { transform: translateY(-30px) scale(1.3); opacity: calc(var(--p-opacity, 0.2) * 2); }
+  3029→  100% { transform: translateY(-60px) scale(0.8); opacity: 0; }
+  3030→}
+  3031→
+  3032→/* ─── Mobile Search Bar (Liquid Glass Droplet) ─── */
+  3033→.mobile-search-bar {
+  3034→  display: inline-flex;
+  3035→  align-items: center;
+  3036→  width: 145px;
+  3037→  border-radius: 9999px;
+  3038→  background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
+  3039→  border: 1.5px solid rgba(255,255,255, var(--glass-border-opacity));
+  3040→  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  3041→  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  3042→  box-shadow: var(--glass-volumetric);
+  3043→  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+  3044→              box-shadow 0.3s ease, border-color 0.3s ease;
+  3045→  position: relative;
+  3046→  overflow: hidden;
+  3047→}
+  3048→.mobile-search-bar::before {
+  3049→  content: '';
+  3050→  position: absolute;
+  3051→  top: 0;
+  3052→  left: 15%;
+  3053→  right: 15%;
+  3054→  height: 1px;
+  3055→  background: linear-gradient(
+  3056→    90deg,
+  3057→    transparent 0%,
+  3058→    rgba(255, 255, 255, 0.4) 25%,
+  3059→    rgba(255, 255, 255, 0.6) 50%,
+  3060→    rgba(255, 255, 255, 0.4) 75%,
+  3061→    transparent 100%
+  3062→  );
+  3063→  z-index: 2;
+  3064→  pointer-events: none;
+  3065→}
+  3066→.mobile-search-bar::after {
+  3067→  content: '';
+  3068→  position: absolute;
+  3069→  inset: 0;
+  3070→  border-radius: inherit;
+  3071→  background: radial-gradient(
+  3072→    ellipse 50% 35% at 30% 20%,
+  3073→    rgba(255, 255, 255, 0.08) 0%,
+  3074→    transparent 55%
+  3075→  );
+  3076→  pointer-events: none;
+  3077→  z-index: 1;
+  3078→}
+  3079→.mobile-search-bar > * {
+  3080→  position: relative;
+  3081→  z-index: 2;
+  3082→}
+  3083→
+  3084→
+  3085→/* Completely strip native button styling inside search bar */
+  3086→.mobile-search-bar button {
+  3087→  -webkit-appearance: none;
+  3088→  appearance: none;
+  3089→  border: none !important;
+  3090→  background: transparent !important;
+  3091→  outline: none !important;
+  3092→  box-shadow: none !important;
+  3093→  -webkit-tap-highlight-color: transparent;
+  3094→  padding: 0;
+  3095→  margin: 0;
+  3096→  cursor: pointer;
+  3097→}
+  3098→
+  3099→/* Strip native input styling */
+  3100→.mobile-search-bar input {
+  3101→  -webkit-appearance: none;
+  3102→  appearance: none;
+  3103→  border: none !important;
+  3104→  background: transparent !important;
+  3105→  outline: none !important;
+  3106→  box-shadow: none !important;
+  3107→}
+  3108→
+  3109→/* Expanded state when focused */
+  3110→.mobile-search-bar.expanded {
+  3111→  width: calc(100vw - 2rem);
+  3112→  border-radius: 14px;
+  3113→}
+  3114→
+  3115→.mobile-search-bar .mobile-search-input-wrap {
+  3116→  flex: 0 1 auto;
+  3117→  transition: flex 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  3118→}
+  3119→.mobile-search-bar .mobile-search-input-wrap input {
+  3120→  width: 70px;
+  3121→  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+  3122→              opacity 0.3s ease;
+  3123→}
+  3124→.mobile-search-bar.expanded .mobile-search-input-wrap {
+  3125→  flex: 1 1 0%;
+  3126→}
+  3127→.mobile-search-bar.expanded .mobile-search-input-wrap input {
+  3128→  width: 100%;
+  3129→}
+  3130→
+  3131→.mobile-search-bar:focus-within {
+  3132→  box-shadow:
+  3133→    0 8px 40px -4px rgba(52, 211, 153, 0.2),
+  3134→    0 2px 8px -2px rgba(0, 0, 0, 0.3);
+  3135→}
+  3136→
+  3137→.mobile-search-divider {
+  3138→  width: 1px;
+  3139→  height: 14px;
+  3140→  background: rgba(255, 255, 255, 0.15);
+  3141→  flex-shrink: 0;
+  3142→}
+  3143→
+  3144→/* Mobile search results dropdown — Liquid Glass 3D */
+  3145→.mobile-search-results {
+  3146→  position: relative;
+  3147→  background: linear-gradient(
+  3148→    180deg,
+  3149→    rgba(18, 18, 22, 0.92) 0%,
+  3150→    rgba(12, 12, 14, 0.96) 100%
+  3151→  );
+  3152→  backdrop-filter: blur(12px) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  3153→  -webkit-backdrop-filter: blur(12px) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  3154→  border: 1.5px solid rgba(255, 255, 255, var(--glass-border-opacity));
+  3155→  border-radius: 20px;
+  3156→  box-shadow: var(--glass-volumetric);
+  3157→  overflow: hidden;
+  3158→}
+  3159→.mobile-search-results::before {
+  3160→  content: "";
+  3161→  position: absolute;
+  3162→  top: 0;
+  3163→  left: 10%;
+  3164→  right: 10%;
+  3165→  height: 1.5px;
+  3166→  background: linear-gradient(
+  3167→    90deg,
+  3168→    transparent 0%,
+  3169→    rgba(255, 255, 255, 0.25) 20%,
+  3170→    rgba(52, 211, 153, 0.15) 45%,
+  3171→    rgba(255, 255, 255, 0.4) 50%,
+  3172→    rgba(56, 189, 248, 0.08) 55%,
+  3173→    rgba(255, 255, 255, 0.25) 80%,
+  3174→    transparent 100%
+  3175→  );
+  3176→  pointer-events: none;
+  3177→  z-index: 3;
+  3178→}
+  3179→
+  3180→
+  3181→/* Light mode for mobile floating search bar */
+  3182→html:not(.dark) .mobile-search-bar {
+  3183→  background: rgba(30, 30, 30, 0.85);
+  3184→  box-shadow:
+  3185→    0 8px 32px -4px rgba(0, 0, 0, 0.2),
+  3186→    0 2px 8px -2px rgba(0, 0, 0, 0.1);
+  3187→}
+  3188→
+  3189→html:not(.dark) .mobile-search-bar:focus-within {
+  3190→  box-shadow:
+  3191→    0 8px 40px -4px rgba(4, 120, 87, 0.15),
+  3192→    0 2px 8px -2px rgba(0, 0, 0, 0.1);
+  3193→}
+  3194→
+  3195→html:not(.dark) .mobile-search-divider {
+  3196→  background: rgba(0, 0, 0, 0.08);
+  3197→}
+  3198→
+  3199→html:not(.dark) .mobile-search-results {
+  3200→  background: linear-gradient(
+  3201→    180deg,
+  3202→    rgba(240, 245, 242, 0.98) 0%,
+  3203→    rgba(244, 248, 246, 0.99) 100%
+  3204→  );
+  3205→  border-color: rgba(0, 0, 0, 0.08);
+  3206→  box-shadow: 0 -8px 40px -8px rgba(0, 0, 0, 0.12);
+  3207→}
+  3208→
+  3209→html:not(.dark) .mobile-search-results::before {
+  3210→  background: linear-gradient(
+  3211→    90deg,
+  3212→    transparent 0%,
+  3213→    rgba(0, 0, 0, 0.06) 30%,
+  3214→    rgba(0, 0, 0, 0.1) 50%,
+  3215→    rgba(0, 0, 0, 0.06) 70%,
+  3216→    transparent 100%
+  3217→  );
+  3218→}
+  3219→
+  3220→/* ─── Mobile Fullscreen Menu Overlay ─── */
+  3221→.mobile-menu-overlay {
+  3222→  position: fixed;
+  3223→  inset: 0;
+  3224→  z-index: 60;
+  3225→  pointer-events: none;
+  3226→  visibility: hidden;
+  3227→  transition: visibility 0s linear 0.35s;
+  3228→}
+  3229→
+  3230→.mobile-menu-overlay.mobile-menu-open {
+  3231→  pointer-events: auto;
+  3232→  visibility: visible;
+  3233→  transition: visibility 0s linear 0s;
+  3234→}
+  3235→
+  3236→/* Backdrop */
+  3237→.mobile-menu-backdrop {
+  3238→  position: absolute;
+  3239→  inset: 0;
+  3240→  background: rgba(0, 0, 0, 0.7);
+  3241→  backdrop-filter: blur(8px) saturate(120%);
+  3242→  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  3243→  opacity: 0;
+  3244→  transition: opacity 0.35s ease;
+  3245→}
+  3246→
+  3247→.mobile-menu-open .mobile-menu-backdrop {
+  3248→  opacity: 1;
+  3249→}
+  3250→
+  3251→/* Content panel */
+  3252→.mobile-menu-content {
+  3253→  position: absolute;
+  3254→  inset: 0;
+  3255→  background: linear-gradient(
+  3256→    180deg,
+  3257→    rgba(14, 14, 18, 0.97) 0%,
+  3258→    rgba(10, 10, 12, 0.99) 100%
+  3259→  );
+  3260→  backdrop-filter: blur(14px) saturate(200%) brightness(108%);
+  3261→  -webkit-backdrop-filter: blur(14px) saturate(200%) brightness(108%);
+  3262→  display: flex;
+  3263→  flex-direction: column;
+  3264→  align-items: center;
+  3265→  overflow-y: auto;
+  3266→  padding: 0 1.5rem;
+  3267→  transform: translateY(-100%);
+  3268→  opacity: 0;
+  3269→  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+  3270→}
+  3271→
+  3272→.mobile-menu-open .mobile-menu-content {
+  3273→  transform: translateY(0);
+  3274→  opacity: 1;
+  3275→}
+  3276→
+  3277→/* Top shine line */
+  3278→.mobile-menu-content::before {
+  3279→  content: "";
+  3280→  position: absolute;
+  3281→  top: 0;
+  3282→  left: 15%;
+  3283→  right: 15%;
+  3284→  height: 1px;
+  3285→  background: linear-gradient(
+  3286→    90deg,
+  3287→    transparent 0%,
+  3288→    rgba(255, 255, 255, 0.2) 20%,
+  3289→    rgba(52, 211, 153, 0.35) 50%,
+  3290→    rgba(255, 255, 255, 0.2) 80%,
+  3291→    transparent 100%
+  3292→  );
+  3293→  pointer-events: none;
+  3294→}
+  3295→
+  3296→/* Close button */
+  3297→.mobile-menu-close {
+  3298→  position: absolute;
+  3299→  top: 1rem;
+  3300→  right: 1rem;
+  3301→  display: flex;
+  3302→  align-items: center;
+  3303→  justify-content: center;
+  3304→  width: 44px;
+  3305→  height: 44px;
+  3306→  border-radius: 16px;
+  3307→  border: 1.5px solid rgba(255, 255, 255, var(--glass-border-opacity));
+  3308→  background: linear-gradient(135deg, var(--glass-bg-1), var(--glass-bg-2));
+  3309→  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  3310→  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  3311→  color: rgba(255, 255, 255, 0.6);
+  3312→  cursor: pointer;
+  3313→  transition: var(--glass-transition);
+  3314→  box-shadow: var(--glass-volumetric);
+  3315→}
+  3316→
+  3317→.mobile-menu-close:hover {
+  3318→  background: rgba(255, 255, 255, 0.1);
+  3319→  border-color: rgba(255, 255, 255, 0.2);
+  3320→  color: rgba(255, 255, 255, 0.9);
+  3321→  transform: scale(1.05);
+  3322→}
+  3323→
+  3324→.mobile-menu-close:active {
+  3325→  transform: scale(0.95);
+  3326→}
+  3327→
+  3328→/* Links container */
+  3329→.mobile-menu-links {
+  3330→  display: flex;
+  3331→  flex-direction: column;
+  3332→  align-items: center;
+  3333→  justify-content: center;
+  3334→  flex: 1;
+  3335→  width: 100%;
+  3336→  max-width: 400px;
+  3337→  padding-top: 4rem;
+  3338→}
+  3339→
+  3340→/* User section */
+  3341→.mobile-menu-user {
+  3342→  margin-bottom: 2rem;
+  3343→  opacity: 0;
+  3344→  animation: mobile-menu-item-in 0.4s ease forwards;
+  3345→  animation-delay: 0ms;
+  3346→}
+  3347→
+  3348→/* Nav links */
+  3349→.mobile-menu-nav {
+  3350→  width: 100%;
+  3351→  display: flex;
+  3352→  flex-direction: column;
+  3353→  gap: 0.5rem;
+  3354→}
+  3355→
+  3356→/* Individual link */
+  3357→.mobile-menu-link {
+  3358→  display: flex;
+  3359→  align-items: center;
+  3360→  justify-content: space-between;
+  3361→  width: 100%;
+  3362→  padding: 1rem 1.25rem;
+  3363→  border-radius: 14px;
+  3364→  font-size: 1.05rem;
+  3365→  font-weight: 500;
+  3366→  color: rgba(255, 255, 255, 0.75);
+  3367→  border: 1px solid transparent;
+  3368→  transition: all 0.2s ease;
+  3369→  cursor: pointer;
+  3370→  text-decoration: none;
+  3371→  opacity: 0;
+  3372→  animation: mobile-menu-item-in 0.4s ease forwards;
+  3373→}
+  3374→
+  3375→.mobile-menu-link:hover {
+  3376→  color: rgba(255, 255, 255, 1);
+  3377→  background: rgba(255, 255, 255, 0.05);
+  3378→  border-color: rgba(255, 255, 255, 0.08);
+  3379→}
+  3380→
+  3381→.mobile-menu-link.active {
+  3382→  color: rgba(110, 231, 183, 0.95);
+  3383→  background: rgba(52, 211, 153, 0.1);
+  3384→  border-color: rgba(52, 211, 153, 0.2);
+  3385→  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  3386→}
+  3387→
+  3388→.mobile-menu-link-secondary {
+  3389→  margin-top: 0.5rem;
+  3390→  padding-top: 1.25rem;
+  3391→  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  3392→  color: rgba(255, 255, 255, 0.45);
+  3393→}
+  3394→
+  3395→.mobile-menu-link-secondary:hover {
+  3396→  color: rgba(255, 255, 255, 0.65);
+  3397→}
+  3398→
+  3399→/* CTA section */
+  3400→.mobile-menu-cta {
+  3401→  width: 100%;
+  3402→  margin-top: 2rem;
+  3403→  padding-bottom: 2rem;
+  3404→  opacity: 0;
+  3405→  animation: mobile-menu-item-in 0.4s ease forwards;
+  3406→}
+  3407→
+  3408→.mobile-menu-cta-btn {
+  3409→  display: flex;
+  3410→  align-items: center;
+  3411→  justify-content: center;
+  3412→  gap: 0.5rem;
+  3413→  width: 100%;
+  3414→  padding: 0.85rem 1.5rem;
+  3415→  border-radius: 9999px;
+  3416→  font-size: 0.9rem;
+  3417→  font-weight: 600;
+  3418→  color: #052e16;
+  3419→  background: linear-gradient(180deg, rgba(110, 231, 183, 0.9) 0%, rgba(16, 185, 129, 0.95) 100%);
+  3420→  border: 1px solid rgba(110, 231, 183, 0.3);
+  3421→  box-shadow:
+  3422→    0 4px 16px -4px rgba(52, 211, 153, 0.5),
+  3423→    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  3424→  transition: all 0.2s ease;
+  3425→  text-decoration: none;
+  3426→}
+  3427→
+  3428→.mobile-menu-cta-btn:hover {
+  3429→  box-shadow:
+  3430→    0 8px 24px -4px rgba(52, 211, 153, 0.7),
+  3431→    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  3432→  transform: translateY(-1px);
+  3433→}
+  3434→
+  3435→.mobile-menu-cta-btn:active {
+  3436→  transform: translateY(0) scale(0.98);
+  3437→}
+  3438→
+  3439→@keyframes mobile-menu-item-in {
+  3440→  0% {
+  3441→    opacity: 0;
+  3442→    transform: translateY(16px);
+  3443→  }
+  3444→  100% {
+  3445→    opacity: 1;
+  3446→    transform: translateY(0);
+  3447→  }
+  3448→}
+  3449→
+  3450→/* Light mode adjustments */
+  3451→html:not(.dark) .mobile-menu-backdrop {
+  3452→  background: rgba(255, 255, 255, 0.6);
+  3453→}
+  3454→
+  3455→html:not(.dark) .mobile-menu-content {
+  3456→  background: linear-gradient(
+  3457→    180deg,
+  3458→    rgba(240, 245, 242, 0.98) 0%,
+  3459→    rgba(244, 248, 246, 0.99) 100%
+  3460→  );
+  3461→}
+  3462→
+  3463→html:not(.dark) .mobile-menu-content::before {
+  3464→  background: linear-gradient(
+  3465→    90deg,
+  3466→    transparent 0%,
+  3467→    rgba(0, 0, 0, 0.08) 20%,
+  3468→    rgba(4, 120, 87, 0.15) 50%,
+  3469→    rgba(0, 0, 0, 0.08) 80%,
+  3470→    transparent 100%
+  3471→  );
+  3472→}
+  3473→
+  3474→html:not(.dark) .mobile-menu-close {
+  3475→  border-color: rgba(0, 0, 0, 0.1);
+  3476→  background: rgba(0, 0, 0, 0.04);
+  3477→  color: rgba(0, 0, 0, 0.5);
+  3478→}
+  3479→
+  3480→html:not(.dark) .mobile-menu-close:hover {
+  3481→  background: rgba(0, 0, 0, 0.08);
+  3482→  border-color: rgba(0, 0, 0, 0.15);
+  3483→  color: rgba(0, 0, 0, 0.8);
+  3484→}
+  3485→
+  3486→html:not(.dark) .mobile-menu-link {
+  3487→  color: rgba(30, 30, 30, 0.7);
+  3488→}
+  3489→
+  3490→html:not(.dark) .mobile-menu-link:hover {
+  3491→  color: rgba(30, 30, 30, 0.95);
+  3492→  background: rgba(0, 0, 0, 0.04);
+  3493→  border-color: rgba(0, 0, 0, 0.06);
+  3494→}
+  3495→
+  3496→html:not(.dark) .mobile-menu-link.active {
+  3497→  color: rgba(4, 120, 87, 0.95);
+  3498→  background: rgba(4, 120, 87, 0.08);
+  3499→  border-color: rgba(4, 120, 87, 0.15);
+  3500→}
+  3501→
+  3502→html:not(.dark) .mobile-menu-link-secondary {
+  3503→  border-top-color: rgba(0, 0, 0, 0.06);
+  3504→  color: rgba(30, 30, 30, 0.4);
+  3505→}
+  3506→
+  3507→html:not(.dark) .mobile-menu-link-secondary:hover {
+  3508→  color: rgba(30, 30, 30, 0.65);
+  3509→}
+  3510→
+  3511→/* ─── Reduce motion (user toggle & system) ── */
+  3512→.reduced-motion *,
+  3513→.reduced-motion *::before,
+  3514→.reduced-motion *::after {
+  3515→  animation-duration: 0.01ms !important;
+  3516→  animation-iteration-count: 1 !important;
+  3517→  transition-duration: 0.01ms !important;
+  3518→  scroll-behavior: auto !important;
+  3519→}
+  3520→.reduced-motion .ambient-orb,
+  3521→.reduced-motion .cinema-grain,
+  3522→.reduced-motion .light-leak,
+  3523→.reduced-motion .bokeh-particle,
+  3524→.reduced-motion .welcome-ring {
+  3525→  display: none !important;
+  3526→}
+  3527→@media (prefers-reduced-motion: reduce) {
+  3528→  *, *::before, *::after {
+  3529→    animation-duration: 0.01ms !important;
+  3530→    animation-iteration-count: 1 !important;
+  3531→    transition-duration: 0.01ms !important;
+  3532→    scroll-behavior: auto !important;
+  3533→  }
+  3534→}
+  3535→
+  3536→/* ─── User font size scaling ─────────────────── */
+  3537→html {
+  3538→  --user-font-scale: 1;
+  3539→}
+  3540→html:not([style*="--user-font-scale"]) {
+  3541→  --user-font-scale: 1;
+  3542→}
+  3543→
+  3544→/* ─── Compact mode ────────────────────────────── */
+  3545→.compact-mode .liquid-glass-card {
+  3546→  padding-top: 0.75rem;
+  3547→  padding-bottom: 0.75rem;
+  3548→}
+  3549→.compact-mode [class*="py-3.5"],
+  3550→.compact-mode [class*="py-4"] {
+  3551→  padding-top: 0.5rem;
+  3552→  padding-bottom: 0.5rem;
+  3553→}
+  3554→.compact-mode section {
+  3555→  margin-bottom: 0.75rem !important;
+  3556→}
+  3557→
+  3558→/* ─────────────────────────────────────────────
+  3559→   Mobile / responsive refinements
+  3560→   ───────────────────────────────────────────── */
+  3561→
+  3562→/* Prevent iOS zoom on input focus (min 16px) */
+  3563→input, textarea, select {
+  3564→  font-size: 16px;
+  3565→}
+  3566→@media (min-width: 640px) {
+  3567→  input, textarea, select {
+  3568→    font-size: inherit;
+  3569→  }
+  3570→}
+  3571→
+  3572→/* Remove tap highlight, use our own active states */
+  3573→* {
+  3574→  -webkit-tap-highlight-color: transparent;
+  3575→}
+  3576→
+  3577→/* Better touch behavior */
+  3578→html {
+  3579→  overscroll-behavior-y: none;
+  3580→  -webkit-text-size-adjust: 100%;
+  3581→}
+  3582→
+  3583→/* Safe area for notched devices (iOS) */
+  3584→body {
+  3585→  padding-left: env(safe-area-inset-left);
+  3586→  padding-right: env(safe-area-inset-right);
+  3587→}
+  3588→
+  3589→/* Hide scrollbar utility (used in filter pills) */
+  3590→.scrollbar-thin::-webkit-scrollbar {
+  3591→  height: 4px;
+  3592→}
+  3593→.scrollbar-thin::-webkit-scrollbar-track {
+  3594→  background: transparent;
+  3595→}
+  3596→.scrollbar-thin::-webkit-scrollbar-thumb {
+  3597→  background: rgba(52, 211, 153, 0.2);
+  3598→  border-radius: 10px;
+  3599→}
+  3600→@media (max-width: 640px) {
+  3601→  .scrollbar-thin::-webkit-scrollbar {
+  3602→    display: none;
+  3603→  }
+  3604→  .scrollbar-thin {
+  3605→    scrollbar-width: none;
+  3606→  }
+  3607→}
+  3608→
+  3609→/* Mobile prose adjustments */
+  3610→@media (max-width: 640px) {
+  3611→  .prose-custom {
+  3612→    font-size: 1rem;
+  3613→    line-height: 1.7;
+  3614→  }
+  3615→  .prose-custom h1 { font-size: 1.625rem; }
+  3616→  .prose-custom h2 { font-size: 1.375rem; }
+  3617→  .prose-custom h3 { font-size: 1.15rem; }
+  3618→  .prose-custom h4 { font-size: 1rem; }
+  3619→  .prose-custom pre {
+  3620→    padding: 1rem;
+  3621→    font-size: 0.8125rem;
+  3622→    border-radius: 0.65rem;
+  3623→    margin-left: 0;
+  3624→    margin-right: 0;
+  3625→  }
+  3626→  .prose-custom blockquote {
+  3627→    padding: 0.6em 1em;
+  3628→    margin: 1.25em -0.25em;
+  3629→  }
+  3630→  .prose-custom :not(pre) > code {
+  3631→    font-size: 0.85em;
+  3632→    word-break: break-word;
+  3633→  }
+  3634→}
+  3635→
+  3636→/* Buttons - mobile-friendly sizes (44px tap target) */
+  3637→@media (max-width: 640px) {
+  3638→  .btn-primary, .btn-secondary {
+  3639→    padding: 0.75rem 1.25rem;
+  3640→    font-size: 0.875rem;
+  3641→    min-height: 44px;
+  3642→  }
+  3643→}
+  3644→
+  3645→/* Disable hover-only effects on touch devices */
+  3646→@media (hover: none) {
+  3647→  .card-shine::after {
+  3648→    display: none;
+  3649→  }
+  3650→  .spotlight::before {
+  3651→    display: none;
+  3652→  }
+  3653→  .card-glow-hover:hover {
+  3654→    box-shadow: none;
+  3655→  }
+  3656→}
+  3657→
+  3658→/* Smooth momentum scroll on iOS */
+  3659→.overflow-x-auto, .overflow-y-auto {
+  3660→  -webkit-overflow-scrolling: touch;
+  3661→}
+  3662→
+  3663→/* Disable double-tap zoom on interactive elements */
+  3664→button, a, [role="button"] {
+  3665→  touch-action: manipulation;
+  3666→}
+  3667→
+  3668→/* ═══════════════════════════════════════════════════
+  3669→   MOBILE PERFORMANCE — Aggressive GPU savings ═════════════════════════════════════════════════════ */
+  3670→@media (max-width: 640px) {
+  3671→  /* ── 1. Slash blur intensity (biggest GPU saver) ── */
+  3672→  :root {
+  3673→    --glass-blur: 6px;
+  3674→    --glass-saturate: 120%;
+  3675→    --glass-volumetric:
+  3676→      inset 0 1px 2px 0 rgba(255, 255, 255, 0.5),
+  3677→      0 8px 24px -8px rgba(0, 0, 0, 0.3);
+  3678→    --glass-volumetric-hover:
+  3679→      inset 0 1px 2px 0 rgba(255, 255, 255, 0.6),
+  3680→      0 12px 32px -8px rgba(0, 0, 0, 0.35);
+  3681→  }
+  3682→
+  3683→  /* ── 2. Kill the refraction-pulse animation (animates backdrop-filter) ── */
+  3684→  .liquid-glass,
+  3685→  .liquid-glass-card,
+  3686→  .liquid-glass-pill,
+  3687→  .liquid-glass-nav,
+  3688→  .glass-card,
+  3689→  .glass-nav {
+  3690→    animation: none !important;
+  3691→  }
+  3692→
+  3693→  /* ── 3. Strip decorative pseudo-elements from glass cards/pills ── */
+  3694→  .liquid-glass::before,
+  3695→  .liquid-glass::after,
+  3696→  .liquid-glass-card::before,
+  3697→  .liquid-glass-card::after,
+  3698→  .liquid-glass-pill::before,
+  3699→  .liquid-glass-pill::after,
+  3700→  .liquid-glass-panel::before,
+  3701→  .liquid-glass-panel::after,
+  3702→  .liquid-glass-input::before,
+  3703→  .liquid-glass-input::after,
+  3704→  .glass-card::before,
+  3705→  .glass-card::after,
+  3706→  .glass-nav::before,
+  3707→  .glass-nav::after,
+  3708→  .glass-input::before,
+  3709→  .glass-input::after,
+  3710→  .liquid-glass-mobile-menu::before,
+  3711→  .liquid-glass-mobile-menu::after {
+  3712→    display: none !important;
+  3713→  }
+  3714→
+  3715→  /* ── 4. Remove SVG refraction filter ── */
+  3716→  .liquid-refraction {
+  3717→    filter: none !important;
+  3718→  }
+  3719→
+  3720→  /* ── 5. Remove prismatic/conic borders ── */
+  3721→  .prismatic-border::before,
+  3722→  .liquid-glass-prismatic::before,
+  3723→  .conic-border::before {
+  3724→    display: none !important;
+  3725→  }
+  3726→
+  3727→  /* ── 6. Hide decorative overlays ── */
+  3728→  .cinema-grain,
+  3729→  .light-leak,
+  3730→  .bokeh-canvas {
+  3731→    display: none !important;
+  3732→  }
+  3733→
+  3734→  /* ── 7. Simplify button pseudo-elements ── */
+  3735→  .btn-primary::before,
+  3736→  .btn-primary::after,
+  3737→  .btn-secondary::before,
+  3738→  .btn-secondary::after,
+  3739→  .searchbar-input-wrap::before,
+  3740→  .searchbar-input-wrap::after,
+  3741→  .mobile-search-bar::before,
+  3742→  .mobile-search-bar::after {
+  3743→    display: none !important;
+  3744→  }
+  3745→  .btn-primary,
+  3746→  .btn-secondary {
+  3747→    backdrop-filter: blur(8px);
+  3748→  }
+  3749→
+
+[showing lines 1750-3749 of 4151; use offset=3750 with limit to continue reading]
