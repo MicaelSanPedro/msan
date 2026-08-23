@@ -1,0 +1,914 @@
+     1→"use client";
+     2→
+     3→import { useState, useEffect, useCallback } from "react";
+     4→import Link from "next/link";
+     5→import {
+     6→  User,
+     7→  Moon,
+     8→  Sun,
+     9→  Trash2,
+    10→  ChevronRight,
+    11→  ArrowLeft,
+    12→  Shield,
+    13→  Type,
+    14→  Monitor,
+    15→  Smartphone,
+    16→  Info,
+    17→  Heart,
+    18→  Zap,
+    19→  RotateCcw,
+    20→  HardDrive,
+    21→  Palette,
+    22→  Keyboard,
+    23→  Globe,
+    24→  Sparkles,
+    25→  Volume2,
+    26→  VolumeX,
+    27→  Minimize2,
+    28→  Maximize2,
+    29→  Check,
+    30→  Clock,
+    31→  Layout,
+    32→  Eye,
+    33→} from "lucide-react";
+    34→import { Logo } from "@/components/Logo";
+    35→import { ToggleSlider } from "@/components/ToggleSlider";
+    36→import { useSession } from "next-auth/react";
+    37→
+    38→/* ─── Storage helpers ─── */
+    39→const KEYS = {
+    40→  theme: "techmate_theme",
+    41→  fontSize: "techmate_font_size",
+    42→  reducedMotion: "techmate_reduced_motion",
+    43→  compactMode: "techmate_compact_mode",
+    44→  accentColor: "techmate_accent_color",
+    45→} as const;
+    46→
+    47→function getStored(key: string): string | null {
+    48→  if (typeof window === "undefined") return null;
+    49→  try { return localStorage.getItem(key); } catch { return null; }
+    50→}
+    51→function setStored(key: string, val: string) {
+    52→  try { localStorage.setItem(key, val); } catch { /* ignore */ }
+    53→}
+    54→function removeStored(key: string) {
+    55→  try { localStorage.removeItem(key); } catch { /* ignore */ }
+    56→}
+    57→
+    58→function getStorageSize(): string {
+    59→  if (typeof window === "undefined") return "0 B";
+    60→  try {
+    61→    let total = 0;
+    62→    for (const key of Object.keys(localStorage)) {
+    63→      total += (localStorage.getItem(key) || "").length;
+    64→    }
+    65→    if (total < 1024) return `${total} B`;
+    66→    return `${(total / 1024).toFixed(1)} KB`;
+    67→  } catch { return "0 B"; }
+    68→}
+    69→function getVisitCount(): number {
+    70→  try {
+    71→    const stored = localStorage.getItem("techmate_visits");
+    72→    if (stored) {
+    73→      const count = parseInt(stored, 10) + 1;
+    74→      localStorage.setItem("techmate_visits", String(count));
+    75→      return count;
+    76→    }
+    77→    localStorage.setItem("techmate_visits", "1");
+    78→    return 1;
+    79→  }
+    80→  catch { return 1; }
+    81→}
+    82→function getFirstVisit(): string {
+    83→  try {
+    84→    const stored = localStorage.getItem("techmate_first_visit");
+    85→    if (stored) return stored;
+    86→    const now = new Date();
+    87→    const formatted = `${now.getDate().toString().padStart(2, "0")}/${(now.getMonth() + 1).toString().padStart(2, "0")}/${now.getFullYear()}`;
+    88→    localStorage.setItem("techmate_first_visit", formatted);
+    89→    return formatted;
+    90→  }
+    91→  catch { return "Hoje"; }
+    92→}
+    93→
+    94→/* ─── Font size presets ─── */
+    95→const FONT_SIZES = [
+    96→  { label: "Pequeno", value: "small", scale: 14, desc: "Textos mais compactos" },
+    97→  { label: "Padrao", value: "medium", scale: 16, desc: "Tamanho original do site" },
+    98→  { label: "Grande", value: "large", scale: 18, desc: "Textos maiores e mais legiveis" },
+    99→  { label: "Extra grande", value: "xlarge", scale: 20, desc: "Maxima legibilidade" },
+   100→] as const;
+   101→
+   102→/* ─── Accent colors ─── */
+   103→const ACCENT_COLORS = [
+   104→  { label: "Esmeralda", value: "emerald", primary: "#10b981", glow: "rgba(16,185,129,0.45)" },
+   105→  { label: "Azul", value: "blue", primary: "#3b82f6", glow: "rgba(59,130,246,0.45)" },
+   106→  { label: "Violeta", value: "violet", primary: "#8b5cf6", glow: "rgba(139,92,246,0.45)" },
+   107→  { label: "Rosa", value: "rose", primary: "#f43f5e", glow: "rgba(244,63,94,0.45)" },
+   108→  { label: "Ciano", value: "cyan", primary: "#06b6d4", glow: "rgba(6,182,212,0.45)" },
+   109→] as const;
+   110→
+   111→/* ─── Sub-components ─── */
+   112→
+   113→function SectionTitle({ icon: Icon, title }: { icon: React.ElementType; title: string }) {
+   114→  return (
+   115→    <div className="flex items-center gap-2.5 mb-4">
+   116→      <div className="flex items-center justify-center w-8 h-8 rounded-xl
+   117→                      bg-emerald-500/[0.08] border border-emerald-500/15">
+   118→        <Icon className="w-4 h-4 text-emerald-400" />
+   119→      </div>
+   120→      <h2 className="text-base font-bold text-white/90">{title}</h2>
+   121→    </div>
+   122→  );
+   123→}
+   124→
+   125→function SettingRow({ children }: { children: React.ReactNode }) {
+   126→  return (
+   127→    <div className="flex items-center justify-between px-4 py-3.5 rounded-xl
+   128→                    hover:bg-white/[0.03] transition-colors duration-200">
+   129→      {children}
+   130→    </div>
+   131→  );
+   132→}
+   133→
+   134→function SettingLabel({ label, description }: { label: string; description?: string }) {
+   135→  return (
+   136→    <div className="flex-1 mr-4">
+   137→      <p className="text-sm font-medium text-white/80">{label}</p>
+   138→      {description && <p className="text-xs text-white/35 mt-0.5">{description}</p>}
+   139→    </div>
+   140→  );
+   141→}
+   142→
+   143→/* Toggle component replaced by ToggleSlider (v1/v2/v3 physical sliders) */
+   144→
+   145→function DangerButton({ onClick, children }: { onClick: () => void; children: React.ReactNode }) {
+   146→  const [confirm, setConfirm] = useState(false);
+   147→
+   148→  if (!confirm) {
+   149→    return (
+   150→      <button
+   151→        type="button"
+   152→        onClick={() => setConfirm(true)}
+   153→        className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold
+   154→                   border border-red-500/20 bg-red-500/[0.08] text-red-400
+   155→                   hover:bg-red-500/[0.15] transition-colors cursor-pointer"
+   156→      >
+   157→        <Trash2 className="w-3.5 h-3.5" />
+   158→        {children}
+   159→      </button>
+   160→    );
+   161→  }
+   162→
+   163→  return (
+   164→    <div className="flex items-center gap-2">
+   165→      <p className="text-[11px] text-red-400/70 mr-1">Tem certeza?</p>
+   166→      <button
+   167→        type="button"
+   168→        onClick={() => { onClick(); setConfirm(false); }}
+   169→        className="px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer
+   170→                   border border-red-500/30 bg-red-500/[0.15] text-red-400
+   171→                   hover:bg-red-500/[0.25] transition-colors"
+   172→      >
+   173→        Sim, limpar
+   174→      </button>
+   175→      <button
+   176→        type="button"
+   177→        onClick={() => setConfirm(false)}
+   178→        className="px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer
+   179→                   border border-white/30 bg-white/[0.03] text-white/40
+   180→                   hover:bg-white/[0.06] transition-colors"
+   181→      >
+   182→        Cancelar
+   183→      </button>
+   184→    </div>
+   185→  );
+   186→}
+   187→
+   188→function Divider() {
+   189→  return <div className="h-px mx-4 my-1 bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />;
+   190→}
+   191→
+   192→/* Segmented control for selecting from options */
+   193→function SegmentedControl<T extends string>({
+   194→  options,
+   195→  value,
+   196→  onChange,
+   197→  renderLabel,
+   198→}: {
+   199→  options: readonly { label: string; value: T; desc?: string }[];
+   200→  value: T;
+   201→  onChange: (val: T) => void;
+   202→  renderLabel?: (opt: { label: string; value: T; desc?: string }) => string;
+   203→}) {
+   204→  return (
+   205→    <div className="flex flex-wrap gap-1.5">
+   206→      {options.map((opt) => {
+   207→        const isActive = value === opt.value;
+   208→        return (
+   209→          <button
+   210→            key={opt.value}
+   211→            type="button"
+   212→            onClick={() => onChange(opt.value)}
+   213→            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer
+   214→                       ${isActive
+   215→                         ? "bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 shadow-[0_0_12px_rgba(52,211,153,0.15)]"
+   216→                         : "bg-white/[0.03] border border-white/30 text-white/40 hover:bg-white/[0.06] hover:text-white/60"}`}
+   217→          >
+   218→            {renderLabel ? renderLabel(opt) : opt.label}
+   219→            {isActive && <Check className="w-3 h-3 inline ml-1" />}
+   220→          </button>
+   221→        );
+   222→      })}
+   223→    </div>
+   224→  );
+   225→}
+   226→
+   227→/* Color picker grid */
+   228→function ColorPicker({
+   229→  colors,
+   230→  value,
+   231→  onChange,
+   232→}: {
+   233→  colors: typeof ACCENT_COLORS;
+   234→  value: string;
+   235→  onChange: (val: string) => void;
+   236→}) {
+   237→  return (
+   238→    <div className="flex flex-wrap gap-2">
+   239→      {colors.map((c) => {
+   240→        const isActive = value === c.value;
+   241→        return (
+   242→          <button
+   243→            key={c.value}
+   244→            type="button"
+   245→            onClick={() => onChange(c.value)}
+   246→            className="relative w-9 h-9 rounded-xl border-2 transition-all duration-200 cursor-pointer
+   247→                       hover:scale-110 active:scale-95"
+   248→            style={{
+   249→              backgroundColor: c.primary,
+   250→              borderColor: isActive ? c.primary : "transparent",
+   251→              boxShadow: isActive ? `0 0 16px ${c.glow}` : "none",
+   252→              opacity: isActive ? 1 : 0.5,
+   253→            }}
+   254→            title={c.label}
+   255→          >
+   256→            {isActive && (
+   257→              <Check className="w-4 h-4 text-white absolute inset-0 m-auto drop-shadow-md" />
+   258→            )}
+   259→          </button>
+   260→        );
+   261→      })}
+   262→    </div>
+   263→  );
+   264→}
+   265→
+   266→/* ─── Main Settings Page ─── */
+   267→
+   268→export default function SettingsPage() {
+   269→  const { data: session } = useSession();
+   270→  const [theme, setTheme] = useState<"dark" | "light">("dark");
+   271→  const [fontSize, setFontSize] = useState<string>("medium");
+   272→  const [reducedMotion, setReducedMotion] = useState(false);
+   273→  const [compactMode, setCompactMode] = useState(false);
+   274→  const [accentColor, setAccentColor] = useState("emerald");
+   275→  const [mounted, setMounted] = useState(false);
+   276→  const [storageSize, setStorageSize] = useState("0 B");
+   277→  const [visitCount, setVisitCount] = useState(1);
+   278→  const [firstVisit, setFirstVisit] = useState("Hoje");
+   279→  const [savedMsg, setSavedMsg] = useState("");
+   280→
+   281→  const hydrate = useCallback(() => {
+   282→    setMounted(true);
+   283→
+   284→    const t = getStored(KEYS.theme);
+   285→    if (t === "light") setTheme("light");
+   286→
+   287→    const fs = getStored(KEYS.fontSize);
+   288→    if (fs) setFontSize(fs);
+   289→
+   290→    const rm = getStored(KEYS.reducedMotion);
+   291→    if (rm === "true") setReducedMotion(true);
+   292→
+   293→    const cm = getStored(KEYS.compactMode);
+   294→    if (cm === "true") setCompactMode(true);
+   295→
+   296→    const ac = getStored(KEYS.accentColor);
+   297→    if (ac) setAccentColor(ac);
+   298→
+   299→    setStorageSize(getStorageSize());
+   300→    setVisitCount(getVisitCount());
+   301→    setFirstVisit(getFirstVisit());
+   302→  }, []);
+   303→
+   304→  useEffect(() => { hydrate(); }, [hydrate]);
+   305→
+   306→  /* ── Apply preferences to document ── */
+   307→  const applyFontSize = useCallback((size: string) => {
+   308→    const root = document.documentElement;
+   309→    const preset = FONT_SIZES.find((f) => f.value === size);
+   310→    if (preset) {
+   311→      const scale = preset.scale / 16;
+   312→      root.style.setProperty("--user-font-scale", String(scale));
+   313→      root.style.fontSize = `${preset.scale}px`;
+   314→    } else {
+   315→      root.style.removeProperty("--user-font-scale");
+   316→      root.style.fontSize = "";
+   317→    }
+   318→  }, []);
+   319→
+   320→  const applyReducedMotion = useCallback((enabled: boolean) => {
+   321→    const root = document.documentElement;
+   322→    if (enabled) {
+   323→      root.classList.add("reduced-motion");
+   324→    } else {
+   325→      root.classList.remove("reduced-motion");
+   326→    }
+   327→  }, []);
+   328→
+   329→  const applyCompactMode = useCallback((enabled: boolean) => {
+   330→    const root = document.documentElement;
+   331→    if (enabled) {
+   332→      root.classList.add("compact-mode");
+   333→    } else {
+   334→      root.classList.remove("compact-mode");
+   335→    }
+   336→  }, []);
+   337→
+   338→  const applyAccentColor = useCallback((color: string) => {
+   339→    const preset = ACCENT_COLORS.find((c) => c.value === color);
+   340→    if (!preset) return;
+   341→    const root = document.documentElement;
+   342→    root.style.setProperty("--accent", preset.primary);
+   343→    root.style.setProperty("--accent-glow", preset.glow);
+   344→    root.setAttribute("data-accent", color);
+   345→  }, []);
+   346→
+   347→  /* Apply on mount */
+   348→  useEffect(() => {
+   349→    if (!mounted) return;
+   350→    applyFontSize(fontSize);
+   351→    applyReducedMotion(reducedMotion);
+   352→    applyCompactMode(compactMode);
+   353→    applyAccentColor(accentColor);
+   354→  }, [mounted, fontSize, reducedMotion, compactMode, accentColor, applyFontSize, applyReducedMotion, applyCompactMode, applyAccentColor]);
+   355→
+   356→  const showSaved = useCallback(() => {
+   357→    setSavedMsg("Salvo!");
+   358→    setTimeout(() => setSavedMsg(""), 2000);
+   359→  }, []);
+   360→
+   361→  /* ── Handlers ── */
+   362→  const handleThemeToggle = () => {
+   363→    const next = theme === "dark" ? "light" : "dark";
+   364→    setTheme(next);
+   365→    setStored(KEYS.theme, next);
+   366→    if (next === "light") {
+   367→      document.documentElement.classList.remove("dark");
+   368→      const m = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null;
+   369→      if (m) m.content = "#f0f5f2";
+   370→    } else {
+   371→      document.documentElement.classList.add("dark");
+   372→      const m = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null;
+   373→      if (m) m.content = "#060a08";
+   374→    }
+   375→    showSaved();
+   376→  };
+   377→
+   378→  const handleFontSizeChange = (val: string) => {
+   379→    setFontSize(val);
+   380→    setStored(KEYS.fontSize, val);
+   381→    applyFontSize(val);
+   382→    showSaved();
+   383→  };
+   384→
+   385→  const handleReducedMotionToggle = (val: boolean) => {
+   386→    setReducedMotion(val);
+   387→    setStored(KEYS.reducedMotion, String(val));
+   388→    applyReducedMotion(val);
+   389→    showSaved();
+   390→  };
+   391→
+   392→  const handleCompactModeToggle = (val: boolean) => {
+   393→    setCompactMode(val);
+   394→    setStored(KEYS.compactMode, String(val));
+   395→    applyCompactMode(val);
+   396→    showSaved();
+   397→  };
+   398→
+   399→  const handleAccentColorChange = (val: string) => {
+   400→    setAccentColor(val);
+   401→    setStored(KEYS.accentColor, val);
+   402→    applyAccentColor(val);
+   403→    showSaved();
+   404→  };
+   405→
+   406→  const handleClearData = () => {
+   407→    try { localStorage.clear(); } catch { /* ignore */ }
+   408→    setTheme("dark");
+   409→    setFontSize("medium");
+   410→    setReducedMotion(false);
+   411→    setCompactMode(false);
+   412→    setAccentColor("emerald");
+   413→    setStorageSize("0 B");
+   414→    setVisitCount(0);
+   415→    setFirstVisit("Hoje");
+   416→    localStorage.removeItem("techmate_visits");
+   417→    localStorage.removeItem("techmate_first_visit");
+   418→    document.documentElement.classList.add("dark");
+   419→    document.documentElement.classList.remove("reduced-motion", "compact-mode");
+   420→    document.documentElement.style.removeProperty("--user-font-scale");
+   421→    document.documentElement.style.fontSize = "";
+   422→    document.documentElement.style.removeProperty("--accent");
+   423→    document.documentElement.style.removeProperty("--accent-glow");
+   424→    document.documentElement.removeAttribute("data-accent");
+   425→    const m = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null;
+   426→    if (m) m.content = "#060a08";
+   427→    window.dispatchEvent(new CustomEvent("techmate:username-set"));
+   428→    showSaved();
+   429→  };
+   430→
+   431→  const handleResetTheme = () => {
+   432→    setTheme("dark");
+   433→    setStored(KEYS.theme, "dark");
+   434→    document.documentElement.classList.add("dark");
+   435→    const m = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null;
+   436→    if (m) m.content = "#060a08";
+   437→    showSaved();
+   438→  };
+   439→
+   440→  /* ── Compute display values ── */
+   441→  const currentFontLabel = FONT_SIZES.find((f) => f.value === fontSize)?.label || "Padrao";
+   442→  const currentAccentLabel = ACCENT_COLORS.find((c) => c.value === accentColor)?.label || "Ambar";
+   443→  const currentAccentColor = ACCENT_COLORS.find((c) => c.value === accentColor)?.primary || "#10b981";
+   444→
+   445→  if (!mounted) return null;
+   446→
+   447→  return (
+   448→    <div className="min-h-screen pt-20 pb-16 px-4">
+   449→      <div className="max-w-2xl mx-auto">
+   450→
+   451→        {/* ── Header ── */}
+   452→        <div className="flex items-center gap-4 mb-8">
+   453→          <Link
+   454→            href="/"
+   455→            className="flex items-center justify-center w-10 h-10 rounded-xl
+   456→                       liquid-glass-pill
+   457→                       hover:bg-white/[0.08] active:scale-95
+   458→                       transition-all duration-200"
+   459→          >
+   460→            <ArrowLeft className="w-4 h-4 text-white/60" />
+   461→          </Link>
+   462→          <div>
+   463→            <h1 className="text-2xl font-extrabold text-white tracking-tight">Configurações</h1>
+   464→            <p className="text-xs text-white/35 mt-0.5">Personalize sua experiência no TechMate</p>
+   465→          </div>
+   466→          {savedMsg && (
+   467→            <span className="ml-auto flex items-center gap-1.5 text-xs font-semibold text-emerald-400 animate-fade-in">
+   468→              <Check className="w-3.5 h-3.5" />
+   469→              {savedMsg}
+   470→            </span>
+   471→          )}
+   472→        </div>
+   473→
+   474→        {/* ══════════════════════════════════════════
+   475→            SECTION 1: CONTA
+   476→        ══════════════════════════════════════════ */}
+   477→        <section className="liquid-glass-card rounded-2xl p-5 sm:p-6 mb-5">
+   478→          <SectionTitle icon={User} title="Conta" />
+   479→          <Divider />
+   480→
+   481→          {session?.user ? (
+   482→            <>
+   483→              <div className="flex items-center gap-4 py-3 px-4">
+   484→                {session.user.image ? (
+   485→                  <div className="w-14 h-14 rounded-full overflow-hidden shrink-0
+   486→                              border-2 border-emerald-400/30 shadow-[0_0_20px_rgba(52,211,153,0.2)]">
+   487→                    <img src={session.user.image} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+   488→                  </div>
+   489→                ) : (
+   490→                  <div className="flex items-center justify-center w-14 h-14 rounded-full shrink-0
+   491→                              bg-gradient-to-br from-emerald-400/20 to-emerald-500/10 border border-emerald-400/20">
+   492→                    <User className="w-7 h-7 text-emerald-400" />
+   493→                  </div>
+   494→                )}
+   495→                <div className="min-w-0">
+   496→                  <p className="text-sm font-semibold text-white/85 truncate">
+   497→                    {session.user.name || session.user.login || "Usuario"}
+   498→                  </p>
+   499→                  <p className="text-xs text-white/35 mt-0.5 flex items-center gap-1.5">
+   500→                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+   501→                      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+   502→                    </svg>
+   503→                    Conectado via GitHub
+   504→                  </p>
+   505→                </div>
+   506→              </div>
+   507→            </>
+   508→          ) : (
+   509→            <div className="py-6 px-4 text-center">
+   510→              <p className="text-sm text-white/50 mb-3">Voce nao esta conectado</p>
+   511→              <button
+   512→                onClick={() => {
+   513→                  const event = new CustomEvent("techmate:signin-open");
+   514→                  window.dispatchEvent(event);
+   515→                }}
+   516→                className="btn-primary text-sm"
+   517→              >
+   518→                Entrar com GitHub
+   519→              </button>
+   520→            </div>
+   521→          )}
+   522→
+   523→          <Divider />
+   524→
+   525→          <SettingRow>
+   526→            <SettingLabel label="Visitas ao site" description="Total de vezes que voce acessou o TechMate" />
+   527→            <span className="text-sm font-mono text-white/40 tabular-nums">{visitCount}x</span>
+   528→          </SettingRow>
+   529→
+   530→          <Divider />
+   531→
+   532→          <SettingRow>
+   533→            <SettingLabel label="Primeira visita" description="Quando voce descobriu o TechMate" />
+   534→            <span className="text-sm font-mono text-white/40">{firstVisit}</span>
+   535→          </SettingRow>
+   536→        </section>
+   537→
+   538→        {/* ══════════════════════════════════════════
+   539→            SECTION 2: APARENCIA
+   540→        ══════════════════════════════════════════ */}
+   541→        <section className="liquid-glass-card rounded-2xl p-5 sm:p-6 mb-5">
+   542→          <SectionTitle icon={Palette} title="Aparencia" />
+   543→          <Divider />
+   544→
+   545→          {/* Theme toggle */}
+   546→          <SettingRow>
+   547→            <div className="flex items-center gap-3 flex-1 mr-4">
+   548→              <div className={`flex items-center justify-center w-9 h-9 rounded-xl border
+   549→                              ${theme === "dark"
+   550→                                ? "bg-indigo-500/[0.08] border-indigo-500/15"
+   551→                                : "bg-yellow-500/[0.08] border-yellow-500/15"}`}>
+   552→                {theme === "dark"
+   553→                  ? <Moon className="w-4 h-4 text-indigo-400" />
+   554→                  : <Sun className="w-4 h-4 text-yellow-400" />}
+   555→              </div>
+   556→              <SettingLabel
+   557→                label={theme === "dark" ? "Modo Escuro" : "Modo Claro"}
+   558→                description={theme === "dark"
+   559→                  ? "Ideal para uso noturno e ambientes com pouca luz"
+   560→                  : "Ideal para uso diurno e ambientes claros"}
+   561→              />
+   562→            </div>
+   563→            <ToggleSlider checked={theme === "light"} onChange={handleThemeToggle} variant="v3" aria-label="Alternar tema claro/escuro" />
+   564→          </SettingRow>
+   565→
+   566→          <Divider />
+   567→
+   568→          {/* Accent color */}
+   569→          <div className="py-3 px-4">
+   570→            <div className="flex items-center gap-3 mb-3">
+   571→              <div className="flex items-center justify-center w-9 h-9 rounded-xl
+   572→                              bg-white/[0.05] border border-white/30">
+   573→                <Palette className="w-4 h-4 text-white/50" />
+   574→              </div>
+   575→              <div>
+   576→                <p className="text-sm font-medium text-white/80">Cor de destaque</p>
+   577→                <p className="text-xs text-white/35 mt-0.5">
+   578→                  Atual: <span className="font-semibold" style={{ color: currentAccentColor }}>{currentAccentLabel}</span>
+   579→                </p>
+   580→              </div>
+   581→            </div>
+   582→            <ColorPicker
+   583→              colors={ACCENT_COLORS}
+   584→              value={accentColor}
+   585→              onChange={handleAccentColorChange}
+   586→            />
+   587→          </div>
+   588→
+   589→          <Divider />
+   590→
+   591→          <SettingRow>
+   592→            <SettingLabel
+   593→              label="Restaurar tema padrao"
+   594→              description="Volta para o modo escuro (tema padrao do TechMate)"
+   595→            />
+   596→            <button
+   597→              type="button"
+   598→              onClick={handleResetTheme}
+   599→              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium
+   600→                         bg-white/[0.04] border border-white/30 text-white/50
+   601→                         hover:bg-white/[0.07] hover:text-white/70 transition-colors cursor-pointer"
+   602→            >
+   603→              <RotateCcw className="w-3 h-3" />
+   604→              Restaurar
+   605→            </button>
+   606→          </SettingRow>
+   607→        </section>
+   608→
+   609→        {/* ══════════════════════════════════════════
+   610→            SECTION 3: PREFERENCIAS (tudo funcional!)
+   611→        ══════════════════════════════════════════ */}
+   612→        <section className="liquid-glass-card rounded-2xl p-5 sm:p-6 mb-5">
+   613→          <SectionTitle icon={Monitor} title="Preferencias" />
+   614→          <Divider />
+   615→
+   616→          {/* Font size — interactive selector */}
+   617→          <div className="py-3 px-4">
+   618→            <div className="flex items-center gap-3 mb-3">
+   619→              <div className="flex items-center justify-center w-9 h-9 rounded-xl
+   620→                              bg-emerald-500/[0.08] border border-emerald-500/15">
+   621→                <Type className="w-4 h-4 text-emerald-400" />
+   622→              </div>
+   623→              <div>
+   624→                <p className="text-sm font-medium text-white/80">Tamanho da fonte</p>
+   625→                <p className="text-xs text-white/35 mt-0.5">
+   626→                  Atual: <span className="font-semibold text-white/60">{currentFontLabel}</span>
+   627→                </p>
+   628→              </div>
+   629→            </div>
+   630→            <SegmentedControl
+   631→              options={FONT_SIZES.map((f) => ({ label: f.label, value: f.value }))}
+   632→              value={fontSize}
+   633→              onChange={handleFontSizeChange}
+   634→            />
+   635→            {/* Preview */}
+   636→            <div className="mt-3 px-3 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+   637→              <p className="text-white/50 transition-all duration-200"
+   638→                 style={{ fontSize: `${(FONT_SIZES.find((f) => f.value === fontSize)?.scale || 16)}px` }}>
+   639→                Exemplo de texto para preview do tamanho escolhido.
+   640→              </p>
+   641→            </div>
+   642→          </div>
+   643→
+   644→          <Divider />
+   645→
+   646→          {/* Reduced motion toggle */}
+   647→          <SettingRow>
+   648→            <div className="flex items-center gap-3 flex-1 mr-4">
+   649→              <div className="flex items-center justify-center w-9 h-9 rounded-xl border
+   650→                              bg-white/[0.05] border-white/30">
+   651→                {reducedMotion
+   652→                  ? <VolumeX className="w-4 h-4 text-white/50" />
+   653→                  : <Volume2 className="w-4 h-4 text-emerald-400" />}
+   654→              </div>
+   655→              <SettingLabel
+   656→                label="Animacoes reduzidas"
+   657→                description={reducedMotion
+   658→                  ? "Animacoes desativadas para melhor acessibilidade"
+   659→                  : "Ative para reduzir animacoes e efeitos visuais"}
+   660→              />
+   661→            </div>
+   662→            <ToggleSlider checked={reducedMotion} onChange={handleReducedMotionToggle} variant="v3" aria-label="Animações reduzidas" />
+   663→          </SettingRow>
+   664→
+   665→          <Divider />
+   666→
+   667→          {/* Compact mode toggle */}
+   668→          <SettingRow>
+   669→            <div className="flex items-center gap-3 flex-1 mr-4">
+   670→              <div className="flex items-center justify-center w-9 h-9 rounded-xl border
+   671→                              bg-white/[0.05] border-white/30">
+   672→                {compactMode
+   673→                  ? <Minimize2 className="w-4 h-4 text-emerald-400" />
+   674→                  : <Maximize2 className="w-4 h-4 text-white/50" />}
+   675→              </div>
+   676→              <SettingLabel
+   677→                label="Modo compacto"
+   678→                description={compactMode
+   679→                  ? "Espaçamento reduzido, mais conteúdo na tela"
+   680→                  : "Ative para reduzir espaçamentos e mostrar mais conteúdo"}
+   681→              />
+   682→            </div>
+   683→            <ToggleSlider checked={compactMode} onChange={handleCompactModeToggle} variant="v3" aria-label="Modo compacto" />
+   684→          </SettingRow>
+   685→
+   686→          <Divider />
+   687→
+   688→          {/* Language (locked to PT-BR for now) */}
+   689→          <SettingRow>
+   690→            <div className="flex items-center gap-3 flex-1 mr-4">
+   691→              <div className="flex items-center justify-center w-9 h-9 rounded-xl
+   692→                              bg-emerald-500/[0.08] border border-emerald-500/15">
+   693→                <Globe className="w-4 h-4 text-emerald-400" />
+   694→              </div>
+   695→              <SettingLabel
+   696→                label="Idioma"
+   697→                description="Portugues Brasileiro (unico idioma disponivel no momento)"
+   698→              />
+   699→            </div>
+   700→            <span className="text-xs font-medium text-white/30 px-2.5 py-1 rounded-lg
+   701→                           bg-white/[0.03] border border-white/[0.06]">
+   702→              PT-BR
+   703→            </span>
+   704→          </SettingRow>
+   705→
+   706→          <Divider />
+   707→
+   708→          {/* Keyboard shortcuts link */}
+   709→          <SettingRow>
+   710→            <div className="flex items-center gap-3 flex-1 mr-4">
+   711→              <div className="flex items-center justify-center w-9 h-9 rounded-xl
+   712→                              bg-emerald-500/[0.08] border border-emerald-500/15">
+   713→                <Keyboard className="w-4 h-4 text-emerald-400" />
+   714→              </div>
+   715→              <SettingLabel
+   716→                label="Atalhos de teclado"
+   717→                description="Atalhos rapidos para navegar no site"
+   718→              />
+   719→            </div>
+   720→            <Link
+   721→              href="/settings#shortcuts"
+   722→              className="flex items-center gap-1 text-xs text-emerald-400/70 hover:text-emerald-300 transition-colors"
+   723→            >
+   724→              Ver
+   725→              <ChevronRight className="w-3 h-3" />
+   726→            </Link>
+   727→          </SettingRow>
+   728→
+   729→          <Divider />
+   730→
+   731→          {/* Platform info */}
+   732→          <SettingRow>
+   733→            <div className="flex items-center gap-3 flex-1 mr-4">
+   734→              <div className="flex items-center justify-center w-9 h-9 rounded-xl
+   735→                              bg-emerald-500/[0.08] border border-emerald-500/15">
+   736→                <Smartphone className="w-4 h-4 text-emerald-400" />
+   737→              </div>
+   738→              <SettingLabel
+   739→                label="Plataforma"
+   740→                description="Dispositivo que você está usando"
+   741→              />
+   742→            </div>
+   743→            <span className="text-xs font-medium text-white/30 px-2.5 py-1 rounded-lg
+   744→                           bg-white/[0.03] border border-white/[0.06]">
+   745→              Web
+   746→            </span>
+   747→          </SettingRow>
+   748→        </section>
+   749→
+   750→        {/* ══════════════════════════════════════════
+   751→            SECTION 4: ARMAZENAMENTO
+   752→        ══════════════════════════════════════════ */}
+   753→        <section className="liquid-glass-card rounded-2xl p-5 sm:p-6 mb-5">
+   754→          <SectionTitle icon={HardDrive} title="Armazenamento" />
+   755→          <Divider />
+   756→
+   757→          <SettingRow>
+   758→            <div className="flex items-center gap-3 flex-1 mr-4">
+   759→              <div className="flex items-center justify-center w-9 h-9 rounded-xl
+   760→                              bg-emerald-500/[0.08] border border-emerald-500/15">
+   761→                <HardDrive className="w-4 h-4 text-emerald-400" />
+   762→              </div>
+   763→              <SettingLabel
+   764→                label="Dados salvos"
+   765→                description="Espaco usado pelo TechMate no seu navegador"
+   766→              />
+   767→            </div>
+   768→            <span className="text-sm font-mono text-white/40 tabular-nums">{storageSize}</span>
+   769→          </SettingRow>
+   770→
+   771→          {/* Storage breakdown */}
+   772→          <Divider />
+   773→          <div className="px-4 py-3">
+   774→            <p className="text-xs text-white/30 mb-2 font-medium uppercase tracking-wider">Dados armazenados</p>
+   775→            <div className="space-y-1.5">
+   776→              {[
+   777→                { label: "Tema", key: KEYS.theme },
+   778→                { label: "Tamanho da fonte", key: KEYS.fontSize },
+   779→                { label: "Animacoes reduzidas", key: KEYS.reducedMotion },
+   780→                { label: "Modo compacto", key: KEYS.compactMode },
+   781→                { label: "Cor de destaque", key: KEYS.accentColor },
+   782→              ].map((item) => {
+   783→                const val = getStored(item.key);
+   784→                return (
+   785→                  <div key={item.key} className="flex items-center justify-between py-1.5">
+   786→                    <span className="text-xs text-white/45">{item.label}</span>
+   787→                    <span className="text-xs text-white/25 font-mono truncate max-w-[140px]">
+   788→                      {val || "(vazio)"}
+   789→                    </span>
+   790→                  </div>
+   791→                );
+   792→              })}
+   793→            </div>
+   794→          </div>
+   795→
+   796→          <Divider />
+   797→
+   798→          <div className="py-3 px-4">
+   799→            <div className="flex items-center gap-2 mb-3">
+   800→              <Shield className="w-4 h-4 text-white/25" />
+   801→              <p className="text-xs text-white/30">
+   802→                Todos os dados sao armazenados localmente no seu navegador. Nada e enviado para servidores.
+   803→              </p>
+   804→            </div>
+   805→            <DangerButton onClick={handleClearData}>
+   806→              Limpar todos os dados
+   807→            </DangerButton>
+   808→          </div>
+   809→        </section>
+   810→
+   811→        {/* ══════════════════════════════════════════
+   812→            SECTION 5: ATALHOS DE TECLADO
+   813→        ══════════════════════════════════════════ */}
+   814→        <section className="liquid-glass-card rounded-2xl p-5 sm:p-6 mb-5" id="shortcuts">
+   815→          <SectionTitle icon={Keyboard} title="Atalhos de Teclado" />
+   816→          <Divider />
+   817→
+   818→          <div className="space-y-0.5 py-2">
+   819→            {[
+   820→              { keys: ["Ctrl", "K"], desc: "Abrir busca" },
+   821→              { keys: ["Ctrl", "/"], desc: "Ir para blog" },
+   822→              { keys: ["Esc"], desc: "Fechar painel/busca" },
+   823→              { keys: ["T"], desc: "Ir para o topo" },
+   824→            ].map((shortcut) => (
+   825→              <div key={shortcut.desc} className="flex items-center justify-between px-4 py-2.5">
+   826→                <span className="text-sm text-white/50">{shortcut.desc}</span>
+   827→                <div className="flex items-center gap-1">
+   828→                  {shortcut.keys.map((key, i) => (
+   829→                    <span key={i}>
+   830→                      <kbd className="inline-flex items-center justify-center px-2 py-0.5 rounded-md
+   831→                                   text-[11px] font-mono font-medium
+   832→                                   bg-white/[0.06] border border-white/30
+   833→                                   text-white/40 min-w-[1.75rem]">
+   834→                        {key}
+   835→                      </kbd>
+   836→                      {i < shortcut.keys.length - 1 && (
+   837→                        <span className="text-white/15 mx-0.5 text-[10px]">+</span>
+   838→                      )}
+   839→                    </span>
+   840→                  ))}
+   841→                </div>
+   842→              </div>
+   843→            ))}
+   844→          </div>
+   845→        </section>
+   846→
+   847→        {/* ══════════════════════════════════════════
+   848→            SECTION 6: SOBRE
+   849→        ══════════════════════════════════════════ */}
+   850→        <section className="liquid-glass-card rounded-2xl p-5 sm:p-6 mb-5">
+   851→          <SectionTitle icon={Info} title="Sobre o TechMate" />
+   852→          <Divider />
+   853→
+   854→          <div className="flex items-center gap-4 py-4 px-4">
+   855→            <Logo className="w-14 h-14" glow />
+   856→            <div>
+   857→              <h3 className="text-base font-bold text-white/90">TechMate</h3>
+   858→              <p className="text-xs text-white/35 mt-0.5">Seu parceiro em tech</p>
+   859→              <p className="text-[10px] text-white/20 mt-1 font-mono">v1.0.0</p>
+   860→            </div>
+   861→          </div>
+   862→
+   863→          <Divider />
+   864→
+   865→          <SettingRow>
+   866→            <SettingLabel label="Feito com" />
+   867→            <div className="flex items-center gap-1 text-red-400/60 text-xs">
+   868→              <Heart className="w-3 h-3" />
+   869→              <span>por Micael</span>
+   870→            </div>
+   871→          </SettingRow>
+   872→
+   873→          <Divider />
+   874→
+   875→          <SettingRow>
+   876→            <SettingLabel
+   877→              label="Tecnologias"
+   878→              description="Next.js, React, Tailwind CSS, TypeScript"
+   879→            />
+   880→            <div className="flex items-center gap-1.5">
+   881→              {["Next.js", "React", "Tailwind"].map((tech) => (
+   882→                <span
+   883→                  key={tech}
+   884→                  className="px-2 py-0.5 rounded-md text-[10px] font-medium
+   885→                           bg-white/[0.04] border border-white/30 text-white/35"
+   886→                >
+   887→                  {tech}
+   888→                </span>
+   889→              ))}
+   890→            </div>
+   891→          </SettingRow>
+   892→
+   893→          <Divider />
+   894→
+   895→          <div className="py-3 px-4">
+   896→            <p className="text-xs text-white/25 leading-relaxed">
+   897→              TechMate é um blog independente focado em conteúdo técnico honesto e prático.
+   898→              Tutoriais sobre Linux, Windows, desenvolvimento, segurança e gaming.
+   899→              Sem enrolação, direto ao ponto.
+   900→            </p>
+   901→          </div>
+   902→        </section>
+   903→
+   904→        {/* ── Footer ── */}
+   905→        <div className="flex items-center justify-center gap-2 pt-4 pb-2">
+   906→          <Zap className="w-3 h-3 text-emerald-400/30" />
+   907→          <p className="text-[11px] text-white/15">TechMate v1.0.0</p>
+   908→        </div>
+   909→
+   910→      </div>
+   911→    </div>
+   912→  );
+   913→}
+   914→
