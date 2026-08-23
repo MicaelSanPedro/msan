@@ -28,12 +28,35 @@
   --r-xl: 2rem;
   --r-2xl: 2.5rem;
 
-  /* ═══ Liquid Glass 3D System Variables ═══ */
+  /* ═══ PERFORMANCE: Kill decorative pseudo-elements + overlays ═══ */
+.liquid-glass::before, .liquid-glass::after,
+.liquid-glass-nav::before, .liquid-glass-nav::after,
+.liquid-glass-card::before, .liquid-glass-card::after,
+.liquid-glass-pill::before, .liquid-glass-pill::after,
+.liquid-glass-panel::before, .liquid-glass-panel::after,
+.liquid-glass-input::before, .liquid-glass-input::after,
+.glass-card::before, .glass-card::after,
+.glass-nav::before, .glass-nav::after,
+.glass-input::before, .glass-input::after,
+.btn-primary::before, .btn-primary::after,
+.btn-secondary::before, .btn-secondary::after {
+  display: none !important;
+}
+.cinema-grain, .light-leak, .bokeh-canvas, .noise-overlay,
+.cinema-vignette, .site-backdrop, .mesh-bg,
+.ambient-orb, .liquid-refraction {
+  display: none !important;
+}
+.shimmer-text { animation: none !important; -webkit-text-fill-color: var(--foreground); }
+.card-shine::after, .spotlight::before { display: none !important; }
+
+/* ═══ Liquid Glass 3D System Variables ═══ */
+:root {
   --glass-bg-1: rgba(255, 255, 255, 0.14);
   --glass-bg-2: rgba(255, 255, 255, 0.04);
   --glass-bg-3: rgba(255, 255, 255, 0.07);
-  --glass-blur: 24px;
-  --glass-saturate: 220%;
+  --glass-blur: 8px;
+  --glass-saturate: 160%;
   --glass-contrast: 105%;
   --glass-border-opacity: 0.35;
   --glass-transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
@@ -42,18 +65,13 @@
     background 0.5s cubic-bezier(0.16, 1, 0.3, 1),
     opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 
-  /* Volumetric shadow system */
+  /* Volumetric shadow system — lightweight */
   --glass-volumetric:
-    inset 0 2px 4px 0 rgba(255, 255, 255, 0.8),
-    inset 0 -4px 12px 0 rgba(255, 255, 255, 0.15),
-    inset 0 -10px 20px 0 rgba(0, 0, 0, 0.2),
-    0 30px 60px -12px rgba(0, 0, 0, 0.35);
+    inset 0 1px 2px 0 rgba(255, 255, 255, 0.5),
+    0 8px 24px -8px rgba(0, 0, 0, 0.3);
   --glass-volumetric-hover:
-    inset 0 2px 4px 0 rgba(255, 255, 255, 0.9),
-    inset 0 -4px 12px 0 rgba(255, 255, 255, 0.2),
-    inset 0 -10px 20px 0 rgba(0, 0, 0, 0.15),
-    0 40px 80px -12px rgba(0, 0, 0, 0.45),
-    0 0 0 1px rgba(52, 211, 153, 0.12);
+    inset 0 1px 2px 0 rgba(255, 255, 255, 0.6),
+    0 12px 32px -8px rgba(0, 0, 0, 0.35);
 
   /* Mouse-tracking light position (updated by JS) */
   --light-x: 50%;
@@ -395,8 +413,8 @@ html:not(.dark) .card-shine::after {
 html:not(.dark) .category-card {
   background: linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0.2) 100%) !important;
   box-shadow: 0 8px 32px -8px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.5) !important;
-  backdrop-filter: blur(40px) saturate(180%) brightness(102%) !important;
-  -webkit-backdrop-filter: blur(40px) saturate(180%) brightness(102%) !important;
+  backdrop-filter: blur(12px) saturate(180%) brightness(102%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(180%) brightness(102%) !important;
 }
 /* Specular top highlight */
 html:not(.dark) .category-card > div:first-child {
@@ -452,6 +470,8 @@ html:not(.dark) .liquid-glass-mobile-menu a[class*="shadow-"] {
   --tw-shadow-colored: inset 0 1px 0 rgba(255,255,255,0.3) !important;
   box-shadow: var(--tw-shadow-offset, 0 0 0 0) var(--tw-ring-offset, 0 0 0 0) var(--tw-ring, 0 0 0 0), var(--tw-shadow) !important;
 }
+
+} /* close html:not(.dark) */
 
 @layer base {
   * {
@@ -673,51 +693,15 @@ html:not(.dark) .liquid-glass-mobile-menu a[class*="shadow-"] {
   box-shadow: var(--glass-volumetric);
   overflow: hidden;
   transition: var(--glass-transition);
-  animation: refraction-pulse 8s ease-in-out infinite;
+    /* animation removed for performance */
 }
 
-/* ::before = Glossy surface reflection layer */
-.liquid-glass::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 5%;
-  right: 5%;
-  height: 1.5px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.5) 15%,
-    rgba(255, 255, 255, 0.85) 50%,
-    rgba(255, 255, 255, 0.5) 85%,
-    transparent 100%
-  );
-  z-index: 3;
-  pointer-events: none;
-  animation: specular-shift 6s ease-in-out infinite;
-}
+/* ::before = Glossy surface — disabled for performance */
+/* .liquid-glass::before removed */
 
-/* ::after = Volumetric glass mass + caustic inner glow */
-.liquid-glass::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background:
-    radial-gradient(
-      ellipse 60% 40% at var(--light-x, 50%) var(--light-y, 20%),
-      rgba(255, 255, 255, 0.12) 0%,
-      transparent 55%
-    ),
-    radial-gradient(
-      ellipse 80% 60% at calc(100% - var(--light-x, 50%)) calc(100% - var(--light-y, 20%)),
-      rgba(52, 211, 153, 0.03) 0%,
-      transparent 50%
-    );
-  pointer-events: none;
-  z-index: 1;
-  animation: caustic-shadow-move 10s ease-in-out infinite;
-}
+/* ::after = Caustic shadow projection — disabled for performance */
+/* .liquid-glass::after removed */
+
 .liquid-glass > * {
   position: relative;
   z-index: 2;
@@ -736,7 +720,7 @@ html:not(.dark) .liquid-glass-mobile-menu a[class*="shadow-"] {
   border-bottom: 1.5px solid rgba(255, 255, 255, var(--glass-border-opacity));
   box-shadow: var(--glass-volumetric);
   transition: var(--glass-transition);
-  animation: refraction-pulse 8s ease-in-out infinite;
+    /* animation removed for performance */
 }
 .liquid-glass-nav::before {
   content: '';
@@ -802,7 +786,7 @@ html:not(.dark) .liquid-glass-mobile-menu a[class*="shadow-"] {
   box-shadow: var(--glass-volumetric);
   overflow: hidden;
   transition: var(--glass-transition);
-  animation: refraction-pulse 8s ease-in-out infinite;
+    /* animation removed for performance */
 }
 .liquid-glass-card::before {
   content: '';
@@ -881,7 +865,7 @@ html:not(.dark) .liquid-glass-mobile-menu a[class*="shadow-"] {
   box-shadow: var(--glass-volumetric);
   overflow: hidden;
   transition: var(--glass-transition);
-  animation: refraction-pulse 8s ease-in-out infinite;
+    /* animation removed for performance */
 }
 .liquid-glass-pill::before {
   content: '';
@@ -1131,7 +1115,7 @@ html:not(.dark) .liquid-glass-mobile-menu a[class*="shadow-"] {
   box-shadow: var(--glass-volumetric);
   overflow: hidden;
   transition: var(--glass-transition);
-  animation: refraction-pulse 8s ease-in-out infinite;
+    /* animation removed for performance */
 }
 .glass-card::before {
   content: '';
@@ -2656,8 +2640,8 @@ html:not(.dark) .liquid-glass-mobile-menu a[class*="shadow-"] {
   border-radius: 0.75rem;
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(40px);
-  -webkit-backdrop-filter: blur(40px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   color: rgba(255, 255, 255, 0.9);
   font-size: 1rem;
   font-weight: 400;
@@ -2833,8 +2817,8 @@ html:not(.dark) .liquid-glass-mobile-menu a[class*="shadow-"] {
 .welcome-photo-btn--skip {
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(40px);
-  -webkit-backdrop-filter: blur(40px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   color: rgba(255, 255, 255, 0.4);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
@@ -2903,8 +2887,8 @@ html:not(.dark) .liquid-glass-mobile-menu a[class*="shadow-"] {
   width: 280px;
   z-index: 100;
   border-radius: 1rem;
-  backdrop-filter: blur(50px) saturate(200%);
-  -webkit-backdrop-filter: blur(50px) saturate(200%);
+  backdrop-filter: blur(12px) saturate(200%);
+  -webkit-backdrop-filter: blur(12px) saturate(200%);
   background: rgba(15, 13, 18, 0.85);
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow:
@@ -3165,8 +3149,8 @@ html:not(.dark) .liquid-glass-mobile-menu a[class*="shadow-"] {
     rgba(18, 18, 22, 0.92) 0%,
     rgba(12, 12, 14, 0.96) 100%
   );
-  backdrop-filter: blur(50px) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
-  -webkit-backdrop-filter: blur(50px) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  backdrop-filter: blur(12px) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
+  -webkit-backdrop-filter: blur(12px) saturate(var(--glass-saturate)) contrast(var(--glass-contrast));
   border: 1.5px solid rgba(255, 255, 255, var(--glass-border-opacity));
   border-radius: 20px;
   box-shadow: var(--glass-volumetric);
@@ -3273,8 +3257,8 @@ html:not(.dark) .mobile-search-results::before {
     rgba(14, 14, 18, 0.97) 0%,
     rgba(10, 10, 12, 0.99) 100%
   );
-  backdrop-filter: blur(60px) saturate(200%) brightness(108%);
-  -webkit-backdrop-filter: blur(60px) saturate(200%) brightness(108%);
+  backdrop-filter: blur(14px) saturate(200%) brightness(108%);
+  -webkit-backdrop-filter: blur(14px) saturate(200%) brightness(108%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -3686,8 +3670,8 @@ button, a, [role="button"] {
 @media (max-width: 640px) {
   /* ── 1. Slash blur intensity (biggest GPU saver) ── */
   :root {
-    --glass-blur: 10px;
-    --glass-saturate: 140%;
+    --glass-blur: 6px;
+    --glass-saturate: 120%;
     --glass-volumetric:
       inset 0 1px 2px 0 rgba(255, 255, 255, 0.5),
       0 8px 24px -8px rgba(0, 0, 0, 0.3);
@@ -3848,13 +3832,11 @@ button, a, [role="button"] {
     animation: none !important;
     -webkit-text-fill-color: var(--foreground);
   }
-  .card-shine::after {
-    display: none !important;
-  }
+  .card-shine::after,
   .spotlight::before {
     display: none !important;
   }
-}
+} /* close @media max-width:640px */
 
 /* ─── Physical 3D Toggle Sliders ────────────────────── */
 /* Hidden real checkbox */
