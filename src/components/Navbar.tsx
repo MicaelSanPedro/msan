@@ -398,7 +398,7 @@ export function Navbar({ allPosts }: NavbarProps) {
                 {avatarUrl ? (
                   <div className="w-14 h-14 rounded-full overflow-hidden shrink-0
                               border-2 border-emerald-400/25
-                              shadow-[0_0_20px_rgba(52,211,153,0.2)]">
+                              shadow-[0_0_20px_var(--accent-glow)]">
                     <img src={avatarUrl} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                   </div>
                 ) : (
