@@ -33,6 +33,7 @@ import {
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { ToggleSlider } from "@/components/ToggleSlider";
+import { applyAccentToRoot, type AccentPreset } from "@/lib/accent-utils";
 import { useSession } from "next-auth/react";
 
 /* ─── Storage helpers ─── */
@@ -101,11 +102,11 @@ const FONT_SIZES = [
 
 /* ─── Accent colors ─── */
 const ACCENT_COLORS = [
-  { label: "Esmeralda", value: "emerald", primary: "#10b981", glow: "rgba(16,185,129,0.45)" },
-  { label: "Azul", value: "blue", primary: "#3b82f6", glow: "rgba(59,130,246,0.45)" },
-  { label: "Violeta", value: "violet", primary: "#8b5cf6", glow: "rgba(139,92,246,0.45)" },
-  { label: "Rosa", value: "rose", primary: "#f43f5e", glow: "rgba(244,63,94,0.45)" },
-  { label: "Ciano", value: "cyan", primary: "#06b6d4", glow: "rgba(6,182,212,0.45)" },
+  { label: "Esmeralda", value: "emerald", primary: "#10b981", secondary: "#6ee7b7", deep: "#059669", glow: "rgba(16,185,129,0.45)" },
+  { label: "Azul", value: "blue", primary: "#3b82f6", secondary: "#93c5fd", deep: "#2563eb", glow: "rgba(59,130,246,0.45)" },
+  { label: "Violeta", value: "violet", primary: "#8b5cf6", secondary: "#c4b5fd", deep: "#7c3aed", glow: "rgba(139,92,246,0.45)" },
+  { label: "Rosa", value: "rose", primary: "#f43f5e", secondary: "#fda4af", deep: "#e11d48", glow: "rgba(244,63,94,0.45)" },
+  { label: "Ciano", value: "cyan", primary: "#06b6d4", secondary: "#67e8f9", deep: "#0891b2", glow: "rgba(6,182,212,0.45)" },
 ] as const;
 
 /* ─── Sub-components ─── */
@@ -338,10 +339,8 @@ export default function SettingsPage() {
   const applyAccentColor = useCallback((color: string) => {
     const preset = ACCENT_COLORS.find((c) => c.value === color);
     if (!preset) return;
-    const root = document.documentElement;
-    root.style.setProperty("--accent", preset.primary);
-    root.style.setProperty("--accent-glow", preset.glow);
-    root.setAttribute("data-accent", color);
+    applyAccentToRoot(document.documentElement, preset as unknown as AccentPreset);
+    document.documentElement.setAttribute("data-accent", color);
   }, []);
 
   /* Apply on mount */
