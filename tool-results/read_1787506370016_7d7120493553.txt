@@ -1,0 +1,913 @@
+     1→"use client";
+     2→
+     3→import { useState, useEffect, useCallback } from "react";
+     4→import Link from "next/link";
+     5→import {
+     6→  User,
+     7→  Moon,
+     8→  Sun,
+     9→  Trash2,
+    10→  ChevronRight,
+    11→  ArrowLeft,
+    12→  Shield,
+    13→  Type,
+    14→  Monitor,
+    15→  Smartphone,
+    16→  Info,
+    17→  Heart,
+    18→  Zap,
+    19→  RotateCcw,
+    20→  HardDrive,
+    21→  Palette,
+    22→  Keyboard,
+    23→  Globe,
+    24→  Sparkles,
+    25→  Volume2,
+    26→  VolumeX,
+    27→  Minimize2,
+    28→  Maximize2,
+    29→  Check,
+    30→  Clock,
+    31→  Layout,
+    32→  Eye,
+    33→} from "lucide-react";
+    34→import { Logo } from "@/components/Logo";
+    35→import { ToggleSlider } from "@/components/ToggleSlider";
+    36→import { applyAccentToRoot, type AccentPreset } from "@/lib/accent-utils";
+    37→import { useSession } from "next-auth/react";
+    38→
+    39→/* ─── Storage helpers ─── */
+    40→const KEYS = {
+    41→  theme: "techmate_theme",
+    42→  fontSize: "techmate_font_size",
+    43→  reducedMotion: "techmate_reduced_motion",
+    44→  compactMode: "techmate_compact_mode",
+    45→  accentColor: "techmate_accent_color",
+    46→} as const;
+    47→
+    48→function getStored(key: string): string | null {
+    49→  if (typeof window === "undefined") return null;
+    50→  try { return localStorage.getItem(key); } catch { return null; }
+    51→}
+    52→function setStored(key: string, val: string) {
+    53→  try { localStorage.setItem(key, val); } catch { /* ignore */ }
+    54→}
+    55→function removeStored(key: string) {
+    56→  try { localStorage.removeItem(key); } catch { /* ignore */ }
+    57→}
+    58→
+    59→function getStorageSize(): string {
+    60→  if (typeof window === "undefined") return "0 B";
+    61→  try {
+    62→    let total = 0;
+    63→    for (const key of Object.keys(localStorage)) {
+    64→      total += (localStorage.getItem(key) || "").length;
+    65→    }
+    66→    if (total < 1024) return `${total} B`;
+    67→    return `${(total / 1024).toFixed(1)} KB`;
+    68→  } catch { return "0 B"; }
+    69→}
+    70→function getVisitCount(): number {
+    71→  try {
+    72→    const stored = localStorage.getItem("techmate_visits");
+    73→    if (stored) {
+    74→      const count = parseInt(stored, 10) + 1;
+    75→      localStorage.setItem("techmate_visits", String(count));
+    76→      return count;
+    77→    }
+    78→    localStorage.setItem("techmate_visits", "1");
+    79→    return 1;
+    80→  }
+    81→  catch { return 1; }
+    82→}
+    83→function getFirstVisit(): string {
+    84→  try {
+    85→    const stored = localStorage.getItem("techmate_first_visit");
+    86→    if (stored) return stored;
+    87→    const now = new Date();
+    88→    const formatted = `${now.getDate().toString().padStart(2, "0")}/${(now.getMonth() + 1).toString().padStart(2, "0")}/${now.getFullYear()}`;
+    89→    localStorage.setItem("techmate_first_visit", formatted);
+    90→    return formatted;
+    91→  }
+    92→  catch { return "Hoje"; }
+    93→}
+    94→
+    95→/* ─── Font size presets ─── */
+    96→const FONT_SIZES = [
+    97→  { label: "Pequeno", value: "small", scale: 14, desc: "Textos mais compactos" },
+    98→  { label: "Padrao", value: "medium", scale: 16, desc: "Tamanho original do site" },
+    99→  { label: "Grande", value: "large", scale: 18, desc: "Textos maiores e mais legiveis" },
+   100→  { label: "Extra grande", value: "xlarge", scale: 20, desc: "Maxima legibilidade" },
+   101→] as const;
+   102→
+   103→/* ─── Accent colors ─── */
+   104→const ACCENT_COLORS = [
+   105→  { label: "Esmeralda", value: "emerald", primary: "#10b981", secondary: "#6ee7b7", deep: "#059669", glow: "rgba(16,185,129,0.45)" },
+   106→  { label: "Azul", value: "blue", primary: "#3b82f6", secondary: "#93c5fd", deep: "#2563eb", glow: "rgba(59,130,246,0.45)" },
+   107→  { label: "Violeta", value: "violet", primary: "#8b5cf6", secondary: "#c4b5fd", deep: "#7c3aed", glow: "rgba(139,92,246,0.45)" },
+   108→  { label: "Rosa", value: "rose", primary: "#f43f5e", secondary: "#fda4af", deep: "#e11d48", glow: "rgba(244,63,94,0.45)" },
+   109→  { label: "Ciano", value: "cyan", primary: "#06b6d4", secondary: "#67e8f9", deep: "#0891b2", glow: "rgba(6,182,212,0.45)" },
+   110→] as const;
+   111→
+   112→/* ─── Sub-components ─── */
+   113→
+   114→function SectionTitle({ icon: Icon, title }: { icon: React.ElementType; title: string }) {
+   115→  return (
+   116→    <div className="flex items-center gap-2.5 mb-4">
+   117→      <div className="flex items-center justify-center w-8 h-8 rounded-xl
+   118→                      bg-emerald-500/[0.08] border border-emerald-500/15">
+   119→        <Icon className="w-4 h-4 text-emerald-400" />
+   120→      </div>
+   121→      <h2 className="text-base font-bold text-white/90">{title}</h2>
+   122→    </div>
+   123→  );
+   124→}
+   125→
+   126→function SettingRow({ children }: { children: React.ReactNode }) {
+   127→  return (
+   128→    <div className="flex items-center justify-between px-4 py-3.5 rounded-xl
+   129→                    hover:bg-white/[0.03] transition-colors duration-200">
+   130→      {children}
+   131→    </div>
+   132→  );
+   133→}
+   134→
+   135→function SettingLabel({ label, description }: { label: string; description?: string }) {
+   136→  return (
+   137→    <div className="flex-1 mr-4">
+   138→      <p className="text-sm font-medium text-white/80">{label}</p>
+   139→      {description && <p className="text-xs text-white/35 mt-0.5">{description}</p>}
+   140→    </div>
+   141→  );
+   142→}
+   143→
+   144→/* Toggle component replaced by ToggleSlider (v1/v2/v3 physical sliders) */
+   145→
+   146→function DangerButton({ onClick, children }: { onClick: () => void; children: React.ReactNode }) {
+   147→  const [confirm, setConfirm] = useState(false);
+   148→
+   149→  if (!confirm) {
+   150→    return (
+   151→      <button
+   152→        type="button"
+   153→        onClick={() => setConfirm(true)}
+   154→        className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold
+   155→                   border border-red-500/20 bg-red-500/[0.08] text-red-400
+   156→                   hover:bg-red-500/[0.15] transition-colors cursor-pointer"
+   157→      >
+   158→        <Trash2 className="w-3.5 h-3.5" />
+   159→        {children}
+   160→      </button>
+   161→    );
+   162→  }
+   163→
+   164→  return (
+   165→    <div className="flex items-center gap-2">
+   166→      <p className="text-[11px] text-red-400/70 mr-1">Tem certeza?</p>
+   167→      <button
+   168→        type="button"
+   169→        onClick={() => { onClick(); setConfirm(false); }}
+   170→        className="px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer
+   171→                   border border-red-500/30 bg-red-500/[0.15] text-red-400
+   172→                   hover:bg-red-500/[0.25] transition-colors"
+   173→      >
+   174→        Sim, limpar
+   175→      </button>
+   176→      <button
+   177→        type="button"
+   178→        onClick={() => setConfirm(false)}
+   179→        className="px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer
+   180→                   border border-white/30 bg-white/[0.03] text-white/40
+   181→                   hover:bg-white/[0.06] transition-colors"
+   182→      >
+   183→        Cancelar
+   184→      </button>
+   185→    </div>
+   186→  );
+   187→}
+   188→
+   189→function Divider() {
+   190→  return <div className="h-px mx-4 my-1 bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />;
+   191→}
+   192→
+   193→/* Segmented control for selecting from options */
+   194→function SegmentedControl<T extends string>({
+   195→  options,
+   196→  value,
+   197→  onChange,
+   198→  renderLabel,
+   199→}: {
+   200→  options: readonly { label: string; value: T; desc?: string }[];
+   201→  value: T;
+   202→  onChange: (val: T) => void;
+   203→  renderLabel?: (opt: { label: string; value: T; desc?: string }) => string;
+   204→}) {
+   205→  return (
+   206→    <div className="flex flex-wrap gap-1.5">
+   207→      {options.map((opt) => {
+   208→        const isActive = value === opt.value;
+   209→        return (
+   210→          <button
+   211→            key={opt.value}
+   212→            type="button"
+   213→            onClick={() => onChange(opt.value)}
+   214→            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer
+   215→                       ${isActive
+   216→                         ? "bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 shadow-[0_0_12px_rgba(52,211,153,0.15)]"
+   217→                         : "bg-white/[0.03] border border-white/30 text-white/40 hover:bg-white/[0.06] hover:text-white/60"}`}
+   218→          >
+   219→            {renderLabel ? renderLabel(opt) : opt.label}
+   220→            {isActive && <Check className="w-3 h-3 inline ml-1" />}
+   221→          </button>
+   222→        );
+   223→      })}
+   224→    </div>
+   225→  );
+   226→}
+   227→
+   228→/* Color picker grid */
+   229→function ColorPicker({
+   230→  colors,
+   231→  value,
+   232→  onChange,
+   233→}: {
+   234→  colors: typeof ACCENT_COLORS;
+   235→  value: string;
+   236→  onChange: (val: string) => void;
+   237→}) {
+   238→  return (
+   239→    <div className="flex flex-wrap gap-2">
+   240→      {colors.map((c) => {
+   241→        const isActive = value === c.value;
+   242→        return (
+   243→          <button
+   244→            key={c.value}
+   245→            type="button"
+   246→            onClick={() => onChange(c.value)}
+   247→            className="relative w-9 h-9 rounded-xl border-2 transition-all duration-200 cursor-pointer
+   248→                       hover:scale-110 active:scale-95"
+   249→            style={{
+   250→              backgroundColor: c.primary,
+   251→              borderColor: isActive ? c.primary : "transparent",
+   252→              boxShadow: isActive ? `0 0 16px ${c.glow}` : "none",
+   253→              opacity: isActive ? 1 : 0.5,
+   254→            }}
+   255→            title={c.label}
+   256→          >
+   257→            {isActive && (
+   258→              <Check className="w-4 h-4 text-white absolute inset-0 m-auto drop-shadow-md" />
+   259→            )}
+   260→          </button>
+   261→        );
+   262→      })}
+   263→    </div>
+   264→  );
+   265→}
+   266→
+   267→/* ─── Main Settings Page ─── */
+   268→
+   269→export default function SettingsPage() {
+   270→  const { data: session } = useSession();
+   271→  const [theme, setTheme] = useState<"dark" | "light">("dark");
+   272→  const [fontSize, setFontSize] = useState<string>("medium");
+   273→  const [reducedMotion, setReducedMotion] = useState(false);
+   274→  const [compactMode, setCompactMode] = useState(false);
+   275→  const [accentColor, setAccentColor] = useState("emerald");
+   276→  const [mounted, setMounted] = useState(false);
+   277→  const [storageSize, setStorageSize] = useState("0 B");
+   278→  const [visitCount, setVisitCount] = useState(1);
+   279→  const [firstVisit, setFirstVisit] = useState("Hoje");
+   280→  const [savedMsg, setSavedMsg] = useState("");
+   281→
+   282→  const hydrate = useCallback(() => {
+   283→    setMounted(true);
+   284→
+   285→    const t = getStored(KEYS.theme);
+   286→    if (t === "light") setTheme("light");
+   287→
+   288→    const fs = getStored(KEYS.fontSize);
+   289→    if (fs) setFontSize(fs);
+   290→
+   291→    const rm = getStored(KEYS.reducedMotion);
+   292→    if (rm === "true") setReducedMotion(true);
+   293→
+   294→    const cm = getStored(KEYS.compactMode);
+   295→    if (cm === "true") setCompactMode(true);
+   296→
+   297→    const ac = getStored(KEYS.accentColor);
+   298→    if (ac) setAccentColor(ac);
+   299→
+   300→    setStorageSize(getStorageSize());
+   301→    setVisitCount(getVisitCount());
+   302→    setFirstVisit(getFirstVisit());
+   303→  }, []);
+   304→
+   305→  useEffect(() => { hydrate(); }, [hydrate]);
+   306→
+   307→  /* ── Apply preferences to document ── */
+   308→  const applyFontSize = useCallback((size: string) => {
+   309→    const root = document.documentElement;
+   310→    const preset = FONT_SIZES.find((f) => f.value === size);
+   311→    if (preset) {
+   312→      const scale = preset.scale / 16;
+   313→      root.style.setProperty("--user-font-scale", String(scale));
+   314→      root.style.fontSize = `${preset.scale}px`;
+   315→    } else {
+   316→      root.style.removeProperty("--user-font-scale");
+   317→      root.style.fontSize = "";
+   318→    }
+   319→  }, []);
+   320→
+   321→  const applyReducedMotion = useCallback((enabled: boolean) => {
+   322→    const root = document.documentElement;
+   323→    if (enabled) {
+   324→      root.classList.add("reduced-motion");
+   325→    } else {
+   326→      root.classList.remove("reduced-motion");
+   327→    }
+   328→  }, []);
+   329→
+   330→  const applyCompactMode = useCallback((enabled: boolean) => {
+   331→    const root = document.documentElement;
+   332→    if (enabled) {
+   333→      root.classList.add("compact-mode");
+   334→    } else {
+   335→      root.classList.remove("compact-mode");
+   336→    }
+   337→  }, []);
+   338→
+   339→  const applyAccentColor = useCallback((color: string) => {
+   340→    const preset = ACCENT_COLORS.find((c) => c.value === color);
+   341→    if (!preset) return;
+   342→    applyAccentToRoot(document.documentElement, preset as unknown as AccentPreset);
+   343→    document.documentElement.setAttribute("data-accent", color);
+   344→  }, []);
+   345→
+   346→  /* Apply on mount */
+   347→  useEffect(() => {
+   348→    if (!mounted) return;
+   349→    applyFontSize(fontSize);
+   350→    applyReducedMotion(reducedMotion);
+   351→    applyCompactMode(compactMode);
+   352→    applyAccentColor(accentColor);
+   353→  }, [mounted, fontSize, reducedMotion, compactMode, accentColor, applyFontSize, applyReducedMotion, applyCompactMode, applyAccentColor]);
+   354→
+   355→  const showSaved = useCallback(() => {
+   356→    setSavedMsg("Salvo!");
+   357→    setTimeout(() => setSavedMsg(""), 2000);
+   358→  }, []);
+   359→
+   360→  /* ── Handlers ── */
+   361→  const handleThemeToggle = () => {
+   362→    const next = theme === "dark" ? "light" : "dark";
+   363→    setTheme(next);
+   364→    setStored(KEYS.theme, next);
+   365→    if (next === "light") {
+   366→      document.documentElement.classList.remove("dark");
+   367→      const m = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null;
+   368→      if (m) m.content = "#f0f5f2";
+   369→    } else {
+   370→      document.documentElement.classList.add("dark");
+   371→      const m = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null;
+   372→      if (m) m.content = "#060a08";
+   373→    }
+   374→    showSaved();
+   375→  };
+   376→
+   377→  const handleFontSizeChange = (val: string) => {
+   378→    setFontSize(val);
+   379→    setStored(KEYS.fontSize, val);
+   380→    applyFontSize(val);
+   381→    showSaved();
+   382→  };
+   383→
+   384→  const handleReducedMotionToggle = (val: boolean) => {
+   385→    setReducedMotion(val);
+   386→    setStored(KEYS.reducedMotion, String(val));
+   387→    applyReducedMotion(val);
+   388→    showSaved();
+   389→  };
+   390→
+   391→  const handleCompactModeToggle = (val: boolean) => {
+   392→    setCompactMode(val);
+   393→    setStored(KEYS.compactMode, String(val));
+   394→    applyCompactMode(val);
+   395→    showSaved();
+   396→  };
+   397→
+   398→  const handleAccentColorChange = (val: string) => {
+   399→    setAccentColor(val);
+   400→    setStored(KEYS.accentColor, val);
+   401→    applyAccentColor(val);
+   402→    showSaved();
+   403→  };
+   404→
+   405→  const handleClearData = () => {
+   406→    try { localStorage.clear(); } catch { /* ignore */ }
+   407→    setTheme("dark");
+   408→    setFontSize("medium");
+   409→    setReducedMotion(false);
+   410→    setCompactMode(false);
+   411→    setAccentColor("emerald");
+   412→    setStorageSize("0 B");
+   413→    setVisitCount(0);
+   414→    setFirstVisit("Hoje");
+   415→    localStorage.removeItem("techmate_visits");
+   416→    localStorage.removeItem("techmate_first_visit");
+   417→    document.documentElement.classList.add("dark");
+   418→    document.documentElement.classList.remove("reduced-motion", "compact-mode");
+   419→    document.documentElement.style.removeProperty("--user-font-scale");
+   420→    document.documentElement.style.fontSize = "";
+   421→    document.documentElement.style.removeProperty("--accent");
+   422→    document.documentElement.style.removeProperty("--accent-glow");
+   423→    document.documentElement.removeAttribute("data-accent");
+   424→    const m = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null;
+   425→    if (m) m.content = "#060a08";
+   426→    window.dispatchEvent(new CustomEvent("techmate:username-set"));
+   427→    showSaved();
+   428→  };
+   429→
+   430→  const handleResetTheme = () => {
+   431→    setTheme("dark");
+   432→    setStored(KEYS.theme, "dark");
+   433→    document.documentElement.classList.add("dark");
+   434→    const m = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null;
+   435→    if (m) m.content = "#060a08";
+   436→    showSaved();
+   437→  };
+   438→
+   439→  /* ── Compute display values ── */
+   440→  const currentFontLabel = FONT_SIZES.find((f) => f.value === fontSize)?.label || "Padrao";
+   441→  const currentAccentLabel = ACCENT_COLORS.find((c) => c.value === accentColor)?.label || "Ambar";
+   442→  const currentAccentColor = ACCENT_COLORS.find((c) => c.value === accentColor)?.primary || "#10b981";
+   443→
+   444→  if (!mounted) return null;
+   445→
+   446→  return (
+   447→    <div className="min-h-screen pt-20 pb-16 px-4">
+   448→      <div className="max-w-2xl mx-auto">
+   449→
+   450→        {/* ── Header ── */}
+   451→        <div className="flex items-center gap-4 mb-8">
+   452→          <Link
+   453→            href="/"
+   454→            className="flex items-center justify-center w-10 h-10 rounded-xl
+   455→                       liquid-glass-pill
+   456→                       hover:bg-white/[0.08] active:scale-95
+   457→                       transition-all duration-200"
+   458→          >
+   459→            <ArrowLeft className="w-4 h-4 text-white/60" />
+   460→          </Link>
+   461→          <div>
+   462→            <h1 className="text-2xl font-extrabold text-white tracking-tight">Configurações</h1>
+   463→            <p className="text-xs text-white/35 mt-0.5">Personalize sua experiência no TechMate</p>
+   464→          </div>
+   465→          {savedMsg && (
+   466→            <span className="ml-auto flex items-center gap-1.5 text-xs font-semibold text-emerald-400 animate-fade-in">
+   467→              <Check className="w-3.5 h-3.5" />
+   468→              {savedMsg}
+   469→            </span>
+   470→          )}
+   471→        </div>
+   472→
+   473→        {/* ══════════════════════════════════════════
+   474→            SECTION 1: CONTA
+   475→        ══════════════════════════════════════════ */}
+   476→        <section className="liquid-glass-card rounded-2xl p-5 sm:p-6 mb-5">
+   477→          <SectionTitle icon={User} title="Conta" />
+   478→          <Divider />
+   479→
+   480→          {session?.user ? (
+   481→            <>
+   482→              <div className="flex items-center gap-4 py-3 px-4">
+   483→                {session.user.image ? (
+   484→                  <div className="w-14 h-14 rounded-full overflow-hidden shrink-0
+   485→                              border-2 border-emerald-400/30 shadow-[0_0_20px_rgba(52,211,153,0.2)]">
+   486→                    <img src={session.user.image} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+   487→                  </div>
+   488→                ) : (
+   489→                  <div className="flex items-center justify-center w-14 h-14 rounded-full shrink-0
+   490→                              bg-gradient-to-br from-emerald-400/20 to-emerald-500/10 border border-emerald-400/20">
+   491→                    <User className="w-7 h-7 text-emerald-400" />
+   492→                  </div>
+   493→                )}
+   494→                <div className="min-w-0">
+   495→                  <p className="text-sm font-semibold text-white/85 truncate">
+   496→                    {session.user.name || session.user.login || "Usuario"}
+   497→                  </p>
+   498→                  <p className="text-xs text-white/35 mt-0.5 flex items-center gap-1.5">
+   499→                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+   500→                      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+   501→                    </svg>
+   502→                    Conectado via GitHub
+   503→                  </p>
+   504→                </div>
+   505→              </div>
+   506→            </>
+   507→          ) : (
+   508→            <div className="py-6 px-4 text-center">
+   509→              <p className="text-sm text-white/50 mb-3">Voce nao esta conectado</p>
+   510→              <button
+   511→                onClick={() => {
+   512→                  const event = new CustomEvent("techmate:signin-open");
+   513→                  window.dispatchEvent(event);
+   514→                }}
+   515→                className="btn-primary text-sm"
+   516→              >
+   517→                Entrar com GitHub
+   518→              </button>
+   519→            </div>
+   520→          )}
+   521→
+   522→          <Divider />
+   523→
+   524→          <SettingRow>
+   525→            <SettingLabel label="Visitas ao site" description="Total de vezes que voce acessou o TechMate" />
+   526→            <span className="text-sm font-mono text-white/40 tabular-nums">{visitCount}x</span>
+   527→          </SettingRow>
+   528→
+   529→          <Divider />
+   530→
+   531→          <SettingRow>
+   532→            <SettingLabel label="Primeira visita" description="Quando voce descobriu o TechMate" />
+   533→            <span className="text-sm font-mono text-white/40">{firstVisit}</span>
+   534→          </SettingRow>
+   535→        </section>
+   536→
+   537→        {/* ══════════════════════════════════════════
+   538→            SECTION 2: APARENCIA
+   539→        ══════════════════════════════════════════ */}
+   540→        <section className="liquid-glass-card rounded-2xl p-5 sm:p-6 mb-5">
+   541→          <SectionTitle icon={Palette} title="Aparencia" />
+   542→          <Divider />
+   543→
+   544→          {/* Theme toggle */}
+   545→          <SettingRow>
+   546→            <div className="flex items-center gap-3 flex-1 mr-4">
+   547→              <div className={`flex items-center justify-center w-9 h-9 rounded-xl border
+   548→                              ${theme === "dark"
+   549→                                ? "bg-indigo-500/[0.08] border-indigo-500/15"
+   550→                                : "bg-yellow-500/[0.08] border-yellow-500/15"}`}>
+   551→                {theme === "dark"
+   552→                  ? <Moon className="w-4 h-4 text-indigo-400" />
+   553→                  : <Sun className="w-4 h-4 text-yellow-400" />}
+   554→              </div>
+   555→              <SettingLabel
+   556→                label={theme === "dark" ? "Modo Escuro" : "Modo Claro"}
+   557→                description={theme === "dark"
+   558→                  ? "Ideal para uso noturno e ambientes com pouca luz"
+   559→                  : "Ideal para uso diurno e ambientes claros"}
+   560→              />
+   561→            </div>
+   562→            <ToggleSlider checked={theme === "light"} onChange={handleThemeToggle} variant="v3" aria-label="Alternar tema claro/escuro" />
+   563→          </SettingRow>
+   564→
+   565→          <Divider />
+   566→
+   567→          {/* Accent color */}
+   568→          <div className="py-3 px-4">
+   569→            <div className="flex items-center gap-3 mb-3">
+   570→              <div className="flex items-center justify-center w-9 h-9 rounded-xl
+   571→                              bg-white/[0.05] border border-white/30">
+   572→                <Palette className="w-4 h-4 text-white/50" />
+   573→              </div>
+   574→              <div>
+   575→                <p className="text-sm font-medium text-white/80">Cor de destaque</p>
+   576→                <p className="text-xs text-white/35 mt-0.5">
+   577→                  Atual: <span className="font-semibold" style={{ color: currentAccentColor }}>{currentAccentLabel}</span>
+   578→                </p>
+   579→              </div>
+   580→            </div>
+   581→            <ColorPicker
+   582→              colors={ACCENT_COLORS}
+   583→              value={accentColor}
+   584→              onChange={handleAccentColorChange}
+   585→            />
+   586→          </div>
+   587→
+   588→          <Divider />
+   589→
+   590→          <SettingRow>
+   591→            <SettingLabel
+   592→              label="Restaurar tema padrao"
+   593→              description="Volta para o modo escuro (tema padrao do TechMate)"
+   594→            />
+   595→            <button
+   596→              type="button"
+   597→              onClick={handleResetTheme}
+   598→              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium
+   599→                         bg-white/[0.04] border border-white/30 text-white/50
+   600→                         hover:bg-white/[0.07] hover:text-white/70 transition-colors cursor-pointer"
+   601→            >
+   602→              <RotateCcw className="w-3 h-3" />
+   603→              Restaurar
+   604→            </button>
+   605→          </SettingRow>
+   606→        </section>
+   607→
+   608→        {/* ══════════════════════════════════════════
+   609→            SECTION 3: PREFERENCIAS (tudo funcional!)
+   610→        ══════════════════════════════════════════ */}
+   611→        <section className="liquid-glass-card rounded-2xl p-5 sm:p-6 mb-5">
+   612→          <SectionTitle icon={Monitor} title="Preferencias" />
+   613→          <Divider />
+   614→
+   615→          {/* Font size — interactive selector */}
+   616→          <div className="py-3 px-4">
+   617→            <div className="flex items-center gap-3 mb-3">
+   618→              <div className="flex items-center justify-center w-9 h-9 rounded-xl
+   619→                              bg-emerald-500/[0.08] border border-emerald-500/15">
+   620→                <Type className="w-4 h-4 text-emerald-400" />
+   621→              </div>
+   622→              <div>
+   623→                <p className="text-sm font-medium text-white/80">Tamanho da fonte</p>
+   624→                <p className="text-xs text-white/35 mt-0.5">
+   625→                  Atual: <span className="font-semibold text-white/60">{currentFontLabel}</span>
+   626→                </p>
+   627→              </div>
+   628→            </div>
+   629→            <SegmentedControl
+   630→              options={FONT_SIZES.map((f) => ({ label: f.label, value: f.value }))}
+   631→              value={fontSize}
+   632→              onChange={handleFontSizeChange}
+   633→            />
+   634→            {/* Preview */}
+   635→            <div className="mt-3 px-3 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+   636→              <p className="text-white/50 transition-all duration-200"
+   637→                 style={{ fontSize: `${(FONT_SIZES.find((f) => f.value === fontSize)?.scale || 16)}px` }}>
+   638→                Exemplo de texto para preview do tamanho escolhido.
+   639→              </p>
+   640→            </div>
+   641→          </div>
+   642→
+   643→          <Divider />
+   644→
+   645→          {/* Reduced motion toggle */}
+   646→          <SettingRow>
+   647→            <div className="flex items-center gap-3 flex-1 mr-4">
+   648→              <div className="flex items-center justify-center w-9 h-9 rounded-xl border
+   649→                              bg-white/[0.05] border-white/30">
+   650→                {reducedMotion
+   651→                  ? <VolumeX className="w-4 h-4 text-white/50" />
+   652→                  : <Volume2 className="w-4 h-4 text-emerald-400" />}
+   653→              </div>
+   654→              <SettingLabel
+   655→                label="Animacoes reduzidas"
+   656→                description={reducedMotion
+   657→                  ? "Animacoes desativadas para melhor acessibilidade"
+   658→                  : "Ative para reduzir animacoes e efeitos visuais"}
+   659→              />
+   660→            </div>
+   661→            <ToggleSlider checked={reducedMotion} onChange={handleReducedMotionToggle} variant="v3" aria-label="Animações reduzidas" />
+   662→          </SettingRow>
+   663→
+   664→          <Divider />
+   665→
+   666→          {/* Compact mode toggle */}
+   667→          <SettingRow>
+   668→            <div className="flex items-center gap-3 flex-1 mr-4">
+   669→              <div className="flex items-center justify-center w-9 h-9 rounded-xl border
+   670→                              bg-white/[0.05] border-white/30">
+   671→                {compactMode
+   672→                  ? <Minimize2 className="w-4 h-4 text-emerald-400" />
+   673→                  : <Maximize2 className="w-4 h-4 text-white/50" />}
+   674→              </div>
+   675→              <SettingLabel
+   676→                label="Modo compacto"
+   677→                description={compactMode
+   678→                  ? "Espaçamento reduzido, mais conteúdo na tela"
+   679→                  : "Ative para reduzir espaçamentos e mostrar mais conteúdo"}
+   680→              />
+   681→            </div>
+   682→            <ToggleSlider checked={compactMode} onChange={handleCompactModeToggle} variant="v3" aria-label="Modo compacto" />
+   683→          </SettingRow>
+   684→
+   685→          <Divider />
+   686→
+   687→          {/* Language (locked to PT-BR for now) */}
+   688→          <SettingRow>
+   689→            <div className="flex items-center gap-3 flex-1 mr-4">
+   690→              <div className="flex items-center justify-center w-9 h-9 rounded-xl
+   691→                              bg-emerald-500/[0.08] border border-emerald-500/15">
+   692→                <Globe className="w-4 h-4 text-emerald-400" />
+   693→              </div>
+   694→              <SettingLabel
+   695→                label="Idioma"
+   696→                description="Portugues Brasileiro (unico idioma disponivel no momento)"
+   697→              />
+   698→            </div>
+   699→            <span className="text-xs font-medium text-white/30 px-2.5 py-1 rounded-lg
+   700→                           bg-white/[0.03] border border-white/[0.06]">
+   701→              PT-BR
+   702→            </span>
+   703→          </SettingRow>
+   704→
+   705→          <Divider />
+   706→
+   707→          {/* Keyboard shortcuts link */}
+   708→          <SettingRow>
+   709→            <div className="flex items-center gap-3 flex-1 mr-4">
+   710→              <div className="flex items-center justify-center w-9 h-9 rounded-xl
+   711→                              bg-emerald-500/[0.08] border border-emerald-500/15">
+   712→                <Keyboard className="w-4 h-4 text-emerald-400" />
+   713→              </div>
+   714→              <SettingLabel
+   715→                label="Atalhos de teclado"
+   716→                description="Atalhos rapidos para navegar no site"
+   717→              />
+   718→            </div>
+   719→            <Link
+   720→              href="/settings#shortcuts"
+   721→              className="flex items-center gap-1 text-xs text-emerald-400/70 hover:text-emerald-300 transition-colors"
+   722→            >
+   723→              Ver
+   724→              <ChevronRight className="w-3 h-3" />
+   725→            </Link>
+   726→          </SettingRow>
+   727→
+   728→          <Divider />
+   729→
+   730→          {/* Platform info */}
+   731→          <SettingRow>
+   732→            <div className="flex items-center gap-3 flex-1 mr-4">
+   733→              <div className="flex items-center justify-center w-9 h-9 rounded-xl
+   734→                              bg-emerald-500/[0.08] border border-emerald-500/15">
+   735→                <Smartphone className="w-4 h-4 text-emerald-400" />
+   736→              </div>
+   737→              <SettingLabel
+   738→                label="Plataforma"
+   739→                description="Dispositivo que você está usando"
+   740→              />
+   741→            </div>
+   742→            <span className="text-xs font-medium text-white/30 px-2.5 py-1 rounded-lg
+   743→                           bg-white/[0.03] border border-white/[0.06]">
+   744→              Web
+   745→            </span>
+   746→          </SettingRow>
+   747→        </section>
+   748→
+   749→        {/* ══════════════════════════════════════════
+   750→            SECTION 4: ARMAZENAMENTO
+   751→        ══════════════════════════════════════════ */}
+   752→        <section className="liquid-glass-card rounded-2xl p-5 sm:p-6 mb-5">
+   753→          <SectionTitle icon={HardDrive} title="Armazenamento" />
+   754→          <Divider />
+   755→
+   756→          <SettingRow>
+   757→            <div className="flex items-center gap-3 flex-1 mr-4">
+   758→              <div className="flex items-center justify-center w-9 h-9 rounded-xl
+   759→                              bg-emerald-500/[0.08] border border-emerald-500/15">
+   760→                <HardDrive className="w-4 h-4 text-emerald-400" />
+   761→              </div>
+   762→              <SettingLabel
+   763→                label="Dados salvos"
+   764→                description="Espaco usado pelo TechMate no seu navegador"
+   765→              />
+   766→            </div>
+   767→            <span className="text-sm font-mono text-white/40 tabular-nums">{storageSize}</span>
+   768→          </SettingRow>
+   769→
+   770→          {/* Storage breakdown */}
+   771→          <Divider />
+   772→          <div className="px-4 py-3">
+   773→            <p className="text-xs text-white/30 mb-2 font-medium uppercase tracking-wider">Dados armazenados</p>
+   774→            <div className="space-y-1.5">
+   775→              {[
+   776→                { label: "Tema", key: KEYS.theme },
+   777→                { label: "Tamanho da fonte", key: KEYS.fontSize },
+   778→                { label: "Animacoes reduzidas", key: KEYS.reducedMotion },
+   779→                { label: "Modo compacto", key: KEYS.compactMode },
+   780→                { label: "Cor de destaque", key: KEYS.accentColor },
+   781→              ].map((item) => {
+   782→                const val = getStored(item.key);
+   783→                return (
+   784→                  <div key={item.key} className="flex items-center justify-between py-1.5">
+   785→                    <span className="text-xs text-white/45">{item.label}</span>
+   786→                    <span className="text-xs text-white/25 font-mono truncate max-w-[140px]">
+   787→                      {val || "(vazio)"}
+   788→                    </span>
+   789→                  </div>
+   790→                );
+   791→              })}
+   792→            </div>
+   793→          </div>
+   794→
+   795→          <Divider />
+   796→
+   797→          <div className="py-3 px-4">
+   798→            <div className="flex items-center gap-2 mb-3">
+   799→              <Shield className="w-4 h-4 text-white/25" />
+   800→              <p className="text-xs text-white/30">
+   801→                Todos os dados sao armazenados localmente no seu navegador. Nada e enviado para servidores.
+   802→              </p>
+   803→            </div>
+   804→            <DangerButton onClick={handleClearData}>
+   805→              Limpar todos os dados
+   806→            </DangerButton>
+   807→          </div>
+   808→        </section>
+   809→
+   810→        {/* ══════════════════════════════════════════
+   811→            SECTION 5: ATALHOS DE TECLADO
+   812→        ══════════════════════════════════════════ */}
+   813→        <section className="liquid-glass-card rounded-2xl p-5 sm:p-6 mb-5" id="shortcuts">
+   814→          <SectionTitle icon={Keyboard} title="Atalhos de Teclado" />
+   815→          <Divider />
+   816→
+   817→          <div className="space-y-0.5 py-2">
+   818→            {[
+   819→              { keys: ["Ctrl", "K"], desc: "Abrir busca" },
+   820→              { keys: ["Ctrl", "/"], desc: "Ir para blog" },
+   821→              { keys: ["Esc"], desc: "Fechar painel/busca" },
+   822→              { keys: ["T"], desc: "Ir para o topo" },
+   823→            ].map((shortcut) => (
+   824→              <div key={shortcut.desc} className="flex items-center justify-between px-4 py-2.5">
+   825→                <span className="text-sm text-white/50">{shortcut.desc}</span>
+   826→                <div className="flex items-center gap-1">
+   827→                  {shortcut.keys.map((key, i) => (
+   828→                    <span key={i}>
+   829→                      <kbd className="inline-flex items-center justify-center px-2 py-0.5 rounded-md
+   830→                                   text-[11px] font-mono font-medium
+   831→                                   bg-white/[0.06] border border-white/30
+   832→                                   text-white/40 min-w-[1.75rem]">
+   833→                        {key}
+   834→                      </kbd>
+   835→                      {i < shortcut.keys.length - 1 && (
+   836→                        <span className="text-white/15 mx-0.5 text-[10px]">+</span>
+   837→                      )}
+   838→                    </span>
+   839→                  ))}
+   840→                </div>
+   841→              </div>
+   842→            ))}
+   843→          </div>
+   844→        </section>
+   845→
+   846→        {/* ══════════════════════════════════════════
+   847→            SECTION 6: SOBRE
+   848→        ══════════════════════════════════════════ */}
+   849→        <section className="liquid-glass-card rounded-2xl p-5 sm:p-6 mb-5">
+   850→          <SectionTitle icon={Info} title="Sobre o TechMate" />
+   851→          <Divider />
+   852→
+   853→          <div className="flex items-center gap-4 py-4 px-4">
+   854→            <Logo className="w-14 h-14" glow />
+   855→            <div>
+   856→              <h3 className="text-base font-bold text-white/90">TechMate</h3>
+   857→              <p className="text-xs text-white/35 mt-0.5">Seu parceiro em tech</p>
+   858→              <p className="text-[10px] text-white/20 mt-1 font-mono">v1.0.0</p>
+   859→            </div>
+   860→          </div>
+   861→
+   862→          <Divider />
+   863→
+   864→          <SettingRow>
+   865→            <SettingLabel label="Feito com" />
+   866→            <div className="flex items-center gap-1 text-red-400/60 text-xs">
+   867→              <Heart className="w-3 h-3" />
+   868→              <span>por Micael</span>
+   869→            </div>
+   870→          </SettingRow>
+   871→
+   872→          <Divider />
+   873→
+   874→          <SettingRow>
+   875→            <SettingLabel
+   876→              label="Tecnologias"
+   877→              description="Next.js, React, Tailwind CSS, TypeScript"
+   878→            />
+   879→            <div className="flex items-center gap-1.5">
+   880→              {["Next.js", "React", "Tailwind"].map((tech) => (
+   881→                <span
+   882→                  key={tech}
+   883→                  className="px-2 py-0.5 rounded-md text-[10px] font-medium
+   884→                           bg-white/[0.04] border border-white/30 text-white/35"
+   885→                >
+   886→                  {tech}
+   887→                </span>
+   888→              ))}
+   889→            </div>
+   890→          </SettingRow>
+   891→
+   892→          <Divider />
+   893→
+   894→          <div className="py-3 px-4">
+   895→            <p className="text-xs text-white/25 leading-relaxed">
+   896→              TechMate é um blog independente focado em conteúdo técnico honesto e prático.
+   897→              Tutoriais sobre Linux, Windows, desenvolvimento, segurança e gaming.
+   898→              Sem enrolação, direto ao ponto.
+   899→            </p>
+   900→          </div>
+   901→        </section>
+   902→
+   903→        {/* ── Footer ── */}
+   904→        <div className="flex items-center justify-center gap-2 pt-4 pb-2">
+   905→          <Zap className="w-3 h-3 text-emerald-400/30" />
+   906→          <p className="text-[11px] text-white/15">TechMate v1.0.0</p>
+   907→        </div>
+   908→
+   909→      </div>
+   910→    </div>
+   911→  );
+   912→}
+   913→
