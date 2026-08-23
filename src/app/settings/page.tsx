@@ -33,7 +33,7 @@ import {
 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { ToggleSlider } from "@/components/ToggleSlider";
-import { applyAccentToRoot, type AccentPreset } from "@/lib/accent-utils";
+import { applyAccentToRoot, removeAccentFromRoot, ACCENT_PRESETS, type AccentPreset } from "@/lib/accent-utils";
 import { useSession } from "next-auth/react";
 
 /* ─── Storage helpers ─── */
@@ -102,11 +102,12 @@ const FONT_SIZES = [
 
 /* ─── Accent colors ─── */
 const ACCENT_COLORS = [
-  { label: "Esmeralda", value: "emerald", primary: "#10b981", secondary: "#6ee7b7", deep: "#059669", glow: "rgba(16,185,129,0.45)" },
-  { label: "Azul", value: "blue", primary: "#3b82f6", secondary: "#93c5fd", deep: "#2563eb", glow: "rgba(59,130,246,0.45)" },
-  { label: "Violeta", value: "violet", primary: "#8b5cf6", secondary: "#c4b5fd", deep: "#7c3aed", glow: "rgba(139,92,246,0.45)" },
-  { label: "Rosa", value: "rose", primary: "#f43f5e", secondary: "#fda4af", deep: "#e11d48", glow: "rgba(244,63,94,0.45)" },
-  { label: "Ciano", value: "cyan", primary: "#06b6d4", secondary: "#67e8f9", deep: "#0891b2", glow: "rgba(6,182,212,0.45)" },
+  { label: "Esmeralda", value: "emerald", primary: "#34d399", secondary: "#6ee7b7", deep: "#059669", glow: "rgba(52,211,153,0.45)" },
+  { label: "Azul", value: "blue", primary: "#60a5fa", secondary: "#93c5fd", deep: "#2563eb", glow: "rgba(96,165,250,0.45)" },
+  { label: "Violeta", value: "violet", primary: "#a78bfa", secondary: "#c4b5fd", deep: "#7c3aed", glow: "rgba(167,139,250,0.45)" },
+  { label: "Rosa", value: "rose", primary: "#fb7185", secondary: "#fda4af", deep: "#e11d48", glow: "rgba(251,113,133,0.45)" },
+  { label: "Ciano", value: "cyan", primary: "#22d3ee", secondary: "#67e8f9", deep: "#0891b2", glow: "rgba(34,211,238,0.45)" },
+  { label: "Branco", value: "white", primary: "#e2e8f0", secondary: "#f1f5f9", deep: "#94a3b8", glow: "rgba(226,232,240,0.35)" },
 ] as const;
 
 /* ─── Sub-components ─── */
@@ -213,7 +214,7 @@ function SegmentedControl<T extends string>({
             onClick={() => onChange(opt.value)}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 cursor-pointer
                        ${isActive
-                         ? "bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 shadow-[0_0_12px_rgba(52,211,153,0.15)]"
+                         ? "bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 shadow-[0_0_12px_var(--accent-glow)]"
                          : "bg-white/[0.03] border border-white/30 text-white/40 hover:bg-white/[0.06] hover:text-white/60"}`}
           >
             {renderLabel ? renderLabel(opt) : opt.label}
@@ -337,9 +338,9 @@ export default function SettingsPage() {
   }, []);
 
   const applyAccentColor = useCallback((color: string) => {
-    const preset = ACCENT_COLORS.find((c) => c.value === color);
+    const preset = ACCENT_PRESETS[color];
     if (!preset) return;
-    applyAccentToRoot(document.documentElement, preset as unknown as AccentPreset);
+    applyAccentToRoot(document.documentElement, preset);
     document.documentElement.setAttribute("data-accent", color);
   }, []);
 
@@ -418,9 +419,7 @@ export default function SettingsPage() {
     document.documentElement.classList.remove("reduced-motion", "compact-mode");
     document.documentElement.style.removeProperty("--user-font-scale");
     document.documentElement.style.fontSize = "";
-    document.documentElement.style.removeProperty("--accent");
-    document.documentElement.style.removeProperty("--accent-glow");
-    document.documentElement.removeAttribute("data-accent");
+    removeAccentFromRoot(document.documentElement);
     const m = document.querySelector('meta[name="theme-color"]') as HTMLMetaElement | null;
     if (m) m.content = "#060a08";
     window.dispatchEvent(new CustomEvent("techmate:username-set"));
@@ -438,8 +437,8 @@ export default function SettingsPage() {
 
   /* ── Compute display values ── */
   const currentFontLabel = FONT_SIZES.find((f) => f.value === fontSize)?.label || "Padrao";
-  const currentAccentLabel = ACCENT_COLORS.find((c) => c.value === accentColor)?.label || "Ambar";
-  const currentAccentColor = ACCENT_COLORS.find((c) => c.value === accentColor)?.primary || "#10b981";
+  const currentAccentLabel = ACCENT_COLORS.find((c) => c.value === accentColor)?.label || "Esmeralda";
+  const currentAccentColor = ACCENT_COLORS.find((c) => c.value === accentColor)?.primary || "#34d399";
 
   if (!mounted) return null;
 

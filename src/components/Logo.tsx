@@ -18,7 +18,7 @@ export function Logo({ className = "w-10 h-10", glow = false }: LogoProps) {
       className={`object-cover ${className}`}
       style={
         glow
-          ? { filter: "drop-shadow(0 0 12px rgba(52, 211, 153, 0.45))" }
+          ? { filter: "drop-shadow(0 0 12px var(--accent-glow, rgba(52,211,153,0.45)))" }
           : undefined
       }
     />

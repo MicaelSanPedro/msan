@@ -1,4 +1,8 @@
-/* Shared accent color utility */
+/* Shared accent color utility — Tailwind v4 compatible
+ * Overrides --color-emerald-* CSS custom properties so ALL emerald utilities
+ * (text-emerald-400, bg-emerald-500/20, border-emerald-500/30, arbitrary opacity, etc.)
+ * automatically use the new accent color.
+ */
 
 export interface AccentPreset {
   primary: string;
@@ -8,11 +12,12 @@ export interface AccentPreset {
 }
 
 export const ACCENT_PRESETS: Record<string, AccentPreset> = {
-  emerald: { primary: "#10b981", secondary: "#6ee7b7", deep: "#059669", glow: "rgba(16,185,129,0.45)" },
-  blue:    { primary: "#3b82f6", secondary: "#93c5fd", deep: "#2563eb", glow: "rgba(59,130,246,0.45)" },
-  violet:  { primary: "#8b5cf6", secondary: "#c4b5fd", deep: "#7c3aed", glow: "rgba(139,92,246,0.45)" },
-  rose:    { primary: "#f43f5e", secondary: "#fda4af", deep: "#e11d48", glow: "rgba(244,63,94,0.45)" },
-  cyan:    { primary: "#06b6d4", secondary: "#67e8f9", deep: "#0891b2", glow: "rgba(6,182,212,0.45)" },
+  emerald: { primary: "#34d399", secondary: "#6ee7b7", deep: "#059669", glow: "rgba(52,211,153,0.45)" },
+  blue:    { primary: "#60a5fa", secondary: "#93c5fd", deep: "#2563eb", glow: "rgba(96,165,250,0.45)" },
+  violet:  { primary: "#a78bfa", secondary: "#c4b5fd", deep: "#7c3aed", glow: "rgba(167,139,250,0.45)" },
+  rose:    { primary: "#fb7185", secondary: "#fda4af", deep: "#e11d48", glow: "rgba(251,113,133,0.45)" },
+  cyan:    { primary: "#22d3ee", secondary: "#67e8f9", deep: "#0891b2", glow: "rgba(34,211,238,0.45)" },
+  white:   { primary: "#e2e8f0", secondary: "#f1f5f9", deep: "#94a3b8", glow: "rgba(226,232,240,0.35)" },
 };
 
 function hexToRgb(hex: string): [number, number, number] {
@@ -20,65 +25,66 @@ function hexToRgb(hex: string): [number, number, number] {
   return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
 }
 
-let accentStyleEl: HTMLStyleElement | null = null;
+/** Mix a color towards white (lighten) */
+function lighten(rgb: [number, number, number], t: number): string {
+  return `rgb(${Math.round(rgb[0] + (255 - rgb[0]) * t)},${Math.round(rgb[1] + (255 - rgb[1]) * t)},${Math.round(rgb[2] + (255 - rgb[2]) * t)})`;
+}
+
+/** Mix a color towards black (darken) */
+function darken(rgb: [number, number, number], t: number): string {
+  return `rgb(${Math.round(rgb[0] * (1 - t))},${Math.round(rgb[1] * (1 - t))},${Math.round(rgb[2] * (1 - t))})`;
+}
+
+/** Generate a full emerald 50-950 scale from 3 accent colors */
+function generateScale(
+  primary: [number, number, number],
+  secondary: [number, number, number],
+  deep: [number, number, number],
+): Record<string, string> {
+  return {
+    "50":  lighten(secondary, 0.85),
+    "100": lighten(secondary, 0.7),
+    "200": lighten(secondary, 0.45),
+    "300": `rgb(${secondary[0]},${secondary[1]},${secondary[2]})`,
+    "400": `rgb(${primary[0]},${primary[1]},${primary[2]})`,
+    "500": darken(primary, 0.15),
+    "600": `rgb(${deep[0]},${deep[1]},${deep[2]})`,
+    "700": darken(deep, 0.2),
+    "800": darken(deep, 0.4),
+    "900": darken(deep, 0.6),
+    "950": darken(deep, 0.8),
+  };
+}
 
 export function applyAccentToRoot(root: HTMLElement, preset: AccentPreset) {
-  const [r, g, b] = hexToRgb(preset.primary);
-  const [r2, g2, b2] = hexToRgb(preset.secondary);
-  const [rd, gd, bd] = hexToRgb(preset.deep);
+  const primary = hexToRgb(preset.primary);
+  const secondary = hexToRgb(preset.secondary);
+  const deep = hexToRgb(preset.deep);
 
-  /* Set CSS vars on :root */
+  /* Set semantic CSS vars */
   root.style.setProperty("--accent", preset.primary);
   root.style.setProperty("--accent-2", preset.secondary);
   root.style.setProperty("--accent-deep", preset.deep);
   root.style.setProperty("--accent-glow", preset.glow);
 
-  /* Inject a dynamic <style> that overrides all Tailwind emerald classes */
-  const css = generateAccentCSS(r, g, b, r2, g2, b2, rd, gd, bd);
-  if (!accentStyleEl) {
-    accentStyleEl = document.createElement("style");
-    accentStyleEl.id = "accent-dynamic";
-    document.head.appendChild(accentStyleEl);
+  /* Override Tailwind v4 --color-emerald-* custom properties.
+   This makes ALL emerald utilities (including arbitrary opacity like /[0.08])
+   automatically use the new accent color. */
+  const scale = generateScale(primary, secondary, deep);
+  for (const [shade, value] of Object.entries(scale)) {
+    root.style.setProperty(`--color-emerald-${shade}`, value);
   }
-  accentStyleEl.textContent = css;
 }
 
-function ra(r: number, g: number, b: number, a: number): string {
-  return `rgba(${r},${g},${b},${a})`;
-}
-
-function generateAccentCSS(
-  r: number, g: number, b: number,
-  r2: number, g2: number, b2: number,
-  rd: number, gd: number, bd: number,
-): string {
-  const p = ra; // shorthand
-  return `
-/* Dynamic accent overrides */
-.text-emerald-400, .text-emerald-300, .text-emerald-500 { color: ${p(r,g,b,1)} !important; }
-.text-emerald-300 { color: ${p(r2,g2,b2,1)} !important; }
-.text-emerald-500 { color: ${p(rd,gd,bd,1)} !important; }
-.fill-emerald-400 { fill: ${p(r,g,b,1)} !important; }
-.bg-emerald-500\/5, .bg-emerald-500\/5 { background: ${p(r,g,b,0.05)} !important; }
-.bg-emerald-500\/8, .bg-emerald-500\/8 { background: ${p(r,g,b,0.08)} !important; }
-.bg-emerald-500\/10, .bg-emerald-500\/10 { background: ${p(r,g,b,0.1)} !important; }
-.bg-emerald-500\/15, .bg-emerald-500\/15 { background: ${p(r,g,b,0.15)} !important; }
-.bg-emerald-500\/20, .bg-emerald-500\/20 { background: ${p(r,g,b,0.2)} !important; }
-.bg-emerald-500\/25, .bg-emerald-500\/25 { background: ${p(r,g,b,0.25)} !important; }
-.bg-emerald-500\/30, .bg-emerald-500\/30 { background: ${p(r,g,b,0.3)} !important; }
-.bg-emerald-500\/40, .bg-emerald-500\/40 { background: ${p(r,g,b,0.4)} !important; }
-.bg-emerald-500\/50, .bg-emerald-500\/50 { background: ${p(r,g,b,0.5)} !important; }
-.bg-emerald-500\/60, .bg-emerald-500\/60 { background: ${p(r,g,b,0.6)} !important; }
-.bg-emerald-500\/70, .bg-emerald-500\/70 { background: ${p(r,g,b,0.7)} !important; }
-.bg-emerald-500\/80, .bg-emerald-500\/80 { background: ${p(r,g,b,0.8)} !important; }
-.border-emerald-500\/10, .border-emerald-500\/10 { border-color: ${p(r,g,b,0.1)} !important; }
-.border-emerald-500\/15, .border-emerald-500\/15 { border-color: ${p(r,g,b,0.15)} !important; }
-.border-emerald-500\/20, .border-emerald-500\/20 { border-color: ${p(r,g,b,0.2)} !important; }
-.border-emerald-500\/25, .border-emerald-500\/25 { border-color: ${p(r,g,b,0.25)} !important; }
-.border-emerald-500\/30, .border-emerald-500\/30 { border-color: ${p(r,g,b,0.3)} !important; }
-.border-emerald-500\/40, .border-emerald-500\/40 { border-color: ${p(r,g,b,0.4)} !important; }
-.border-emerald-500\/50, .border-emerald-500\/50 { border-color: ${p(r,g,b,0.5)} !important; }
-.shadow-emerald-500\/20, .shadow-emerald-400\/50 { --tw-shadow-color: ${p(r,g,b,0.4)} !important; }
-.ring-emerald-500\/30, .ring-emerald-400\/50 { --tw-ring-color: ${p(r,g,b,0.3)} !important; }
-`; 
+/** Remove all accent overrides, restoring defaults */
+export function removeAccentFromRoot(root: HTMLElement) {
+  ["--accent", "--accent-2", "--accent-deep", "--accent-glow"].forEach(v =>
+    root.style.removeProperty(v)
+  );
+  for (const shade of ["50","100","200","300","400","500","600","700","800","900","950"]) {
+    root.style.removeProperty(`--color-emerald-${shade}`);
+  }
+  /* Remove old dynamic style if it exists */
+  const old = document.getElementById("accent-dynamic");
+  if (old) old.remove();
 }
