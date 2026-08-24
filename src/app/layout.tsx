@@ -5,7 +5,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { PageTransition } from "@/components/PageTransition";
 import { ScrollRevealInit } from "@/components/ScrollRevealInit";
-import { WelcomeScreen } from "@/components/WelcomeScreen";
+
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { ThemeSync } from "@/components/ThemeSync";
 import { getAllPosts } from "@/lib/posts";
@@ -88,8 +88,6 @@ export default function RootLayout({
         <ThemeSync />
         <SessionProvider>
           <FavoritesProvider>
-            <WelcomeScreen />
-
             <div className="relative z-10 min-h-screen flex flex-col">
               <ScrollRevealInit />
               <Navbar allPosts={allPosts} />
