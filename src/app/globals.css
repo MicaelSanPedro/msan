@@ -3507,13 +3507,14 @@ html:not(.dark) .mobile-menu-link-secondary:hover {
 .mobile-tab-bar {
   position: fixed;
   bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 12px;
+  right: 12px;
+  margin: 0 auto;
   z-index: 50;
   display: flex;
   align-items: center;
   justify-content: space-around;
-  width: calc(100% - 24px);
+  width: auto;
   max-width: 420px;
   padding: 6px 4px calc(env(safe-area-inset-bottom, 0px) + 8px);
   pointer-events: auto;
@@ -3879,8 +3880,11 @@ html:not(.dark) .mobile-search-overlay-results {
 .float-menu {
   position: fixed;
   top: 12px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 12px;
+  right: 12px;
+  margin: 0 auto;
+  width: fit-content;
+  max-width: calc(100% - 24px);
   z-index: 50;
   display: flex;
   align-items: center;
