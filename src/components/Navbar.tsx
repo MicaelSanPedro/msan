@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ArrowRight, Search as SearchIcon, User, Settings, X, LogOut } from "lucide-react";
+import { ArrowRight, Search as SearchIcon, User, Settings, X, LogOut, Home, BookOpen, Grid3X3, Heart, Menu } from "lucide-react";
 import { AuthButton } from "@/components/AuthButton";
 import { openSignInModal } from "@/components/SignInModal";
 import { useSession, signOut } from "next-auth/react";
@@ -11,56 +11,18 @@ import { Logo } from "@/components/Logo";
 import type { PostSummary } from "@/lib/posts";
 
 const navLinks = [
-  { label: "Início", href: "/" },
-  { label: "Blog", href: "/blog" },
-  { label: "Categorias", href: "/#categories" },
-  { label: "Favoritos", href: "/favoritos" },
+  { label: "Início", href: "/", icon: Home },
+  { label: "Blog", href: "/blog", icon: BookOpen },
+  { label: "Categorias", href: "/#categories", icon: Grid3X3 },
+  { label: "Favoritos", href: "/favoritos", icon: Heart },
 ];
 
 interface NavbarProps {
   allPosts: PostSummary[];
 }
 
-function MobileLoginButton({ onSignIn, setMobileOpen, delay }: { onSignIn: () => void; setMobileOpen: (v: boolean) => void; delay: number }) {
-  const { data: session } = useSession();
-  if (session?.user) return null;
-  return (
-    <button
-      onClick={() => { setMobileOpen(false); onSignIn(); }}
-      className="mobile-menu-link"
-      style={{ animationDelay: `${delay}ms` }}
-    >
-      <div className="flex items-center gap-3">
-        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-        </svg>
-        <span className="mobile-menu-link-text">Entrar</span>
-      </div>
-      <ArrowRight className="w-4 h-4 opacity-40" />
-    </button>
-  );
-}
-
-function MobileLogoutButton({ setMobileOpen, delay }: { setMobileOpen: (v: boolean) => void; delay: number }) {
-  const { data: session } = useSession();
-  if (!session?.user) return null;
-  return (
-    <button
-      onClick={() => { setMobileOpen(false); signOut({ callbackUrl: "/" }); }}
-      className="mobile-menu-link"
-      style={{ animationDelay: `${delay}ms` }}
-    >
-      <div className="flex items-center gap-3">
-        <LogOut className="w-4 h-4 text-rose-400/70" />
-        <span className="mobile-menu-link-text">Sair da conta</span>
-      </div>
-      <LogOut className="w-4 h-4 opacity-40" />
-    </button>
-  );
-}
-
 export function Navbar({ allPosts }: NavbarProps) {
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileMoreOpen, setMobileMoreOpen] = useState(false);
   const [mobileSearchActive, setMobileSearchActive] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [categoriesInView, setCategoriesInView] = useState(false);
@@ -173,20 +135,20 @@ export function Navbar({ allPosts }: NavbarProps) {
   }, []);
 
   useEffect(() => {
-    const handleResize = () => { if (window.innerWidth >= 768) { setMobileOpen(false); setMobileSearchActive(false); } };
+    const handleResize = () => { if (window.innerWidth >= 768) { setMobileMoreOpen(false); setMobileSearchActive(false); } };
     window.addEventListener("resize", handleResize, { passive: true });
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  useEffect(() => { setMobileOpen(false); setMobileSearchActive(false); setMobileQuery(""); setDesktopSearchOpen(false); setDesktopQuery(""); }, [pathname]);
+  useEffect(() => { setMobileMoreOpen(false); setMobileSearchActive(false); setMobileQuery(""); setDesktopSearchOpen(false); setDesktopQuery(""); }, [pathname]);
 
   // Lock body scroll
   useEffect(() => {
-    if (mobileOpen || (mobileSearchActive && mobileResults.length > 0)) {
+    if (mobileMoreOpen || mobileSearchActive) {
       document.body.style.overflow = "hidden";
     } else { document.body.style.overflow = ""; }
     return () => { document.body.style.overflow = ""; };
-  }, [mobileOpen, mobileSearchActive, mobileResults.length]);
+  }, [mobileMoreOpen, mobileSearchActive]);
 
   // Categories intersection observer
   useEffect(() => {
@@ -368,80 +330,134 @@ export function Navbar({ allPosts }: NavbarProps) {
         )}
       </div>
 
-      {/* ═══ Mobile Floating Search + Hamburger ═══ */}
-      <div className="md:hidden fixed bottom-6 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
-        <div className={`mobile-search-bar pointer-events-auto flex items-center ${mobileSearchActive ? 'expanded' : ''}`}>
-          <div className="mobile-search-input-wrap flex items-center gap-1.5 py-2.5 pl-2.5 pr-0 min-w-0">
-            <SearchIcon className="w-3.5 h-3.5 text-white/50 shrink-0" />
-            <input
-              ref={mobileInputRef}
-              type="text"
-              value={mobileQuery}
-              onChange={(e) => { setMobileQuery(e.target.value); if (!mobileSearchActive) setMobileSearchActive(true); }}
-              onFocus={() => setMobileSearchActive(true)}
-              onBlur={() => { if (!mobileQuery) setMobileSearchActive(false); }}
-              placeholder="Pesquisar"
-              className="w-[70px] min-w-0 bg-transparent text-xs text-white placeholder:text-white/40 outline-none"
-            />
-          </div>
-          <div
-            onClick={() => setMobileOpen(true)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setMobileOpen(true); }}
-            className="flex items-center justify-center w-8 h-8 shrink-0 ml-1 py-2.5 pr-1 cursor-pointer select-none"
-            aria-label="Abrir menu"
-          >
-            <span className="flex flex-col gap-[4px]">
-              <span className="block w-[12px] h-[1.5px] rounded-full bg-white/80" />
-              <span className="block w-[12px] h-[1.5px] rounded-full bg-white/80" />
-            </span>
+      {/* ═══ Mobile Floating Liquid Glass Tab Bar ═══ */}
+      <div className="md:hidden mobile-tab-bar-wrap">
+        <div className="mobile-tab-bar">
+          <div className="mobile-tab-bar-shine" aria-hidden="true" />
+          <div className="mobile-tab-bar-caustic" aria-hidden="true" />
+
+          <div className="mobile-tab-bar-items">
+            {navLinks.map((link) => {
+              const Icon = link.icon;
+              const active = isActive(link.href);
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={link.href === "/#categories" ? handleCategoriesClick : undefined}
+                  className={`mobile-tab-item ${active ? "active" : ""}`}
+                >
+                  <div className="mobile-tab-icon-wrap">
+                    <Icon className="mobile-tab-icon" strokeWidth={active ? 2.2 : 1.8} />
+                    {active && <div className="mobile-tab-glow" />}
+                  </div>
+                  <span className="mobile-tab-label">{link.label}</span>
+                </Link>
+              );
+            })}
+
+            <button
+              onClick={() => setMobileSearchActive(true)}
+              className={`mobile-tab-item ${mobileSearchActive ? "active" : ""}`}
+              type="button"
+              aria-label="Pesquisar"
+            >
+              <div className="mobile-tab-icon-wrap">
+                <SearchIcon className="mobile-tab-icon" strokeWidth={mobileSearchActive ? 2.2 : 1.8} />
+                {mobileSearchActive && <div className="mobile-tab-glow" />}
+              </div>
+              <span className="mobile-tab-label">Buscar</span>
+            </button>
+
+            <button
+              onClick={() => setMobileMoreOpen(true)}
+              className={`mobile-tab-item ${mobileMoreOpen ? "active" : ""}`}
+              type="button"
+              aria-label="Mais opções"
+            >
+              <div className="mobile-tab-icon-wrap">
+                <Menu className="mobile-tab-icon" strokeWidth={mobileMoreOpen ? 2.2 : 1.8} />
+                {mobileMoreOpen && <div className="mobile-tab-glow" />}
+              </div>
+              <span className="mobile-tab-label">Mais</span>
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile search results */}
-      {mobileSearchActive && mobileResults.length > 0 && (
-        <div className="md:hidden fixed inset-x-0 bottom-24 z-[55] px-4 animate-fade-in">
-          <div className="mobile-search-results relative">
-            <div className="p-1.5">
-              {mobileResults.map((post) => (
-                <Link
-                  key={post.slug}
-                  href={`/blog/${post.slug}`}
-                  onClick={() => handleMobileSearchSelect(post.slug)}
-                  className="flex items-start gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:bg-white/[0.05] active:bg-white/[0.06] transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
-                >
-                  <span className="text-emerald-400 mt-0.5 shrink-0">
-                    <SearchIcon className="w-3.5 h-3.5" />
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm text-white font-medium truncate">{post.frontmatter.title}</p>
-                    <p className="text-xs text-white/40 truncate mt-0.5">{post.frontmatter.category} &middot; {post.frontmatter.readTime} de leitura</p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-            <div className="px-3.5 py-2 border-t border-white/[0.04]">
-              <p className="text-[11px] text-white/30">{mobileResults.length} resultado{mobileResults.length !== 1 ? "s" : ""}</p>
-            </div>
-          </div>
-        </div>
-      )}
-      {mobileSearchActive && mobileQuery.trim().length >= 2 && mobileResults.length === 0 && (
-        <div className="md:hidden fixed inset-x-0 bottom-24 z-[55] px-4 animate-fade-in">
-          <div className="mobile-search-results"><div className="px-4 py-6 text-center"><p className="text-sm text-white/40">Nenhum resultado para &quot;{mobileQuery}&quot;</p></div></div>
-        </div>
-      )}
+      {/* ═══ Mobile Search Overlay ═══ */}
       {mobileSearchActive && (
-        <div className="md:hidden fixed inset-0 bottom-0 z-[54]" onClick={() => { setMobileSearchActive(false); setMobileQuery(""); }} aria-hidden />
+        <>
+          <div
+            className="md:hidden fixed inset-0 z-[58]"
+            onClick={() => { setMobileSearchActive(false); setMobileQuery(""); }}
+            aria-hidden
+          />
+          <div className="md:hidden mobile-search-overlay z-[59]">
+            <div className="mobile-search-overlay-inner">
+              <div className="mobile-search-overlay-shine" aria-hidden="true" />
+              <SearchIcon className="w-4 h-4 text-white/50 shrink-0" />
+              <input
+                ref={mobileInputRef}
+                type="text"
+                value={mobileQuery}
+                onChange={(e) => setMobileQuery(e.target.value)}
+                placeholder="Buscar artigos, tags..."
+                className="mobile-search-overlay-input"
+                autoFocus
+              />
+              <button
+                onClick={() => { setMobileSearchActive(false); setMobileQuery(""); }}
+                className="p-1.5 rounded-full hover:bg-white/10 transition-colors"
+                type="button"
+                aria-label="Fechar busca"
+              >
+                <X className="w-4 h-4 text-white/50" />
+              </button>
+            </div>
+
+            {mobileQuery.trim().length >= 2 && (
+              <div className="mobile-search-overlay-results">
+                {mobileResults.length > 0 ? (
+                  <>
+                    <div className="p-1">
+                      {mobileResults.map((post) => (
+                        <Link
+                          key={post.slug}
+                          href={`/blog/${post.slug}`}
+                          onClick={() => handleMobileSearchSelect(post.slug)}
+                          className="flex items-start gap-3 px-3 py-2.5 rounded-xl text-white/80 hover:bg-white/[0.06] active:bg-white/[0.08] transition-all"
+                        >
+                          <span className="mt-0.5 shrink-0" style={{ color: "rgba(var(--accent-rgb), 0.7)" }}>
+                            <SearchIcon className="w-3.5 h-3.5" />
+                          </span>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm text-white font-medium truncate">{post.frontmatter.title}</p>
+                            <p className="text-xs text-white/40 truncate mt-0.5">{post.frontmatter.category} &middot; {post.frontmatter.readTime} de leitura</p>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                    <div className="px-3 py-2 border-t border-white/[0.05]">
+                      <p className="text-[11px] text-white/30">{mobileResults.length} resultado{mobileResults.length !== 1 ? "s" : ""}</p>
+                    </div>
+                  </>
+                ) : (
+                  <div className="px-4 py-8 text-center">
+                    <p className="text-sm text-white/40">Nenhum resultado para &quot;{mobileQuery}&quot;</p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </>
       )}
 
-      {/* ═══ Mobile Fullscreen Menu Overlay ═══ */}
-      <div className={`mobile-menu-overlay md:hidden ${mobileOpen ? "mobile-menu-open" : ""}`} aria-hidden={!mobileOpen}>
-        <div className="mobile-menu-backdrop" />
+      {/* ═══ Mobile More Menu Overlay ═══ */}
+      <div className={`mobile-menu-overlay md:hidden ${mobileMoreOpen ? "mobile-menu-open" : ""}`} aria-hidden={!mobileMoreOpen}>
+        <div className="mobile-menu-backdrop" onClick={() => setMobileMoreOpen(false)} />
         <div className="mobile-menu-content">
-          <button onClick={() => setMobileOpen(false)} className="mobile-menu-close" aria-label="Fechar menu" type="button">
+          <button onClick={() => setMobileMoreOpen(false)} className="mobile-menu-close" aria-label="Fechar menu" type="button">
             <X className="w-6 h-6" />
           </button>
           <div className="mobile-menu-links">
@@ -463,33 +479,43 @@ export function Navbar({ allPosts }: NavbarProps) {
               </div>
             )}
             <div className="mobile-menu-nav">
-              {navLinks.map((link, index) => {
-                const active = isActive(link.href);
-                return (
-                  <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)}
-                    className={`mobile-menu-link ${active ? "active" : ""}`}
-                    style={{ animationDelay: `${index * 80 + 100}ms` }}
-                  >
-                    <span className="mobile-menu-link-text">{link.label}</span>
-                    <ArrowRight className="w-4 h-4 opacity-40" />
-                  </Link>
-                );
-              })}
-              <Link href="/settings" onClick={() => setMobileOpen(false)} className="mobile-menu-link mobile-menu-link-secondary" style={{ animationDelay: `${navLinks.length * 80 + 100}ms` }}>
+              <Link href="/settings" onClick={() => setMobileMoreOpen(false)} className="mobile-menu-link mobile-menu-link-secondary" style={{ animationDelay: `100ms` }}>
                 <div className="flex items-center gap-3">
                   <Settings className="w-4 h-4" />
                   <span className="mobile-menu-link-text">Configurações</span>
                 </div>
                 <ArrowRight className="w-4 h-4 opacity-40" />
               </Link>
-              <MobileLoginButton onSignIn={() => openSignInModal()} setMobileOpen={setMobileOpen} delay={navLinks.length * 80 + 180} />
-              <MobileLogoutButton setMobileOpen={setMobileOpen} delay={navLinks.length * 80 + 260} />
-            </div>
-            <div className="mobile-menu-cta" style={{ animationDelay: `${navLinks.length * 80 + 200}ms` }}>
-              <Link href="/blog" onClick={() => setMobileOpen(false)} className="mobile-menu-cta-btn">
-                Ler todos os artigos
-                <ArrowRight className="w-4 h-4" />
-              </Link>
+              {!session?.user && (
+                <button
+                  onClick={() => { setMobileMoreOpen(false); openSignInModal(); }}
+                  className="mobile-menu-link"
+                  style={{ animationDelay: `180ms` }}
+                  type="button"
+                >
+                  <div className="flex items-center gap-3">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    <span className="mobile-menu-link-text">Entrar</span>
+                  </div>
+                  <ArrowRight className="w-4 h-4 opacity-40" />
+                </button>
+              )}
+              {session?.user && (
+                <button
+                  onClick={() => { setMobileMoreOpen(false); signOut({ callbackUrl: "/" }); }}
+                  className="mobile-menu-link"
+                  style={{ animationDelay: `260ms` }}
+                  type="button"
+                >
+                  <div className="flex items-center gap-3">
+                    <LogOut className="w-4 h-4 text-rose-400/70" />
+                    <span className="mobile-menu-link-text">Sair da conta</span>
+                  </div>
+                  <LogOut className="w-4 h-4 opacity-40" />
+                </button>
+              )}
             </div>
           </div>
         </div>
