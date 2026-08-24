@@ -3499,15 +3499,22 @@ html:not(.dark) .mobile-menu-link-secondary:hover {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   Mobile Floating Liquid Glass Tab Bar
-   Inspired by @ybouane/liquidglass — CSS approximation
-   ═══════════════════════════════════════════════════════════════ */
+   Liquid Glass — CSS approximation of @ybouane/liquidglass FS_GLASS
+   ─────────────────────────────────────────────────────────────
+   Shader pipeline (defaults.ts):
+     blurAmount: 0.00 → clear glass, NOT frosted
+     refraction: 0.69 → strong biconvex lens distortion
+     fresnel: 1.00 → bright white rim at grazing angles
+     chromAberration: 0.05 → subtle RGB fringe at edges
+     edgeHighlight: 0.05 → very subtle inner glow
+     specular: 0.00 → NO specular highlights
+     distortion: 0.00 → NO micro-noise
+     saturation: 0.00, brightness: 0.00, tintStrength: 0.00
+     shadowOpacity: 0.30, shadowSpread: 10, shadowOffsetY: 1
+     cornerRadius: 65, zRadius: 40 (bevel depth)
 
-/* ═══════════════════════════════════════════════════════════════
-   Liquid Glass — CSS replica of @ybouane/liquidglass GLSL shader
-   Effects: refraction · chromatic aberration · fresnel rim ·
-   Blinn-Phong specular (4 lights) · inner stroke · contact+
-   Gaussian spread shadow · cool glass tint · biconvex depth
+   Visual result: CLEAR glass lens — background visible but
+   refracted, with bright fresnel edges and chromatic fringing.
    ═══════════════════════════════════════════════════════════════ */
 
 /* ─── Tab Bar (liquid glass pill) ─── */
@@ -3526,79 +3533,130 @@ html:not(.dark) .mobile-menu-link-secondary:hover {
   padding: 6px 4px calc(env(safe-area-inset-bottom, 0px) + 8px);
   pointer-events: auto;
   border-radius: 22px;
-  /* Glass body — biconvex depth gradient + cool tint */
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.12) 0%,
-      rgba(255, 255, 255, 0.04) 35%,
-      rgba(200, 210, 230, 0.03) 65%,
-      rgba(255, 255, 255, 0.07) 100%
-    );
-  /* Refraction: blur + saturation + brightness (shader: blur, sat, brightness) */
-  backdrop-filter: blur(24px) saturate(180%) brightness(106%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%) brightness(106%);
-  /* Thin semi-transparent border */
-  border: 1px solid rgba(255, 255, 255, 0.18);
   /*
-   Shadow system (maps to shader uniforms):
-   1. Chromatic aberration — red/blue fringes at edges (shader: chromAberration)
-   2. Inner stroke — top-biased bright rim (shader: innerStroke * edgeHL)
-   3. Inner glow — fresnel rim light (shader: innerGlow * edgeHL)
-   4. Outer hairline — subtle dark outline (shader: AA mask edge)
-   5. Contact shadow — tight beneath (shader: shadowOffsetY=1, shadowAlpha=0.3)
-   6. Spread shadow — Gaussian falloff (shader: shadowSpread=10, shadowAlpha=0.3)
+    Shader: background is NOT frosted.
+    blurAmount=0 → no blur. CSS can't refract, so we use
+    an extremely subtle blur (2px) just for presence on dark bg,
+    plus slight brightness to simulate biconvex light gathering.
+    No saturation change, no blue tint (all defaults are 0).
   */
+  backdrop-filter: blur(2px) brightness(105%);
+  -webkit-backdrop-filter: blur(2px) brightness(105%);
+  /*
+    Shader: no background color/tint (tintStrength=0, opacity=1).
+    The glass body should be nearly transparent — clear glass.
+    Only a hint of gradient to suggest the biconvex curvature:
+    center is slightly brighter (lens gathers light), edges darker.
+  */
+  background:
+    radial-gradient(
+      ellipse 100% 100% at 50% 50%,
+      rgba(255, 255, 255, 0.04) 0%,
+      rgba(255, 255, 255, 0.01) 60%,
+      rgba(0, 0, 0, 0.04) 100%
+    );
+  /*
+    Shader shadow pipeline (renderGlassPanel):
+    outerShadow = exp(-d² * falloff) * 0.65  (Gaussian, shadowSpread=10)
+    contactShadow = exp(-d * 0.08 / spread*0.04) * 0.35  (tight)
+    total = (outerShadow + contactShadow) * shadowAlpha(0.30)
+    Chromatic aberration via colored offset shadows at edges.
+  */
+  border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow:
-    /* Chromatic aberration at edges */
-    -0.5px 0 1px 0 rgba(255, 60, 60, 0.07),
-    0.5px 0 1px 0 rgba(60, 60, 255, 0.07),
-    0 -0.5px 1px 0 rgba(255, 60, 60, 0.05),
-    0 0.5px 1px 0 rgba(60, 60, 255, 0.05),
-    /* Inner stroke — top-biased (shader: innerStroke * topBias) */
-    inset 0 1px 1.5px rgba(255, 255, 255, 0.4),
-    inset 0 -0.5px 0 rgba(0, 0, 0, 0.06),
-    /* Inner glow — fresnel rim (shader: innerGlow * edgeHL) */
-    inset 0 0 12px rgba(255, 255, 255, 0.04),
-    /* Outer hairline */
-    0 0 0 0.5px rgba(0, 0, 0, 0.15),
-    /* Contact shadow (shadowOffsetY: 1) */
-    0 1px 2px rgba(0, 0, 0, 0.25),
-    /* Gaussian spread shadow (shadowSpread: 10) */
-    0 10px 40px -10px rgba(0, 0, 0, 0.35);
+    /*
+      Chromatic aberration (shader: caS = chromAberration*18*(edge*0.7+0.3)*2)
+      R channel shifted +caD, B shifted -caD along surface normal.
+      CSS: offset red/blue shadows to simulate fringe.
+    */
+    -0.8px 0 1.5px 0 rgba(255, 50, 50, 0.08),
+    0.8px 0 1.5px 0 rgba(50, 50, 255, 0.08),
+    0 -0.5px 1px 0 rgba(255, 50, 50, 0.04),
+    0 0.5px 1px 0 rgba(50, 50, 255, 0.04),
+    /*
+      Inner stroke (shader: borderWidth=1.5, top-biased by topBias).
+      Creates the bright edge line visible in the glass.
+    */
+    inset 0 1px 1px rgba(255, 255, 255, 0.25),
+    inset 0 -0.5px 0 rgba(0, 0, 0, 0.08),
+    /*
+      Inner glow (shader: smoothstep(5, 0, -sdf) * edgeHL * 0.15)
+      With edgeHL=0.05 this is extremely subtle.
+    */
+    inset 0 0 8px rgba(255, 255, 255, 0.02),
+    /* Outer hairline (anti-aliased mask edge) */
+    0 0 0 0.5px rgba(0, 0, 0, 0.2),
+    /*
+      Contact shadow (shader: shadowOffsetY=1, shadowAlpha=0.30)
+      Tight shadow right beneath the panel.
+    */
+    0 1px 3px rgba(0, 0, 0, 0.3),
+    /*
+      Gaussian spread shadow (shader: shadowSpread=10, shadowAlpha=0.30)
+      exp(-d²/(10²)) falloff → wide, soft shadow.
+    */
+    0 8px 30px -8px rgba(0, 0, 0, 0.3);
   overflow: hidden;
   animation: tab-bar-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
   animation-delay: 0.15s;
 }
 
 /*
-  ::before — Specular highlights (shader: Blinn-Phong 4 lights)
-  L1 at (0.4, 0.7, 1.0) power 90 → tight spot, upper-right
-  L2 at (-0.3, -0.5, 1.0) power 50 → broad, lower-left
-  L3 at (0.1, 0.3, 1.0) power 6  → very broad ambient
-  L4 at (0.0, 0.9, 0.4) power 120 → razor-thin top edge
+  ::before — Fresnel + Inner Stroke (shader: fresnel + innerStroke composite)
+
+  Shader fresnel: pow(1.0 - abs(N.z), 4.0) * u_fresnel(1.0)
+  - At center: N.z ≈ 1.0 → fresnel ≈ 0 (transparent)
+  - At edges: N.z ≈ 0.0 → fresnel ≈ 1.0 (bright white rim)
+  - Final: mix(fin, vec3(1.0), fres * 0.2) → edges blend 20% toward white
+
+  This creates the signature look: bright white edges that fade to
+  transparent center. The glass looks like a real 3D curved surface.
 */
 .mobile-tab-bar::before {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
+  /*
+    Fresnel rim: bright white at all edges, fading inward.
+    CSS mask simulates pow(1-abs(N.z), 4) — strongest at edges.
+    The gradient stops at ~40% from each edge, matching the
+    shader's edge = smoothstep(maxD*0.35, 0, inside) falloff.
+  */
   background:
-    /* L4: razor top edge highlight */
-    radial-gradient(ellipse 70% 25% at 50% 0%, rgba(255,255,255,0.4) 0%, transparent 100%),
-    /* L1: tight specular upper-right */
-    radial-gradient(ellipse 35% 30% at 70% 20%, rgba(255,255,255,0.18) 0%, transparent 100%),
-    /* L2: broader lower-left fill */
-    radial-gradient(ellipse 50% 40% at 25% 80%, rgba(255,255,255,0.06) 0%, transparent 100%),
-    /* L3: broad ambient top bias */
-    radial-gradient(ellipse 90% 50% at 50% 10%, rgba(255,255,255,0.05) 0%, transparent 100%);
+    /* Top fresnel (strongest — shader topBias = 0.5+0.5*(-y/half)) */
+    linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.06) 12%, transparent 35%),
+    /* Bottom fresnel (weaker) */
+    linear-gradient(0deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 12%, transparent 35%),
+    /* Left/right fresnel */
+    linear-gradient(90deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.03) 10%, transparent 30%),
+    linear-gradient(270deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.03) 10%, transparent 30%),
+    /*
+      Inner stroke (shader: smoothstep(-borderWidth-1, -borderWidth, sdf)
+      * (1 - smoothstep(-1, 0, sdf)) * (0.4 + 0.6*topBias))
+      A thin bright line right at the inner edge of the rounded rect.
+    */
+    linear-gradient(180deg,
+      rgba(255,255,255,0.15) 0%,
+      rgba(255,255,255,0.04) 3%,
+      transparent 5%,
+      transparent 95%,
+      rgba(255,255,255,0.02) 97%,
+      rgba(255,255,255,0.06) 100%
+    );
   pointer-events: none;
   z-index: 3;
 }
 
 /*
-  ::after — Environment reflection + fresnel (shader: envRefl + fresnel white mix)
-  Simulates the glass reflecting the environment at grazing angles.
+  ::after — Biconvex lens depth simulation + environment reflection
+
+  Shader: bevelHeight creates a biconvex (lens-shaped) cross-section.
+  Center of the glass is "thicker" (higher z), edges are thin.
+  depth = smoothstep(0, zRadius, inside) — 0 at edge, 1 at center.
+  col *= 1.0 + 0.06 * depth — center is 6% brighter (light through glass).
+
+  envRefl = (N.y * 0.5 + 0.5) * fres * 0.08 — subtle top reflection.
 */
 .mobile-tab-bar::after {
   content: '';
@@ -3606,18 +3664,28 @@ html:not(.dark) .mobile-menu-link-secondary:hover {
   inset: 0;
   border-radius: inherit;
   background:
-    /* Fresnel — brighter at edges (top-heavy) */
-    linear-gradient(180deg, rgba(255,255,255,0.10) 0%, transparent 35%),
-    /* Environment caustic */
-    radial-gradient(ellipse 80% 60% at 35% 15%, rgba(255,255,255,0.05) 0%, transparent 60%);
+    /*
+      Biconvex depth: center is brighter (lens gathers light).
+      Radial gradient mimics the bevelHeight curvature:
+      sqrt(d * (2*zR - d)) — fastest brightening at edges, plateau at center.
+    */
+    radial-gradient(
+      ellipse 80% 80% at 50% 50%,
+      rgba(255, 255, 255, 0.03) 0%,
+      rgba(255, 255, 255, 0.015) 40%,
+      transparent 70%
+    ),
+    /*
+      Environment reflection (shader: envRefl = (N.y*0.5+0.5) * fres * 0.08)
+      Simulates the glass subtly reflecting the environment from above.
+    */
+    radial-gradient(
+      ellipse 60% 40% at 50% 0%,
+      rgba(255, 255, 255, 0.04) 0%,
+      transparent 70%
+    );
   pointer-events: none;
   z-index: 2;
-  animation: lg-caustic-shift 10s ease-in-out infinite;
-}
-
-@keyframes lg-caustic-shift {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.65; }
 }
 
 /* ─── Tab Bar Items Container ─── */
@@ -3875,60 +3943,55 @@ html:not(.dark) .mobile-search-overlay-results {
   box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.12);
 }
 
-/* Fallback for no backdrop-filter */
-@supports not (backdrop-filter: blur(20px)) {
+/* Fallback for no backdrop-filter — clear glass with opaque tint */
+@supports not (backdrop-filter: blur(2px)) {
   .mobile-tab-bar {
-    background: rgba(10, 12, 18, 0.88);
+    background: rgba(10, 12, 18, 0.75);
     box-shadow:
-      inset 0 1px 1.5px rgba(255, 255, 255, 0.3),
+      inset 0 1px 1px rgba(255, 255, 255, 0.15),
       0 0 0 0.5px rgba(0, 0, 0, 0.2),
-      0 1px 2px rgba(0, 0, 0, 0.25),
-      0 10px 40px -10px rgba(0, 0, 0, 0.4);
+      0 1px 3px rgba(0, 0, 0, 0.3),
+      0 8px 30px -8px rgba(0, 0, 0, 0.3);
   }
   .mobile-tab-bar::before,
   .mobile-tab-bar::after { display: none; }
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   Floating Liquid Glass Pill — @ybouane/liquidglass shader replica
+   Floating Liquid Glass Pill — @ybouane/liquidglass FS_GLASS replica
+   Same shader pipeline as tab bar (see above for full annotation).
    ═══════════════════════════════════════════════════════════════ */
 
-/* ─── Floating Menu Variables (maps to shader defaults) ─── */
+/* ─── Floating Menu Variables (shader defaults) ─── */
 :root {
-  --float-blur: 28px;
-  --float-saturate: 200%;
-  --float-border: 0.28;
   --float-shadow-spread: 10px;
   --float-shadow-y: 1px;
-  --float-bg-1: rgba(255, 255, 255, 0.12);
-  --float-bg-2: rgba(200, 210, 230, 0.03);
-  --float-bg-3: rgba(255, 255, 255, 0.07);
   --float-volumetric:
-    /* Chromatic aberration (shader: chromAberration) */
-    -0.5px 0 1px 0 rgba(255, 60, 60, 0.06),
-    0.5px 0 1px 0 rgba(60, 60, 255, 0.06),
-    0 -0.5px 1px 0 rgba(255, 60, 60, 0.04),
-    0 0.5px 1px 0 rgba(60, 60, 255, 0.04),
-    /* Inner stroke — top-biased (shader: innerStroke) */
-    inset 0 1px 1.5px rgba(255, 255, 255, 0.5),
-    inset 0 -0.5px 0 rgba(0, 0, 0, 0.05),
-    /* Inner glow — fresnel (shader: innerGlow) */
-    inset 0 0 16px rgba(255, 255, 255, 0.04),
-    /* Outer hairline */
-    0 0 0 0.5px rgba(0, 0, 0, 0.12),
-    /* Contact shadow (shadowOffsetY: 1, shadowAlpha: 0.3) */
-    0 1px 2px rgba(0, 0, 0, 0.22),
-    /* Gaussian spread (shadowSpread: 10) */
-    0 var(--float-shadow-spread) 40px -10px rgba(0, 0, 0, 0.35);
+    /* Chromatic aberration (shader: caS = chromAberration*18*(edge*0.7+0.3)*2) */
+    -0.8px 0 1.5px 0 rgba(255, 50, 50, 0.08),
+    0.8px 0 1.5px 0 rgba(50, 50, 255, 0.08),
+    0 -0.5px 1px 0 rgba(255, 50, 50, 0.04),
+    0 0.5px 1px 0 rgba(50, 50, 255, 0.04),
+    /* Inner stroke (shader: borderWidth=1.5, top-biased) */
+    inset 0 1px 1px rgba(255, 255, 255, 0.25),
+    inset 0 -0.5px 0 rgba(0, 0, 0, 0.08),
+    /* Inner glow (shader: edgeHL=0.05, very subtle) */
+    inset 0 0 10px rgba(255, 255, 255, 0.02),
+    /* Outer hairline (shader: AA mask edge) */
+    0 0 0 0.5px rgba(0, 0, 0, 0.2),
+    /* Contact shadow (shader: shadowOffsetY=1, shadowAlpha=0.30) */
+    0 1px 3px rgba(0, 0, 0, 0.3),
+    /* Gaussian spread (shader: shadowSpread=10, shadowAlpha=0.30) */
+    0 var(--float-shadow-spread) 30px -8px rgba(0, 0, 0, 0.3);
   --float-volumetric-hover:
-    -0.5px 0 1px 0 rgba(255, 60, 60, 0.07),
-    0.5px 0 1px 0 rgba(60, 60, 255, 0.07),
-    inset 0 1px 2px rgba(255, 255, 255, 0.6),
-    inset 0 -0.5px 0 rgba(0, 0, 0, 0.04),
-    inset 0 0 20px rgba(255, 255, 255, 0.05),
-    0 0 0 0.5px rgba(0, 0, 0, 0.12),
-    0 1px 2px rgba(0, 0, 0, 0.22),
-    0 24px 50px -10px rgba(0, 0, 0, 0.45);
+    -0.8px 0 2px 0 rgba(255, 50, 50, 0.10),
+    0.8px 0 2px 0 rgba(50, 50, 255, 0.10),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.35),
+    inset 0 -0.5px 0 rgba(0, 0, 0, 0.06),
+    inset 0 0 12px rgba(255, 255, 255, 0.03),
+    0 0 0 0.5px rgba(0, 0, 0, 0.18),
+    0 1px 3px rgba(0, 0, 0, 0.3),
+    0 20px 45px -10px rgba(0, 0, 0, 0.4);
 }
 
 /* ─── Floating Menu Pill (desktop) ─── */
@@ -3946,19 +4009,25 @@ html:not(.dark) .mobile-search-overlay-results {
   gap: 0;
   padding: 6px 6px 6px 10px;
   border-radius: 9999px;
-  /* Biconvex depth gradient + cool tint (shader: tint * 0.92/0.95/1.05) */
+  /*
+    Shader: blurAmount=0, saturation=0, brightness=0, tintStrength=0.
+    Clear glass — nearly transparent. Subtle radial gradient simulates
+    the biconvex bevelHeight curvature (center brighter, edges darker).
+  */
   background:
-    linear-gradient(
-      180deg,
-      var(--float-bg-1) 0%,
-      var(--float-bg-2) 35%,
-      var(--float-bg-2) 65%,
-      var(--float-bg-3) 100%
+    radial-gradient(
+      ellipse 100% 100% at 50% 50%,
+      rgba(255, 255, 255, 0.04) 0%,
+      rgba(255, 255, 255, 0.01) 60%,
+      rgba(0, 0, 0, 0.04) 100%
     );
-  /* Refraction: blur + saturation + brightness + contrast (shader defaults) */
-  backdrop-filter: blur(var(--float-blur)) saturate(var(--float-saturate)) brightness(106%) contrast(110%);
-  -webkit-backdrop-filter: blur(var(--float-blur)) saturate(var(--float-saturate)) brightness(106%) contrast(110%);
-  border: 1.5px solid rgba(255, 255, 255, var(--float-border));
+  /*
+    Minimal blur (2px) for presence on dark bg.
+    Slight brightness simulates biconvex light gathering (shader: col *= 1+0.06*depth).
+  */
+  backdrop-filter: blur(2px) brightness(105%);
+  -webkit-backdrop-filter: blur(2px) brightness(105%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: var(--float-volumetric);
   transition: box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
               border-color 0.4s ease;
@@ -3967,29 +4036,48 @@ html:not(.dark) .mobile-search-overlay-results {
 }
 
 /*
-  ::before — Blinn-Phong specular highlights (shader: 4 lights)
-  L1 (0.4, 0.7, 1.0) p90 tight upper-right
-  L2 (-0.3, -0.5, 1.0) p50 broad lower-left
-  L3 (0.1, 0.3, 1.0) p6  broad ambient
-  L4 (0.0, 0.9, 0.4) p120 razor top edge
+  ::before — Fresnel + Inner Stroke (shader: fresnel + innerStroke)
+
+  Fresnel: pow(1-abs(N.z), 4) * 1.0 — bright white rim at edges.
+  Inner stroke: thin bright line at inner edge, top-biased.
+  For a pill shape, this creates a bright rim highlight on the
+  top half and subtler rim on the bottom.
 */
 .float-menu::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 8%;
-  right: 8%;
-  height: 1px;
+  inset: 0;
+  border-radius: inherit;
   background:
-    radial-gradient(ellipse 70% 30% at 50% 0%, rgba(255,255,255,0.55) 0%, transparent 100%),
-    linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.5) 20%, rgba(255,255,255,0.9) 50%, rgba(255,255,255,0.5) 80%, transparent 100%);
+    /* Fresnel top (strongest — topBias = 0.5+0.5*(-y/half)) */
+    linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.06) 10%, transparent 30%),
+    /* Fresnel bottom (weaker) */
+    linear-gradient(0deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 10%, transparent 30%),
+    /* Fresnel left/right */
+    linear-gradient(90deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.03) 8%, transparent 25%),
+    linear-gradient(270deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.03) 8%, transparent 25%),
+    /*
+      Inner stroke (shader: borderWidth=1.5, top-biased by topBias).
+      On a pill, this creates the signature bright edge line.
+    */
+    linear-gradient(180deg,
+      rgba(255,255,255,0.20) 0%,
+      rgba(255,255,255,0.05) 2.5%,
+      transparent 4%,
+      transparent 96%,
+      rgba(255,255,255,0.02) 98%,
+      rgba(255,255,255,0.06) 100%
+    );
   z-index: 3;
   pointer-events: none;
 }
 
 /*
-  ::after — Environment caustic + fresnel reflection
-  (shader: envRefl + fresnel * 0.2 white mix)
+  ::after — Biconvex depth + environment reflection
+
+  Shader: depth = smoothstep(0, zRadius, inside)
+  col *= 1 + 0.06*depth — center 6% brighter (light through glass)
+  envRefl = (N.y*0.5+0.5) * fres * 0.08 — subtle top reflection
 */
 .float-menu::after {
   content: '';
@@ -3997,18 +4085,21 @@ html:not(.dark) .mobile-search-overlay-results {
   inset: 0;
   border-radius: inherit;
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 30%),
-    radial-gradient(ellipse 70% 50% at var(--light-x, 35%) var(--light-y, 15%),
-      rgba(255, 255, 255, 0.08) 0%,
-      rgba(255, 255, 255, 0.02) 40%,
-      transparent 70%);
+    /* Biconvex depth: center brighter (lens gathers light) */
+    radial-gradient(
+      ellipse 80% 80% at 50% 50%,
+      rgba(255, 255, 255, 0.03) 0%,
+      rgba(255, 255, 255, 0.015) 40%,
+      transparent 70%
+    ),
+    /* Environment reflection from above */
+    radial-gradient(
+      ellipse 60% 40% at 50% 0%,
+      rgba(255, 255, 255, 0.04) 0%,
+      transparent 70%
+    );
   pointer-events: none;
   z-index: 1;
-  animation: float-caustic-shift 8s ease-in-out infinite;
-}
-@keyframes float-caustic-shift {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
 }
 
 .float-menu > * {
@@ -4016,26 +4107,31 @@ html:not(.dark) .mobile-search-overlay-results {
   z-index: 2;
 }
 
-/* Scrolled state — slightly more opaque */
+/*
+  Scrolled state — shader doesn't have scroll states, but we can
+  increase the fresnel intensity slightly to suggest the glass is
+  floating higher above the now-scrolled content.
+*/
 .float-menu.scrolled {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.16) 0%,
-    rgba(255, 255, 255, 0.08) 50%,
-    rgba(255, 255, 255, 0.10) 100%
-  );
+  background:
+    radial-gradient(
+      ellipse 100% 100% at 50% 50%,
+      rgba(255, 255, 255, 0.06) 0%,
+      rgba(255, 255, 255, 0.02) 60%,
+      rgba(0, 0, 0, 0.03) 100%
+    );
   box-shadow: var(--float-volumetric-hover);
-  border-color: rgba(255, 255, 255, 0.38);
+  border-color: rgba(255, 255, 255, 0.12);
 }
 
-@supports not (backdrop-filter: blur(20px)) {
+@supports not (backdrop-filter: blur(2px)) {
   .float-menu {
-    background: rgba(10, 12, 18, 0.90);
+    background: rgba(10, 12, 18, 0.75);
     box-shadow:
-      inset 0 1px 1.5px rgba(255, 255, 255, 0.4),
-      0 0 0 0.5px rgba(0, 0, 0, 0.15),
-      0 1px 2px rgba(0, 0, 0, 0.22),
-      0 10px 40px -10px rgba(0, 0, 0, 0.4);
+      inset 0 1px 1px rgba(255, 255, 255, 0.15),
+      0 0 0 0.5px rgba(0, 0, 0, 0.2),
+      0 1px 3px rgba(0, 0, 0, 0.3),
+      0 8px 30px -8px rgba(0, 0, 0, 0.3);
   }
   .float-menu::before,
   .float-menu::after { display: none; }
