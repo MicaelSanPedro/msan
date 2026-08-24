@@ -1,0 +1,1368 @@
+  3520→
+  3521→/* ─── When real LiquidGlass (WebGL) is active, strip CSS fake glass ─── */
+  3522→.lg-glass {
+  3523→  background: transparent !important;
+  3524→  backdrop-filter: none !important;
+  3525→  -webkit-backdrop-filter: none !important;
+  3526→  border: none !important;
+  3527→  box-shadow: none !important;
+  3528→}
+  3529→.lg-glass::before,
+  3530→.lg-glass::after {
+  3531→  display: none !important;
+  3532→}
+  3533→
+  3534→/* ─── Tab Bar (liquid glass pill) ─── */
+  3535→.mobile-tab-bar {
+  3536→  position: fixed;
+  3537→  bottom: 0;
+  3538→  left: 50%;
+  3539→  transform: translateX(-50%);
+  3540→  z-index: 50;
+  3541→  display: flex;
+  3542→  align-items: center;
+  3543→  justify-content: space-around;
+  3544→  width: calc(100% - 24px);
+  3545→  max-width: 420px;
+  3546→  padding: 6px 4px calc(env(safe-area-inset-bottom, 0px) + 8px);
+  3547→  pointer-events: auto;
+  3548→  animation: tab-bar-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  3549→  animation-delay: 0.15s;
+  3550→}
+  3551→
+  3552→@keyframes tab-bar-in {
+  3553→  0% {
+  3554→    opacity: 0;
+  3555→    transform: translateY(24px) scale(0.96);
+  3556→  }
+  3557→  100% {
+  3558→    opacity: 1;
+  3559→    transform: translateY(0) scale(1);
+  3560→  }
+  3561→}
+  3562→
+  3563→/* Specular highlight — top shine */
+  3564→.mobile-tab-bar-shine {
+  3565→  position: absolute;
+  3566→  top: 0;
+  3567→  left: 8%;
+  3568→  right: 8%;
+  3569→  height: 1px;
+  3570→  background: linear-gradient(
+  3571→    90deg,
+  3572→    transparent 0%,
+  3573→    rgba(255, 255, 255, 0.4) 20%,
+  3574→    rgba(255, 255, 255, 0.8) 50%,
+  3575→    rgba(255, 255, 255, 0.4) 80%,
+  3576→    transparent 100%
+  3577→  );
+  3578→  z-index: 3;
+  3579→  pointer-events: none;
+  3580→}
+  3581→
+  3582→/* Caustic light refraction */
+  3583→.mobile-tab-bar-caustic {
+  3584→  position: absolute;
+  3585→  inset: 0;
+  3586→  border-radius: inherit;
+  3587→  background: radial-gradient(
+  3588→    ellipse 60% 40% at var(--light-x, 35%) var(--light-y, 15%),
+  3589→    rgba(255, 255, 255, 0.08) 0%,
+  3590→    rgba(255, 255, 255, 0.02) 40%,
+  3591→    transparent 70%
+  3592→  );
+  3593→  pointer-events: none;
+  3594→  z-index: 1;
+  3595→  animation: tab-caustic 8s ease-in-out infinite;
+  3596→}
+  3597→
+  3598→@keyframes tab-caustic {
+  3599→  0%, 100% { opacity: 1; }
+  3600→  50% { opacity: 0.6; }
+  3601→}
+  3602→
+  3603→/* ─── Tab Bar Items Container ─── */
+  3604→.mobile-tab-bar-items {
+  3605→  position: relative;
+  3606→  z-index: 2;
+  3607→  display: flex;
+  3608→  align-items: center;
+  3609→  justify-content: space-around;
+  3610→  width: 100%;
+  3611→  gap: 0;
+  3612→}
+  3613→
+  3614→/* ─── Individual Tab Item ─── */
+  3615→.mobile-tab-item {
+  3616→  display: flex;
+  3617→  flex-direction: column;
+  3618→  align-items: center;
+  3619→  justify-content: center;
+  3620→  gap: 3px;
+  3621→  padding: 6px 2px;
+  3622→  min-width: 0;
+  3623→  flex: 1;
+  3624→  border-radius: 14px;
+  3625→  color: rgba(255, 255, 255, 0.45);
+  3626→  cursor: pointer;
+  3627→  text-decoration: none;
+  3628→  -webkit-tap-highlight-color: transparent;
+  3629→  transition: color 0.25s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  3630→  position: relative;
+  3631→}
+  3632→
+  3633→.mobile-tab-item:active {
+  3634→  transform: scale(0.92);
+  3635→}
+  3636→
+  3637→.mobile-tab-item.active {
+  3638→  color: rgba(255, 255, 255, 0.95);
+  3639→}
+  3640→
+  3641→/* ─── Tab Icon ─── */
+  3642→.mobile-tab-icon-wrap {
+  3643→  position: relative;
+  3644→  display: flex;
+  3645→  align-items: center;
+  3646→  justify-content: center;
+  3647→  width: 24px;
+  3648→  height: 24px;
+  3649→}
+  3650→
+  3651→.mobile-tab-icon {
+  3652→  width: 20px;
+  3653→  height: 20px;
+  3654→  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  3655→}
+  3656→
+  3657→.mobile-tab-item.active .mobile-tab-icon {
+  3658→  transform: translateY(-0.5px);
+  3659→}
+  3660→
+  3661→/* Active glow behind icon */
+  3662→.mobile-tab-glow {
+  3663→  position: absolute;
+  3664→  inset: -6px;
+  3665→  border-radius: 50%;
+  3666→  background: radial-gradient(
+  3667→    circle,
+  3668→    rgba(var(--accent-rgb), 0.25) 0%,
+  3669→    rgba(var(--accent-rgb), 0.08) 40%,
+  3670→    transparent 70%
+  3671→  );
+  3672→  pointer-events: none;
+  3673→  animation: tab-glow-pulse 2.5s ease-in-out infinite;
+  3674→}
+  3675→
+  3676→@keyframes tab-glow-pulse {
+  3677→  0%, 100% { opacity: 1; }
+  3678→  50% { opacity: 0.7; }
+  3679→}
+  3680→
+  3681→/* ─── Tab Label ─── */
+  3682→.mobile-tab-label {
+  3683→  font-size: 10px;
+  3684→  font-weight: 500;
+  3685→  letter-spacing: 0.01em;
+  3686→  line-height: 1;
+  3687→  white-space: nowrap;
+  3688→  transition: color 0.25s ease;
+  3689→}
+  3690→
+  3691→.mobile-tab-item.active .mobile-tab-label {
+  3692→  color: rgba(var(--accent-rgb), 0.9);
+  3693→}
+  3694→
+  3695→/* ─── Mobile Search Overlay ─── */
+  3696→.mobile-search-overlay {
+  3697→  position: fixed;
+  3698→  bottom: 80px;
+  3699→  left: 12px;
+  3700→  right: 12px;
+  3701→  z-index: 59;
+  3702→  animation: search-overlay-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  3703→}
+  3704→
+  3705→@keyframes search-overlay-in {
+  3706→  0% {
+  3707→    opacity: 0;
+  3708→    transform: translateY(12px) scale(0.96);
+  3709→  }
+  3710→  100% {
+  3711→    opacity: 1;
+  3712→    transform: translateY(0) scale(1);
+  3713→  }
+  3714→}
+  3715→
+  3716→.mobile-search-overlay-inner {
+  3717→  position: relative;
+  3718→  display: flex;
+  3719→  align-items: center;
+  3720→  gap: 10px;
+  3721→  padding: 12px 14px;
+  3722→  border-radius: 18px;
+  3723→  background: linear-gradient(
+  3724→    135deg,
+  3725→    rgba(255, 255, 255, 0.14) 0%,
+  3726→    rgba(255, 255, 255, 0.06) 100%
+  3727→  );
+  3728→  backdrop-filter: blur(var(--float-blur)) saturate(var(--float-saturate)) contrast(110%);
+  3729→  -webkit-backdrop-filter: blur(var(--float-blur)) saturate(var(--float-saturate)) contrast(110%);
+  3730→  border: 1.5px solid rgba(255, 255, 255, var(--float-border));
+  3731→  box-shadow:
+  3732→    inset 0 1px 0 0 rgba(255, 255, 255, 0.5),
+  3733→    0 8px 32px -8px rgba(0, 0, 0, 0.5);
+  3734→  overflow: hidden;
+  3735→}
+  3736→
+  3737→.mobile-search-overlay-shine {
+  3738→  position: absolute;
+  3739→  top: 0;
+  3740→  left: 10%;
+  3741→  right: 10%;
+  3742→  height: 1px;
+  3743→  background: linear-gradient(
+  3744→    90deg,
+  3745→    transparent 0%,
+  3746→    rgba(255, 255, 255, 0.3) 20%,
+  3747→    rgba(255, 255, 255, 0.6) 50%,
+  3748→    rgba(255, 255, 255, 0.3) 80%,
+  3749→    transparent 100%
+  3750→  );
+  3751→  pointer-events: none;
+  3752→  z-index: 2;
+  3753→}
+  3754→
+  3755→.mobile-search-overlay-input {
+  3756→  flex: 1;
+  3757→  min-width: 0;
+  3758→  background: transparent;
+  3759→  border: none;
+  3760→  outline: none;
+  3761→  color: white;
+  3762→  font-size: 0.875rem;
+  3763→  -webkit-appearance: none;
+  3764→  appearance: none;
+  3765→}
+  3766→
+  3767→.mobile-search-overlay-input::placeholder {
+  3768→  color: rgba(255, 255, 255, 0.35);
+  3769→}
+  3770→
+  3771→.mobile-search-overlay-results {
+  3772→  margin-top: 8px;
+  3773→  border-radius: 18px;
+  3774→  background: linear-gradient(
+  3775→    180deg,
+  3776→    rgba(14, 14, 18, 0.95) 0%,
+  3777→    rgba(10, 10, 12, 0.98) 100%
+  3778→  );
+  3779→  backdrop-filter: blur(16px) saturate(180%);
+  3780→  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  3781→  border: 1.5px solid rgba(255, 255, 255, var(--glass-border-opacity));
+  3782→  box-shadow: var(--glass-volumetric);
+  3783→  overflow: hidden;
+  3784→  max-height: 50vh;
+  3785→  overflow-y: auto;
+  3786→}
+  3787→
+  3788→/* ─── Light mode tab bar overrides ─── */
+  3789→html:not(.dark) .mobile-tab-bar {
+  3790→  background: linear-gradient(
+  3791→    135deg,
+  3792→    rgba(255, 255, 255, 0.65) 0%,
+  3793→    rgba(255, 255, 255, 0.45) 50%,
+  3794→    rgba(255, 255, 255, 0.55) 100%
+  3795→  );
+  3796→  border-color: rgba(0, 0, 0, 0.08);
+  3797→  box-shadow:
+  3798→    inset 0 1px 0 0 rgba(255, 255, 255, 0.9),
+  3799→    inset 0 -1px 0 0 rgba(0, 0, 0, 0.04),
+  3800→    0 1px 3px 0 rgba(0, 0, 0, 0.06),
+  3801→    0 8px 24px -4px rgba(0, 0, 0, 0.1),
+  3802→    0 18px 40px -8px rgba(0, 0, 0, 0.08);
+  3803→}
+  3804→
+  3805→html:not(.dark) .mobile-tab-bar-shine {
+  3806→  background: linear-gradient(
+  3807→    90deg,
+  3808→    transparent 0%,
+  3809→    rgba(255, 255, 255, 0.6) 30%,
+  3810→    rgba(255, 255, 255, 0.9) 50%,
+  3811→    rgba(255, 255, 255, 0.6) 70%,
+  3812→    transparent 100%
+  3813→  );
+  3814→}
+  3815→
+  3816→html:not(.dark) .mobile-tab-item {
+  3817→  color: rgba(0, 0, 0, 0.4);
+  3818→}
+  3819→
+  3820→html:not(.dark) .mobile-tab-item.active {
+  3821→  color: rgba(0, 0, 0, 0.85);
+  3822→}
+  3823→
+  3824→html:not(.dark) .mobile-tab-item.active .mobile-tab-label {
+  3825→  color: rgba(4, 120, 87, 0.9);
+  3826→}
+  3827→
+  3828→html:not(.dark) .mobile-search-overlay-inner {
+  3829→  background: linear-gradient(
+  3830→    135deg,
+  3831→    rgba(255, 255, 255, 0.8) 0%,
+  3832→    rgba(255, 255, 255, 0.6) 100%
+  3833→  );
+  3834→  border-color: rgba(0, 0, 0, 0.08);
+  3835→  box-shadow:
+  3836→    inset 0 1px 0 0 rgba(255, 255, 255, 0.9),
+  3837→    0 8px 32px -8px rgba(0, 0, 0, 0.15);
+  3838→}
+  3839→
+  3840→html:not(.dark) .mobile-search-overlay-inner input {
+  3841→  color: #1a1a1a;
+  3842→}
+  3843→
+  3844→html:not(.dark) .mobile-search-overlay-inner input::placeholder {
+  3845→  color: rgba(0, 0, 0, 0.35);
+  3846→}
+  3847→
+  3848→html:not(.dark) .mobile-search-overlay-results {
+  3849→  background: linear-gradient(
+  3850→    180deg,
+  3851→    rgba(244, 248, 246, 0.98) 0%,
+  3852→    rgba(240, 245, 242, 0.99) 100%
+  3853→  );
+  3854→  border-color: rgba(0, 0, 0, 0.08);
+  3855→  box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.12);
+  3856→}
+  3857→
+  3858→/* Fallback for no backdrop-filter */
+  3859→@supports not (backdrop-filter: blur(20px)) {
+  3860→  .mobile-tab-bar {
+  3861→    background: rgba(8, 7, 10, 0.92);
+  3862→  }
+  3863→  .mobile-tab-bar-shine,
+  3864→  .mobile-tab-bar-caustic { display: none; }
+  3865→}
+  3866→
+  3867→/* ═══════════════════════════════════════════════════════════════
+  3868→   Floating Liquid Glass Menu System
+  3869→   Inspired by @ybouane/liquidglass — CSS approximation
+  3870→   Refraction feel · Specular highlights · Volumetric depth
+  3871→   ═══════════════════════════════════════════════════════════════ */
+  3872→
+  3873→/* ─── Floating Menu Variables ─── */
+  3874→:root {
+  3875→  --float-blur: 24px;
+  3876→  --float-saturate: 200%;
+  3877→  --float-border: 0.30;
+  3878→  --float-shadow-spread: 18px;
+  3879→  --float-shadow-y: 6px;
+  3880→  --float-bg-1: rgba(255, 255, 255, 0.12);
+  3881→  --float-bg-2: rgba(255, 255, 255, 0.05);
+  3882→  --float-bg-3: rgba(255, 255, 255, 0.08);
+  3883→  --float-volumetric:
+  3884→    inset 0 1px 0 0 rgba(255, 255, 255, 0.55),
+  3885→    inset 0 -1px 0 0 rgba(255, 255, 255, 0.10),
+  3886→    0 1px 2px 0 rgba(0, 0, 0, 0.3),
+  3887→    0 4px 12px -2px rgba(0, 0, 0, 0.25),
+  3888→    0 var(--float-shadow-spread) var(--float-shadow-y) -6px rgba(0, 0, 0, 0.5);
+  3889→  --float-volumetric-hover:
+  3890→    inset 0 1px 0 0 rgba(255, 255, 255, 0.65),
+  3891→    inset 0 -1px 0 0 rgba(255, 255, 255, 0.15),
+  3892→    0 1px 2px 0 rgba(0, 0, 0, 0.3),
+  3893→    0 4px 12px -2px rgba(0, 0, 0, 0.25),
+  3894→    0 24px 48px -8px rgba(0, 0, 0, 0.55);
+  3895→}
+  3896→
+  3897→/* ─── Floating Menu Pill (desktop) ─── */
+  3898→.float-menu {
+  3899→  position: fixed;
+  3900→  top: 12px;
+  3901→  left: 50%;
+  3902→  transform: translateX(-50%);
+  3903→  z-index: 50;
+  3904→  display: flex;
+  3905→  align-items: center;
+  3906→  gap: 0;
+  3907→  padding: 6px 6px 6px 10px;
+  3908→   border-radius: 9999px;
+  3909→  background: linear-gradient(
+  3910→    135deg,
+  3911→    var(--float-bg-1) 0%,
+  3912→    var(--float-bg-2) 50%,
+  3913→    var(--float-bg-3) 100%
+  3914→  );
+  3915→  backdrop-filter: blur(var(--float-blur)) saturate(var(--float-saturate)) contrast(110%);
+  3916→  -webkit-backdrop-filter: blur(var(--float-blur)) saturate(var(--float-saturate)) contrast(110%);
+  3917→  border: 1.5px solid rgba(255, 255, 255, var(--float-border));
+  3918→  box-shadow: var(--float-volumetric);
+  3919→  transition: box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+  3920→              border-color 0.4s ease;
+  3921→  isolation: isolate;
+  3922→}
+  3923→
+  3924→/* Specular highlight — top edge shine */
+  3925→.float-menu::before {
+  3926→  content: '';
+  3927→  position: absolute;
+  3928→  top: 0;
+  3929→  left: 8%;
+  3930→  right: 8%;
+  3931→  height: 1px;
+  3932→  background: linear-gradient(
+  3933→    90deg,
+  3934→    transparent 0%,
+  3935→    rgba(255, 255, 255, 0.5) 20%,
+  3936→    rgba(255, 255, 255, 0.85) 50%,
+  3937→    rgba(255, 255, 255, 0.5) 80%,
+  3938→    transparent 100%
+  3939→  );
+  3940→  z-index: 3;
+  3941→  pointer-events: none;
+  3942→}
+  3943→
+  3944→/* Caustic light refraction pattern */
+  3945→.float-menu::after {
+  3946→  content: '';
+  3947→  position: absolute;
+  3948→  inset: 0;
+  3949→  border-radius: inherit;
+  3950→  background: radial-gradient(
+  3951→    ellipse 70% 50% at var(--light-x, 35%) var(--light-y, 15%),
+  3952→    rgba(255, 255, 255, 0.10) 0%,
+  3953→    rgba(255, 255, 255, 0.03) 40%,
+  3954→    transparent 70%
+  3955→  );
+  3956→  pointer-events: none;
+  3957→  z-index: 1;
+  3958→  animation: float-caustic-shift 8s ease-in-out infinite;
+  3959→}
+  3960→@keyframes float-caustic-shift {
+  3961→  0%, 100% { opacity: 1; }
+  3962→  50% { opacity: 0.7; }
+  3963→}
+  3964→
+  3965→.float-menu > * {
+  3966→  position: relative;
+  3967→  z-index: 2;
+  3968→}
+  3969→
+  3970→/* Scrolled state — slightly more opaque */
+  3971→.float-menu.scrolled {
+  3972→  background: linear-gradient(
+  3973→    135deg,
+  3974→    rgba(255, 255, 255, 0.16) 0%,
+  3975→    rgba(255, 255, 255, 0.08) 50%,
+  3976→    rgba(255, 255, 255, 0.10) 100%
+  3977→  );
+  3978→  box-shadow: var(--float-volumetric-hover);
+  3979→  border-color: rgba(255, 255, 255, 0.38);
+  3980→}
+  3981→
+  3982→@supports not (backdrop-filter: blur(20px)) {
+  3983→  .float-menu {
+  3984→    background: rgba(8, 7, 10, 0.92);
+  3985→  }
+  3986→  .float-menu::before,
+  3987→  .float-menu::after { display: none; }
+  3988→}
+  3989→@media (max-width: 768px) {
+  3990→  .float-menu { display: none; }
+  3991→}
+  3992→@media (min-width: 769px) {
+  3993→  .mobile-tab-bar { display: none !important; }
+  3994→}
+  3995→
+  3996→/* ─── Float Menu Nav Links ─── */
+  3997→.float-nav-link {
+  3998→  position: relative;
+  3999→  padding: 0.4rem 0.85rem;
+  4000→  font-size: 0.8125rem;
+  4001→  font-weight: 500;
+  4002→  border-radius: 9999px;
+  4003→  color: rgba(255, 255, 255, 0.55);
+  4004→  transition: color 0.25s ease, background 0.25s ease;
+  4005→  text-decoration: none;
+  4006→  white-space: nowrap;
+  4007→  z-index: 2;
+  4008→}
+  4009→.float-nav-link:hover {
+  4010→  color: rgba(255, 255, 255, 0.9);
+  4011→  background: rgba(255, 255, 255, 0.06);
+  4012→}
+  4013→.float-nav-link.active {
+  4014→  color: rgba(255, 255, 255, 0.95);
+  4015→}
+  4016→
+  4017→/* ─── Float Menu Sliding Indicator ─── */
+  4018→.float-pill-indicator {
+  4019→  position: absolute;
+  4020→  top: 4px;
+  4021→  left: 0;
+  4022→  height: calc(100% - 8px);
+  4023→  background: linear-gradient(
+  4024→    135deg,
+  4025→    rgba(255, 255, 255, 0.10) 0%,
+  4026→    rgba(255, 255, 255, 0.05) 100%
+  4027→  );
+  4028→  border-radius: 9999px;
+  4029→  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  4030→  pointer-events: none;
+  4031→  z-index: 1;
+  4032→  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  4033→}
+  4034→
+  4035→/* ─── Float Menu Search (closed) ─── */
+  4036→.float-search-btn {
+  4037→  display: flex;
+  4038→  align-items: center;
+  4039→  gap: 0.4rem;
+  4040→  padding: 0.4rem 0.7rem;
+  4041→  border-radius: 9999px;
+  4042→  color: rgba(255, 255, 255, 0.4);
+  4043→  transition: color 0.25s ease, background 0.25s ease;
+  4044→  cursor: pointer;
+  4045→  font-size: 0.8125rem;
+  4046→  border: none;
+  4047→  background: transparent;
+  4048→  outline: none;
+  4049→}
+  4050→.float-search-btn:hover {
+  4051→  color: rgba(255, 255, 255, 0.75);
+  4052→  background: rgba(255, 255, 255, 0.06);
+  4053→}
+  4054→.float-search-btn:active {
+  4055→  transform: scale(0.95);
+  4056→}
+  4057→
+  4058→/* ─── Float Menu Search (open — inline in pill) ─── */
+  4059→.float-search-inline {
+  4060→  display: flex;
+  4061→  align-items: center;
+  4062→  gap: 0.4rem;
+  4063→  padding: 0.3rem 0.6rem 0.3rem 0.8rem;
+  4064→  border-radius: 9999px;
+  4065→  background: rgba(255, 255, 255, 0.06);
+  4066→  border: 1px solid rgba(255, 255, 255, 0.10);
+  4067→  animation: float-search-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  4068→  transition: border-color 0.2s ease;
+  4069→}
+  4070→.float-search-inline:focus-within {
+  4071→  border-color: rgba(var(--accent-rgb), 0.35);
+  4072→  box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.12);
+  4073→}
+  4074→@keyframes float-search-in {
+  4075→  from { opacity: 0; transform: scaleX(0.85); transform-origin: right center; }
+  4076→  to { opacity: 1; transform: scaleX(1); transform-origin: right center; }
+  4077→}
+  4078→.float-search-inline input {
+  4079→ flex: 1;
+  4080→  min-width: 0;
+  4081→ background: transparent;
+  4082→  font-size: 0.8125rem;
+  4083→  color: white;
+  4084→  outline: none;
+  4085→  width: 160px;
+  4086→}
+  4087→.float-search-inline input::placeholder {
+  4088→  color: rgba(255, 255, 255, 0.25);
+  4089→}
+  4090→
+  4091→/* ─── Float Search Dropdown ─── */
+  4092→.float-search-dropdown {
+  4093→  position: absolute;
+  4094→  top: calc(100% + 10px);
+  4095→  right: 0;
+  4096→  width: 340px;
+  4097→  border-radius: 20px;
+  4098→  overflow: hidden;
+  4099→  z-index: 60;
+  4100→  backdrop-filter: blur(var(--float-blur)) saturate(var(--float-saturate)) contrast(110%);
+  4101→  -webkit-backdrop-filter: blur(var(--float-blur)) saturate(var(--float-saturate)) contrast(110%);
+  4102→  background: linear-gradient(135deg, rgba(18, 18, 22, 0.92), rgba(12, 12, 14, 0.96));
+  4103→  border: 1.5px solid rgba(255, 255, 255, var(--float-border));
+  4104→  box-shadow:
+  4105→    0 20px 60px -12px rgba(0, 0, 0, 0.6),
+  4106→    0 8px 24px -8px rgba(0, 0, 0, 0.3),
+  4107→    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  4108→  animation: float-drop-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  4109→}
+  4110→.float-search-dropdown::before {
+  4111→  content: '';
+  4112→  position: absolute;
+  4113→  top: 0;
+  4114→  left: 10%;
+  4115→  right: 10%;
+  4116→  height: 1px;
+  4117→  background: linear-gradient(
+  4118→    90deg,
+  4119→    transparent 0%,
+  4120→    rgba(255, 255, 255, 0.3) 20%,
+  4121→    rgba(255, 255, 255, 0.5) 50%,
+  4122→    rgba(255, 255, 255, 0.3) 80%,
+  4123→    transparent 100%
+  4124→  );
+  4125→  z-index: 3;
+  4126→  pointer-events: none;
+  4127→}
+  4128→@keyframes float-drop-in {
+  4129→  from { opacity: 0; transform: translateY(-6px) scaleY(0.96); }
+  4130→  to { opacity: 1; transform: translateY(0) scaleY(1); }
+  4131→}
+  4132→.float-search-result {
+  4133→  width: 100%;
+  4134→  text-align: left;
+  4135→  padding: 0.55rem 0.7rem;
+  4136→  border-radius: 12px;
+  4137→  display: flex;
+  4138→  align-items: flex-start;
+  4139→  gap: 0.7rem;
+  4140→  color: rgba(255, 255, 255, 0.75);
+  4141→  transition: background 0.15s ease;
+  4142→  cursor: pointer;
+  4143→}
+  4144→.float-search-result:hover,
+  4145→.float-search-result-active {
+  4146→  background: rgba(var(--accent-rgb), 0.08);
+  4147→}
+  4148→
+  4149→/* ─── Divider inside float pill ─── */
+  4150→.float-divider {
+  4151→  width: 1px;
+  4152→  height: 20px;
+  4153→  background: rgba(255, 255, 255, 0.10);
+  4154→  flex-shrink: 0;
+  4155→  margin: 0 2px;
+  4156→}
+  4157→
+  4158→/* ─── Light mode ─── */
+  4159→html:not(.dark) .float-menu {
+  4160→  background: linear-gradient(
+  4161→    135deg,
+  4162→    rgba(255, 255, 255, 0.65) 0%,
+  4163→    rgba(255, 255, 255, 0.35) 50%,
+  4164→    rgba(255, 255, 255, 0.45) 100%
+  4165→  );
+  4166→  border-color: rgba(0, 0, 0, 0.10);
+  4167→  box-shadow:
+  4168→    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+  4169→    0 1px 2px rgba(0, 0, 0, 0.08),
+  4170→    0 var(--float-shadow-spread) var(--float-shadow-y) -6px rgba(0, 0, 0, 0.12);
+  4171→}
+  4172→html:not(.dark) .float-menu::before {
+  4173→  background: linear-gradient(
+  4174→    90deg,
+  4175→    transparent 0%,
+  4176→    rgba(255, 255, 255, 0.6) 20%,
+  4177→    rgba(255, 255, 255, 0.9) 50%,
+  4178→    rgba(255, 255, 255, 0.6) 80%,
+  4179→    transparent 100%
+  4180→  );
+  4181→}
+  4182→html:not(.dark) .float-menu::after {
+  4183→  background: radial-gradient(
+  4184→    ellipse 70% 50% at 35% 15%,
+  4185→    rgba(255, 255, 255, 0.4) 0%,
+  4186→    rgba(255, 255, 255, 0.1) 40%,
+  4187→    transparent 70%
+  4188→  );
+  4189→}
+  4190→html:not(.dark) .float-nav-link {
+  4191→  color: rgba(30, 30, 30, 0.55);
+  4192→}
+  4193→html:not(.dark) .float-nav-link:hover {
+  4194→  color: rgba(30, 30, 30, 0.9);
+  4195→  background: rgba(0, 0, 0, 0.05);
+  4196→}
+  4197→html:not(.dark) .float-nav-link.active {
+  4198→  color: rgba(30, 30, 30, 0.95);
+  4199→}
+  4200→html:not(.dark) .float-pill-indicator {
+  4201→  background: rgba(0, 0, 0, 0.06);
+  4202→  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  4203→}
+  4204→html:not(.dark) .float-search-btn {
+  4205→  color: rgba(0, 0, 0, 0.4);
+  4206→}
+  4207→html:not(.dark) .float-search-btn:hover {
+  4208→  color: rgba(0, 0, 0, 0.7);
+  4209→  background: rgba(0, 0, 0, 0.05);
+  4210→}
+  4211→html:not(.dark) .float-search-inline {
+  4212→  background: rgba(0, 0, 0, 0.04);
+  4213→  border-color: rgba(0, 0, 0, 0.08);
+  4214→}
+  4215→html:not(.dark) .float-search-inline input {
+  4216→  color: #1a1a1a;
+  4217→}
+  4218→html:not(.dark) .float-search-inline input::placeholder {
+  4219→  color: rgba(0, 0, 0, 0.3);
+  4220→}
+  4221→html:not(.dark) .float-divider {
+  4222→  background: rgba(0, 0, 0, 0.08);
+  4223→}
+  4224→html:not(.dark) .float-search-dropdown {
+  4225→  background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(248, 248, 250, 0.98));
+  4226→  border-color: rgba(0, 0, 0, 0.08);
+  4227→  box-shadow:
+  4228→    0 20px 60px -12px rgba(0, 0, 0, 0.12),
+  4229→    0 8px 24px -8px rgba(0, 0, 0, 0.06),
+  4230→    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  4231→}
+  4232→
+  4233→/* ─── Reduce motion (user toggle & system) ── */
+  4234→.reduced-motion *,
+  4235→.reduced-motion *::before,
+  4236→.reduced-motion *::after {
+  4237→  animation-duration: 0.01ms !important;
+  4238→  animation-iteration-count: 1 !important;
+  4239→  transition-duration: 0.01ms !important;
+  4240→  scroll-behavior: auto !important;
+  4241→}
+  4242→.reduced-motion .ambient-orb,
+  4243→.reduced-motion .cinema-grain,
+  4244→.reduced-motion .light-leak,
+  4245→.reduced-motion .bokeh-particle,
+  4246→.reduced-motion .welcome-ring {
+  4247→  display: none !important;
+  4248→}
+  4249→@media (prefers-reduced-motion: reduce) {
+  4250→  *, *::before, *::after {
+  4251→    animation-duration: 0.01ms !important;
+  4252→    animation-iteration-count: 1 !important;
+  4253→    transition-duration: 0.01ms !important;
+  4254→    scroll-behavior: auto !important;
+  4255→  }
+  4256→}
+  4257→
+  4258→/* ─── User font size scaling ─────────────────── */
+  4259→html {
+  4260→  --user-font-scale: 1;
+  4261→}
+  4262→html:not([style*="--user-font-scale"]) {
+  4263→  --user-font-scale: 1;
+  4264→}
+  4265→
+  4266→/* ─── Compact mode ────────────────────────────── */
+  4267→.compact-mode .liquid-glass-card {
+  4268→  padding-top: 0.75rem;
+  4269→  padding-bottom: 0.75rem;
+  4270→}
+  4271→.compact-mode [class*="py-3.5"],
+  4272→.compact-mode [class*="py-4"] {
+  4273→  padding-top: 0.5rem;
+  4274→  padding-bottom: 0.5rem;
+  4275→}
+  4276→.compact-mode section {
+  4277→  margin-bottom: 0.75rem !important;
+  4278→}
+  4279→
+  4280→/* ─────────────────────────────────────────────
+  4281→   Mobile / responsive refinements
+  4282→   ───────────────────────────────────────────── */
+  4283→
+  4284→/* Prevent iOS zoom on input focus (min 16px) */
+  4285→input, textarea, select {
+  4286→  font-size: 16px;
+  4287→}
+  4288→@media (min-width: 640px) {
+  4289→  input, textarea, select {
+  4290→    font-size: inherit;
+  4291→  }
+  4292→}
+  4293→
+  4294→/* Remove tap highlight, use our own active states */
+  4295→* {
+  4296→  -webkit-tap-highlight-color: transparent;
+  4297→}
+  4298→
+  4299→/* Better touch behavior */
+  4300→html {
+  4301→  overscroll-behavior-y: none;
+  4302→  -webkit-text-size-adjust: 100%;
+  4303→}
+  4304→
+  4305→/* Safe area for notched devices (iOS) */
+  4306→body {
+  4307→  padding-left: env(safe-area-inset-left);
+  4308→  padding-right: env(safe-area-inset-right);
+  4309→}
+  4310→
+  4311→/* Hide scrollbar utility (used in filter pills) */
+  4312→.scrollbar-thin::-webkit-scrollbar {
+  4313→  height: 4px;
+  4314→}
+  4315→.scrollbar-thin::-webkit-scrollbar-track {
+  4316→  background: transparent;
+  4317→}
+  4318→.scrollbar-thin::-webkit-scrollbar-thumb {
+  4319→  background: rgba(var(--accent-rgb), 0.2);
+  4320→  border-radius: 10px;
+  4321→}
+  4322→@media (max-width: 640px) {
+  4323→  .scrollbar-thin::-webkit-scrollbar {
+  4324→    display: none;
+  4325→  }
+  4326→  .scrollbar-thin {
+  4327→    scrollbar-width: none;
+  4328→  }
+  4329→}
+  4330→
+  4331→/* Mobile prose adjustments */
+  4332→@media (max-width: 640px) {
+  4333→  .prose-custom {
+  4334→    font-size: 1rem;
+  4335→    line-height: 1.7;
+  4336→  }
+  4337→  .prose-custom h1 { font-size: 1.625rem; }
+  4338→  .prose-custom h2 { font-size: 1.375rem; }
+  4339→  .prose-custom h3 { font-size: 1.15rem; }
+  4340→  .prose-custom h4 { font-size: 1rem; }
+  4341→  .prose-custom pre {
+  4342→    padding: 1rem;
+  4343→    font-size: 0.8125rem;
+  4344→    border-radius: 0.65rem;
+  4345→    margin-left: 0;
+  4346→    margin-right: 0;
+  4347→  }
+  4348→  .prose-custom blockquote {
+  4349→    padding: 0.6em 1em;
+  4350→    margin: 1.25em -0.25em;
+  4351→  }
+  4352→  .prose-custom :not(pre) > code {
+  4353→    font-size: 0.85em;
+  4354→    word-break: break-word;
+  4355→  }
+  4356→}
+  4357→
+  4358→/* Buttons - mobile-friendly sizes (44px tap target) */
+  4359→@media (max-width: 640px) {
+  4360→  .btn-primary, .btn-secondary {
+  4361→    padding: 0.75rem 1.25rem;
+  4362→    font-size: 0.875rem;
+  4363→    min-height: 44px;
+  4364→  }
+  4365→}
+  4366→
+  4367→/* Disable hover-only effects on touch devices */
+  4368→@media (hover: none) {
+  4369→  .card-shine::after {
+  4370→    display: none;
+  4371→  }
+  4372→  .spotlight::before {
+  4373→    display: none;
+  4374→  }
+  4375→  .card-glow-hover:hover {
+  4376→    box-shadow: none;
+  4377→  }
+  4378→}
+  4379→
+  4380→/* Smooth momentum scroll on iOS */
+  4381→.overflow-x-auto, .overflow-y-auto {
+  4382→  -webkit-overflow-scrolling: touch;
+  4383→}
+  4384→
+  4385→/* Disable double-tap zoom on interactive elements */
+  4386→button, a, [role="button"] {
+  4387→  touch-action: manipulation;
+  4388→}
+  4389→
+  4390→/* ═══════════════════════════════════════════════════
+  4391→   MOBILE PERFORMANCE — Aggressive GPU savings ═════════════════════════════════════════════════════ */
+  4392→@media (max-width: 640px) {
+  4393→  /* ── 1. Slash blur intensity (biggest GPU saver) ── */
+  4394→  :root {
+  4395→    --glass-blur: 6px;
+  4396→    --glass-saturate: 120%;
+  4397→    --glass-volumetric:
+  4398→      inset 0 1px 2px 0 rgba(255, 255, 255, 0.5),
+  4399→      0 8px 24px -8px rgba(0, 0, 0, 0.3);
+  4400→    --glass-volumetric-hover:
+  4401→      inset 0 1px 2px 0 rgba(255, 255, 255, 0.6),
+  4402→      0 12px 32px -8px rgba(0, 0, 0, 0.35);
+  4403→  }
+  4404→
+  4405→  /* ── 2. Kill the refraction-pulse animation (animates backdrop-filter) ── */
+  4406→  .liquid-glass,
+  4407→  .liquid-glass-card,
+  4408→  .liquid-glass-pill,
+  4409→  .liquid-glass-nav,
+  4410→  .glass-card,
+  4411→  .glass-nav {
+  4412→    animation: none !important;
+  4413→  }
+  4414→
+  4415→  /* ── 3. Strip decorative pseudo-elements from glass cards/pills ── */
+  4416→  .liquid-glass::before,
+  4417→  .liquid-glass::after,
+  4418→  .liquid-glass-card::before,
+  4419→  .liquid-glass-card::after,
+  4420→  .liquid-glass-pill::before,
+  4421→  .liquid-glass-pill::after,
+  4422→  .liquid-glass-panel::before,
+  4423→  .liquid-glass-panel::after,
+  4424→  .liquid-glass-input::before,
+  4425→  .liquid-glass-input::after,
+  4426→  .glass-card::before,
+  4427→  .glass-card::after,
+  4428→  .glass-nav::before,
+  4429→  .glass-nav::after,
+  4430→  .glass-input::before,
+  4431→  .glass-input::after,
+  4432→  .liquid-glass-mobile-menu::before,
+  4433→  .liquid-glass-mobile-menu::after,
+  4434→  .float-menu::before,
+  4435→  .float-menu::after,
+  4436→  .float-search-dropdown::before {
+  4437→    display: none !important;
+  4438→  }
+  4439→
+  4440→  /* ── 4. Remove SVG refraction filter ── */
+  4441→  .liquid-refraction {
+  4442→    filter: none !important;
+  4443→  }
+  4444→
+  4445→  /* ── 5. Remove prismatic/conic borders ── */
+  4446→  .prismatic-border::before,
+  4447→  .liquid-glass-prismatic::before,
+  4448→  .conic-border::before {
+  4449→    display: none !important;
+  4450→  }
+  4451→
+  4452→  /* ── 6. Hide decorative overlays ── */
+  4453→  .cinema-grain,
+  4454→  .light-leak,
+  4455→  .bokeh-canvas {
+  4456→    display: none !important;
+  4457→  }
+  4458→
+  4459→  /* ── 7. Simplify button pseudo-elements ── */
+  4460→  .btn-primary::before,
+  4461→  .btn-primary::after,
+  4462→  .btn-secondary::before,
+  4463→  .btn-secondary::after,
+  4464→  .searchbar-input-wrap::before,
+  4465→  .searchbar-input-wrap::after,
+  4466→  .mobile-search-bar::before,
+  4467→  .mobile-search-bar::after,
+  4468→  .mobile-tab-bar-shine,
+  4469→  .mobile-tab-bar-caustic {
+  4470→    display: none !important;
+  4471→  }
+  4472→  .btn-primary,
+  4473→  .btn-secondary {
+  4474→    backdrop-filter: blur(8px);
+  4475→  }
+  4476→
+  4477→  /* ── 8. Reduce specific heavy blurs ── */
+  4478→  .settings-panel {
+  4479→    backdrop-filter: blur(16px) !important;
+  4480→  }
+  4481→  .settings-input {
+  4482→    backdrop-filter: blur(6px) !important;
+  4483→  }
+  4484→  .mobile-search-results {
+  4485→    backdrop-filter: blur(16px) !important;
+  4486→  }
+  4487→  .mobile-search-overlay-inner {
+  4488→    backdrop-filter: blur(16px) !important;
+  4489→  }
+  4490→  .mobile-search-overlay-results {
+  4491→    backdrop-filter: blur(12px) !important;
+  4492→  }
+  4493→  .mobile-tab-bar {
+  4494→    backdrop-filter: blur(16px) !important;
+  4495→  }
+  4496→  .mobile-menu-content {
+  4497→    backdrop-filter: blur(20px) !important;
+  4498→  }
+  4499→  .mobile-menu-close {
+  4500→    backdrop-filter: blur(8px) !important;
+  4501→  }
+  4502→  .searchbar-dropdown {
+  4503→    backdrop-filter: blur(12px) !important;
+  4504→  }
+  4505→  .welcome-name-input {
+  4506→    backdrop-filter: blur(16px) !important;
+  4507→  }
+  4508→  .welcome-photo-btn--skip {
+  4509→    backdrop-filter: blur(12px) !important;
+  4510→  }
+  4511→  .category-card {
+  4512→    backdrop-filter: blur(10px) !important;
+  4513→  }
+  4514→
+  4515→  /* ── 9. Remove blur from entry animations ── */
+  4516→  @keyframes fade-up {
+  4517→    from { opacity: 0; transform: translateY(20px); }
+  4518→    to { opacity: 1; transform: translateY(0); }
+  4519→  }
+  4520→  @keyframes welcome-logo-in {
+  4521→    from { opacity: 0; transform: scale(0.9) translateY(10px); }
+  4522→    to { opacity: 1; transform: scale(1) translateY(0); }
+  4523→  }
+  4524→  @keyframes welcome-text-in {
+  4525→    from { opacity: 0; transform: translateY(16px); }
+  4526→    to { opacity: 1; transform: translateY(0); }
+  4527→  }
+  4528→  @keyframes welcome-element-out {
+  4529→    from { opacity: 1; transform: scale(1); }
+  4530→    to { opacity: 0; transform: scale(0.96); }
+  4531→  }
+  4532→  @keyframes welcome-fade-out {
+  4533→    from { opacity: 1; }
+  4534→    to { opacity: 0; }
+  4535→  }
+  4536→  @keyframes page-enter {
+  4537→    from { opacity: 0; transform: translateY(8px); }
+  4538→    to { opacity: 1; transform: translateY(0); }
+  4539→  }
+  4540→
+  4541→  /* ── 10. Toggle slider optimization ── */
+  4542→  .toggle-track {
+  4543→    transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1),
+  4544→      background 280ms cubic-bezier(0.16, 1, 0.3, 1),
+  4545→      border-color 280ms cubic-bezier(0.16, 1, 0.3, 1),
+  4546→      box-shadow 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  4547→  }
+  4548→  .toggle-v3,
+  4549→  .toggle-v1,
+  4550→  .toggle-v2 {
+  4551→    backdrop-filter: blur(6px) saturate(140%);
+  4552→    transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1),
+  4553→      background 280ms cubic-bezier(0.16, 1, 0.3, 1),
+  4554→      border-color 280ms cubic-bezier(0.16, 1, 0.3, 1),
+  4555→      box-shadow 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  4556→  }
+  4557→
+  4558→  /* ── 11. Reduce ambient effects ── */
+  4559→  .ambient-orb {
+  4560→    filter: blur(60px);
+  4561→  }
+  4562→  .noise-overlay {
+  4563→    display: none !important;
+  4564→  }
+  4565→
+  4566→  /* ── 12. Kill continuous non-essential animations ── */
+  4567→  .shimmer-text {
+  4568→    animation: none !important;
+  4569→    -webkit-text-fill-color: var(--foreground);
+  4570→  }
+  4571→  .card-shine::after,
+  4572→  .spotlight::before {
+  4573→    display: none !important;
+  4574→  }
+  4575→} /* close @media max-width:640px */
+  4576→
+  4577→/* ─── Physical 3D Toggle Sliders ────────────────────── */
+  4578→/* Hidden real checkbox */
+  4579→.toggle-input {
+  4580→  position: absolute;
+  4581→  left: -9999px;
+  4582→  opacity: 0;
+  4583→  width: 0;
+  4584→  height: 0;
+  4585→}
+  4586→
+  4587→/* ═══ Shared track base ═══ */
+  4588→.toggle-track {
+  4589→  position: relative;
+  4590→  display: block;
+  4591→  cursor: pointer;
+  4592→  -webkit-tap-highlight-color: transparent;
+  4593→  transition: all 350ms cubic-bezier(0.16, 1, 0.3, 1);
+  4594→}
+  4595→
+  4596→/* ═══════════════════════════════════════════════════
+  4597→   SLIDER v1 — Dual-Dot Physical Toggle
+  4598→   Track + moving thumb + static off-state dot ════════════════════════════════════════════════════ */
+  4599→.toggle-v1 {
+  4600→  width: 4.25em;
+  4601→  height: 2.25em;
+  4602→  border-radius: 1.125em;
+  4603→  background: linear-gradient(
+  4604→    rgba(255, 255, 255, 0.07),
+  4605→    rgba(255, 255, 255, 0.02)
+  4606→  ), rgba(255, 255, 255, 0.08);
+  4607→  backdrop-filter: blur(12px) saturate(180%);
+  4608→  border: 1px solid rgba(255, 255, 255, 0.18);
+  4609→  box-shadow:
+  4610→    0 0.07em 0.1em -0.1em rgba(0, 0, 0, 0.4) inset,
+  4611→    0 0.05em 0.08em -0.01em rgba(255, 255, 255, 0.7),
+  4612→    0 0 0 0 rgba(var(--accent-rgb), 0);
+  4613→  transition: all 350ms cubic-bezier(0.16, 1, 0.3, 1);
+  4614→}
+  4615→
+  4616→/* Thumb (moves) */
+  4617→.toggle-v1::before {
+  4618→  position: absolute;
+  4619→  content: "";
+  4620→  width: 1.6em;
+  4621→  height: 1.6em;
+  4622→  top: 0.325em;
+  4623→  left: 0.325em;
+  4624→  border-radius: 50%;
+  4625→  transition: all 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  4626→  background: linear-gradient(
+  4627→    rgba(255, 255, 255, 0.25) 0%,
+  4628→    rgba(255, 255, 255, 0.08) 100%
+  4629→  ), rgba(255, 255, 255, 0.15);
+  4630→  border: 1px solid rgba(255, 255, 255, 0.25);
+  4631→  box-shadow:
+  4632→    0 0.1em 0.15em -0.05em rgba(255, 255, 255, 0.5) inset,
+  4633→    0 0.5em 0.3em -0.1em rgba(0, 0, 0, 0.25);
+  4634→}
+  4635→
+  4636→/* Off-state static dot (right side) */
+  4637→.toggle-v1::after {
+  4638→  position: absolute;
+  4639→  content: "";
+  4640→  width: 0.8em;
+  4641→  height: 0.8em;
+  4642→  top: 0.725em;
+  4643→  left: 4.8em;
+  4644→  border-radius: 50%;
+  4645→  transition: all 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  4646→  background: linear-gradient(
+  4647→    rgba(0, 0, 0, 0.07),
+  4648→    rgba(255, 255, 255, 0.1)
+  4649→  ), rgba(255, 255, 255, 0.1);
+  4650→  border: 1px solid rgba(255, 255, 255, 0.12);
+  4651→  box-shadow:
+  4652→    0 0.08em 0.15em -0.1em rgba(0, 0, 0, 0.5) inset,
+  4653→    0 0.05em 0.08em -0.01em rgba(255, 255, 255, 0.5),
+  4654→    -5.8em 0 0 -0.25em rgba(0, 0, 0, 0.15);
+  4655→}
+  4656→
+  4657→/* ── v1 ON state ── */
+  4658→.toggle-input:checked + .toggle-v1::before {
+  4659→  left: 2.3em;
+  4660→  background: linear-gradient(
+  4661→    rgba(255, 255, 255, 0.35) 0%,
+  4662→    rgba(var(--accent-rgb), 0.6) 100%
+  4663→  ), rgba(var(--accent-rgb), 0.8);
+  4664→  border-color: rgba(var(--accent-rgb), 0.5);
+  4665→  box-shadow:
+  4666→    0 0.1em 0.15em -0.05em rgba(255, 255, 255, 0.6) inset,
+  4667→    0 0.5em 0.3em -0.1em rgba(5, 150, 105, 0.4),
+  4668→    0 0 12px rgba(var(--accent-rgb), 0.3);
+  4669→}
+  4670→
+  4671→.toggle-input:checked + .toggle-v1::after {
+  4672→  background: linear-gradient(
+  4673→    rgba(0, 0, 0, 0.07),
+  4674→    rgba(255, 255, 255, 0.1)
+  4675→  ), rgba(var(--accent-rgb), 0.8);
+  4676→  border-color: rgba(var(--accent-rgb), 0.3);
+  4677→  box-shadow:
+  4678→    0 0.08em 0.15em -0.1em rgba(0, 0, 0, 0.5) inset,
+  4679→    0 0.05em 0.08em -0.01em rgba(255, 255, 255, 0.5),
+  4680→    -5.8em 0 0 -0.25em rgba(5, 150, 105, 0.1);
+  4681→}
+  4682→
+  4683→.toggle-input:checked + .toggle-v1 {
+  4684→  border-color: rgba(var(--accent-rgb), 0.25);
+  4685→  box-shadow:
+  4686→    0 0.07em 0.1em -0.1em rgba(0, 0, 0, 0.4) inset,
+  4687→    0 0.05em 0.08em -0.01em rgba(255, 255, 255, 0.7),
+  4688→    0 0 20px rgba(var(--accent-rgb), 0.15);
+  4689→}
+  4690→
+  4691→/* ═══════════════════════════════════════════════════
+  4692→   SLIDER v2 — Channel-Glow Physical Toggle
+  4693→   Track + moving thumb + internal channel glow ════════════════════════════════════════════════════ */
+  4694→.toggle-v2 {
+  4695→  width: 4.25em;
+  4696→  height: 2.25em;
+  4697→  border-radius: 1.125em;
+  4698→  background: linear-gradient(
+  4699→    rgba(255, 255, 255, 0.07),
+  4700→    rgba(255, 255, 255, 0.02)
+  4701→  ), rgba(255, 255, 255, 0.08);
+  4702→  backdrop-filter: blur(12px) saturate(180%);
+  4703→  border: 1px solid rgba(255, 255, 255, 0.18);
+  4704→  box-shadow:
+  4705→    0 0.07em 0.1em -0.1em rgba(0, 0, 0, 0.4) inset,
+  4706→    0 0.05em 0.08em -0.01em rgba(255, 255, 255, 0.7);
+  4707→}
+  4708→
+  4709→/* Thumb (moves) */
+  4710→.toggle-v2::after {
+  4711→  position: absolute;
+  4712→  content: "";
+  4713→  width: 1.6em;
+  4714→  height: 1.6em;
+  4715→  top: 0.325em;
+  4716→  left: 0.325em;
+  4717→  border-radius: 50%;
+  4718→  transition: all 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  4719→  background: linear-gradient(
+  4720→    rgba(255, 255, 255, 0.25) 0%,
+  4721→    rgba(255, 255, 255, 0.08) 100%
+  4722→  ), rgba(255, 255, 255, 0.15);
+  4723→  border: 1px solid rgba(255, 255, 255, 0.25);
+  4724→  box-shadow:
+  4725→    0 0.1em 0.15em -0.05em rgba(255, 255, 255, 0.5) inset,
+  4726→    0 0.2em 0.2em -0.12em rgba(0, 0, 0, 0.5);
+  4727→}
+  4728→
+  4729→/* Internal channel (glow bar) */
+  4730→.toggle-v2::before {
+  4731→  position: absolute;
+  4732→  content: "";
+  4733→  width: 3.1em;
+  4734→  height: 1.05em;
+  4735→  top: 0.6em;
+  4736→  left: 0.575em;
+  4737→  border-radius: 0.525em;
+  4738→  transition: all 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  4739→  background: linear-gradient(
+  4740→    rgba(0, 0, 0, 0.07),
+  4741→    rgba(255, 255, 255, 0.1)
+  4742→  ), rgba(255, 255, 255, 0.06);
+  4743→  border: 1px solid rgba(255, 255, 255, 0.08);
+  4744→  box-shadow:
+  4745→    0 0.08em 0.15em -0.1em rgba(0, 0, 0, 0.5) inset,
+  4746→    0 0.05em 0.08em -0.01em rgba(255, 255, 255, 0.5),
+  4747→    0 0 0 0 rgba(var(--accent-rgb), 0) inset;
+  4748→}
+  4749→
+  4750→/* ── v2 ON state ── */
+  4751→.toggle-input:checked + .toggle-v2::after {
+  4752→  left: 2.3em;
+  4753→  background: linear-gradient(
+  4754→    rgba(255, 255, 255, 0.35) 0%,
+  4755→    rgba(var(--accent-rgb), 0.6) 100%
+  4756→  ), rgba(var(--accent-rgb), 0.8);
+  4757→  border-color: rgba(var(--accent-rgb), 0.5);
+  4758→  box-shadow:
+  4759→    0 0.1em 0.15em -0.05em rgba(255, 255, 255, 0.6) inset,
+  4760→    0 0.2em 0.2em -0.12em rgba(5, 150, 105, 0.4),
+  4761→    0 0 10px rgba(var(--accent-rgb), 0.25);
+  4762→}
+  4763→
+  4764→.toggle-input:checked + .toggle-v2::before {
+  4765→  box-shadow:
+  4766→    0 0.08em 0.15em -0.1em rgba(0, 0, 0, 0.5) inset,
+  4767→    0 0.05em 0.08em -0.01em rgba(255, 255, 255, 0.5),
+  4768→    2.5em 0 0 0 rgba(var(--accent-rgb), 0.5) inset;
+  4769→}
+  4770→
+  4771→.toggle-input:checked + .toggle-v2 {
+  4772→  border-color: rgba(var(--accent-rgb), 0.25);
+  4773→  box-shadow:
+  4774→    0 0.07em 0.1em -0.1em rgba(0, 0, 0, 0.4) inset,
+  4775→    0 0.05em 0.08em -0.01em rgba(255, 255, 255, 0.7),
+  4776→    0 0 20px rgba(var(--accent-rgb), 0.15);
+  4777→}
+  4778→
+  4779→/* ═══════════════════════════════════════════════════
+  4780→   SLIDER v3 — Morph-Pill Physical Toggle
+  4781→   Thumb morphs from circle to rounded rectangle ════════════════════════════════════════════════════ */
+  4782→.toggle-v3 {
+  4783→  width: 5.5em;
+  4784→  height: 2.25em;
+  4785→  border-radius: 1.125em;
+  4786→  cursor: pointer;
+  4787→  transition: all 350ms cubic-bezier(0.16, 1, 0.3, 1);
+  4788→  background: rgba(255, 255, 255, 0.08);
+  4789→  border: 1px solid rgba(255, 255, 255, 0.18);
+  4790→  box-shadow:
+  4791→    0 0.07em 0.1em -0.1em rgba(0, 0, 0, 0.4) inset,
+  4792→    0 0.05em 0.08em -0.01em rgba(255, 255, 255, 0.7);
+  4793→  backdrop-filter: blur(12px) saturate(180%);
+  4794→}
+  4795→
+  4796→/* Thumb — OFF: small circle */
+  4797→.toggle-v3::after {
+  4798→  position: absolute;
+  4799→  content: "";
+  4800→  width: 1.6em;
+  4801→  height: 1.6em;
+  4802→  top: 0.325em;
+  4803→  left: 0.325em;
+  4804→  border-radius: 50%;
+  4805→  transition:
+  4806→    width 200ms cubic-bezier(0.16, 1, 0.3, 1),
+  4807→    height 300ms 50ms cubic-bezier(0.16, 1, 0.3, 1),
+  4808→    top 300ms 50ms cubic-bezier(0.16, 1, 0.3, 1),
+  4809→    left 250ms 50ms cubic-bezier(0.16, 1, 0.3, 1),
+  4810→    background 300ms cubic-bezier(0.16, 1, 0.3, 1),
+  4811→    box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1),
+  4812→    border-radius 300ms cubic-bezier(0.16, 1, 0.3, 1),
+  4813→    border-color 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  4814→  background: linear-gradient(
+  4815→    rgba(255, 255, 255, 0.2) 0%,
+  4816→    rgba(255, 255, 255, 0.06) 100%
+  4817→  ), rgba(255, 255, 255, 0.12);
+  4818→  border: 1px solid rgba(255, 255, 255, 0.22);
+  4819→  box-shadow:
+  4820→    0 0.1em 0.15em -0.05em rgba(255, 255, 255, 0.5) inset,
+  4821→    0 0 0 1.5em rgba(255, 255, 255, 0.03) inset,
+  4822→    0 0.3em 0.2em -0.08em rgba(0, 0, 0, 0.3);
+  4823→}
+  4824→
+  4825→/* Thumb — ON: morphs to large pill that fills the track */
+  4826→.toggle-input:checked + .toggle-v3::after {
+  4827→  width: 4.85em;
+  4828→  height: 1.85em;
+  4829→  top: 0.2em;
+  4830→  left: 0.325em;
+  4831→  border-radius: 0.925em;
+  4832→  background: linear-gradient(
+  4833→    135deg,
+  4834→    rgba(var(--accent-2-rgb), 0.9) 0%,
+  4835→    rgba(var(--accent-rgb), 0.95) 40%,
+  4836→    rgba(var(--accent-deep-rgb), 0.9) 100%
+  4837→  );
+  4838→  border-color: rgba(var(--accent-rgb), 0.4);
+  4839→  box-shadow:
+  4840→    0 0.15em 0.2em -0.05em rgba(255, 255, 255, 0.4) inset,
+  4841→    0 0 0 0 rgba(255, 255, 255, 0) inset,
+  4842→    0 0.4em 0.3em -0.1em rgba(var(--accent-deep-rgb), 0.4),
+  4843→    0 0 16px rgba(var(--accent-rgb), 0.25);
+  4844→}
+  4845→
+  4846→.toggle-input:checked + .toggle-v3 {
+  4847→  border-color: rgba(var(--accent-rgb), 0.2);
+  4848→  box-shadow:
+  4849→    0 0.07em 0.1em -0.1em rgba(0, 0, 0, 0.3) inset,
+  4850→    0 0.05em 0.08em -0.01em rgba(255, 255, 255, 0.5),
+  4851→    0 0 24px rgba(var(--accent-rgb), 0.15);
+  4852→}
+  4853→
+  4854→/* ── Active press states ── */
+  4855→.toggle-v1:active::before,
+  4856→.toggle-v2:active::after,
+  4857→.toggle-v3:active::after {
+  4858→  transform: scale(0.92);
+  4859→}
+  4860→
+  4861→/* ── Focus visible for keyboard accessibility ── */
+  4862→.toggle-input:focus-visible + .toggle-track {
+  4863→  outline: 2px solid var(--accent);
+  4864→  outline-offset: 3px;
+  4865→}
+  4866→
+  4867→/* ─── Medium Zoom ────────────────── */
+  4868→.medium-zoom-overlay {
+  4869→  z-index: 99;
+  4870→  backdrop-filter: blur(10px);
+  4871→}
+  4872→.medium-zoom-image--opened {
+  4873→  z-index: 100;
+  4874→  border: none !important;
+  4875→  box-shadow: 0 0 100px rgba(0,0,0,0.8) !important;
+  4876→}
+  4877→.giscus-frame {
+  4878→  width: 100% !important;
+  4879→  border: none !important;
+  4880→  border-radius: 0.75rem !important;
+  4881→}
+  4882→.giscus-frame,
+  4883→.giscus-frame + .giscus {
+  4884→  max-width: 100% !important;
+  4885→}
+  4886→
+  4887→

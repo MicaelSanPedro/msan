@@ -33,26 +33,11 @@
   --r-xl: 2rem;
   --r-2xl: 2.5rem;
 
-  /* ═══ PERFORMANCE: Kill decorative pseudo-elements + overlays ═══ */
-.liquid-glass::before, .liquid-glass::after,
-.liquid-glass-nav::before, .liquid-glass-nav::after,
-.liquid-glass-card::before, .liquid-glass-card::after,
-.liquid-glass-pill::before, .liquid-glass-pill::after,
-.liquid-glass-panel::before, .liquid-glass-panel::after,
-.liquid-glass-input::before, .liquid-glass-input::after,
-.glass-card::before, .glass-card::after,
-.glass-nav::before, .glass-nav::after,
-.glass-input::before, .glass-input::after,
-.btn-primary::before, .btn-primary::after,
-.btn-secondary::before, .btn-secondary::after {
-  display: none !important;
-}
+  /* ═══ Keep subtle effects, kill only heavy ones ═══ */
 .cinema-grain, .light-leak, .bokeh-canvas, .noise-overlay,
-.cinema-vignette, .site-backdrop, .mesh-bg,
-.ambient-orb, .liquid-refraction {
+.mesh-bg, .liquid-refraction {
   display: none !important;
 }
-.shimmer-text { animation: none !important; -webkit-text-fill-color: var(--foreground); }
 .card-shine::after, .spotlight::before { display: none !important; }
 
 /* ═══ Liquid Glass 3D System Variables ═══ */
@@ -3518,20 +3503,7 @@ html:not(.dark) .mobile-menu-link-secondary:hover {
    Inspired by @ybouane/liquidglass — CSS approximation
    ═══════════════════════════════════════════════════════════════ */
 
-/* ─── When real LiquidGlass (WebGL) is active, strip CSS fake glass ─── */
-.lg-glass {
-  background: transparent !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-.lg-glass::before,
-.lg-glass::after {
-  display: none !important;
-}
-
-/* ─── Tab Bar (liquid glass pill) ─── */
+/* ─── Tab Bar (glass pill) ─── */
 .mobile-tab-bar {
   position: fixed;
   bottom: 0;
@@ -3545,6 +3517,15 @@ html:not(.dark) .mobile-menu-link-secondary:hover {
   max-width: 420px;
   padding: 6px 4px calc(env(safe-area-inset-bottom, 0px) + 8px);
   pointer-events: auto;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px) saturate(1.6);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.25),
+    0 8px 32px -8px rgba(0, 0, 0, 0.5),
+    0 0 0 0.5px rgba(0, 0, 0, 0.2);
   animation: tab-bar-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
   animation-delay: 0.15s;
 }
@@ -4388,9 +4369,8 @@ button, a, [role="button"] {
 }
 
 /* ═══════════════════════════════════════════════════
-   MOBILE PERFORMANCE — Aggressive GPU savings ═════════════════════════════════════════════════════ */
+   MOBILE PERFORMANCE — Moderate GPU savings ═════════════════════════════════════════════════════ */
 @media (max-width: 640px) {
-  /* ── 1. Slash blur intensity (biggest GPU saver) ── */
   :root {
     --glass-blur: 6px;
     --glass-saturate: 120%;
@@ -4412,7 +4392,7 @@ button, a, [role="button"] {
     animation: none !important;
   }
 
-  /* ── 3. Strip decorative pseudo-elements from glass cards/pills ── */
+  /* ── 3. Strip decorative pseudo-elements from old glass classes only ── */
   .liquid-glass::before,
   .liquid-glass::after,
   .liquid-glass-card::before,
@@ -4431,8 +4411,6 @@ button, a, [role="button"] {
   .glass-input::after,
   .liquid-glass-mobile-menu::before,
   .liquid-glass-mobile-menu::after,
-  .float-menu::before,
-  .float-menu::after,
   .float-search-dropdown::before {
     display: none !important;
   }
@@ -4491,7 +4469,7 @@ button, a, [role="button"] {
     backdrop-filter: blur(12px) !important;
   }
   .mobile-tab-bar {
-    backdrop-filter: blur(16px) !important;
+    backdrop-filter: blur(16px) saturate(1.4) !important;
   }
   .mobile-menu-content {
     backdrop-filter: blur(20px) !important;
@@ -4500,12 +4478,6 @@ button, a, [role="button"] {
     backdrop-filter: blur(8px) !important;
   }
   .searchbar-dropdown {
-    backdrop-filter: blur(12px) !important;
-  }
-  .welcome-name-input {
-    backdrop-filter: blur(16px) !important;
-  }
-  .welcome-photo-btn--skip {
     backdrop-filter: blur(12px) !important;
   }
   .category-card {
@@ -4563,10 +4535,9 @@ button, a, [role="button"] {
     display: none !important;
   }
 
-  /* ── 12. Kill continuous non-essential animations ── */
+  /* ── 12. Reduce (not kill) continuous animations ── */
   .shimmer-text {
-    animation: none !important;
-    -webkit-text-fill-color: var(--foreground);
+    opacity: 1;
   }
   .card-shine::after,
   .spotlight::before {

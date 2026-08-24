@@ -18,44 +18,6 @@ const navLinks = [
   { label: "Favoritos", href: "/favoritos", icon: Heart },
 ];
 
-// Liquid glass config for desktop floating pill
-const DESKTOP_GLASS_CONFIG = JSON.stringify({
-  cornerRadius: 9999,
-  zRadius: 35,
-  refraction: 0.55,
-  chromAberration: 0.04,
-  edgeHighlight: 0.12,
-  specular: 0.20,
-  fresnel: 0.90,
-  blurAmount: 0.01,
-  opacity: 0.95,
-  saturation: 0.04,
-  tintStrength: 0.02,
-  brightness: 0.02,
-  shadowOpacity: 0.35,
-  shadowSpread: 18,
-  shadowOffsetY: 6,
-});
-
-// Liquid glass config for mobile tab bar
-const MOBILE_GLASS_CONFIG = JSON.stringify({
-  cornerRadius: 22,
-  zRadius: 28,
-  refraction: 0.50,
-  chromAberration: 0.03,
-  edgeHighlight: 0.10,
-  specular: 0.15,
-  fresnel: 0.80,
-  blurAmount: 0.01,
-  opacity: 0.93,
-  saturation: 0.03,
-  tintStrength: 0.02,
-  brightness: 0.01,
-  shadowOpacity: 0.30,
-  shadowSpread: 14,
-  shadowOffsetY: 4,
-});
-
 interface NavbarProps {
   allPosts: PostSummary[];
 }
@@ -242,8 +204,7 @@ export function Navbar({ allPosts }: NavbarProps) {
   const desktopPill = (
     <div
       ref={pillRef}
-      className={`float-menu lg-glass ${scrolled ? "scrolled" : ""}`}
-      data-config={DESKTOP_GLASS_CONFIG}
+      className={`float-menu ${scrolled ? "scrolled" : ""}`}
     >
       <span
         ref={indicatorRef}
@@ -366,8 +327,7 @@ export function Navbar({ allPosts }: NavbarProps) {
   // ── Mobile Floating Tab Bar (portaled to body) ──
   const mobileTabBar = (
     <div
-      className="mobile-tab-bar lg-glass"
-      data-config={MOBILE_GLASS_CONFIG}
+      className="mobile-tab-bar"
     >
       <div className="mobile-tab-bar-items">
         {navLinks.map((link) => {
