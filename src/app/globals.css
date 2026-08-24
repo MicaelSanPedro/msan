@@ -3513,6 +3513,369 @@ html:not(.dark) .mobile-menu-link-secondary:hover {
   color: rgba(30, 30, 30, 0.65);
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   Floating Liquid Glass Menu System
+   Inspired by @ybouane/liquidglass — CSS approximation
+   Refraction feel · Specular highlights · Volumetric depth
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Floating Menu Variables ─── */
+:root {
+  --float-blur: 24px;
+  --float-saturate: 200%;
+  --float-border: 0.30;
+  --float-shadow-spread: 18px;
+  --float-shadow-y: 6px;
+  --float-bg-1: rgba(255, 255, 255, 0.12);
+  --float-bg-2: rgba(255, 255, 255, 0.05);
+  --float-bg-3: rgba(255, 255, 255, 0.08);
+  --float-volumetric:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.55),
+    inset 0 -1px 0 0 rgba(255, 255, 255, 0.10),
+    0 1px 2px 0 rgba(0, 0, 0, 0.3),
+    0 4px 12px -2px rgba(0, 0, 0, 0.25),
+    0 var(--float-shadow-spread) var(--float-shadow-y) -6px rgba(0, 0, 0, 0.5);
+  --float-volumetric-hover:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.65),
+    inset 0 -1px 0 0 rgba(255, 255, 255, 0.15),
+    0 1px 2px 0 rgba(0, 0, 0, 0.3),
+    0 4px 12px -2px rgba(0, 0, 0, 0.25),
+    0 24px 48px -8px rgba(0, 0, 0, 0.55);
+}
+
+/* ─── Floating Menu Pill (desktop) ─── */
+.float-menu {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 6px 6px 6px 10px;
+   border-radius: 9999px;
+  background: linear-gradient(
+    135deg,
+    var(--float-bg-1) 0%,
+    var(--float-bg-2) 50%,
+    var(--float-bg-3) 100%
+  );
+  backdrop-filter: blur(var(--float-blur)) saturate(var(--float-saturate)) contrast(110%);
+  -webkit-backdrop-filter: blur(var(--float-blur)) saturate(var(--float-saturate)) contrast(110%);
+  border: 1.5px solid rgba(255, 255, 255, var(--float-border));
+  box-shadow: var(--float-volumetric);
+  transition: box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.4s ease;
+  isolation: isolate;
+}
+
+/* Specular highlight — top edge shine */
+.float-menu::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 8%;
+  right: 8%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.5) 20%,
+    rgba(255, 255, 255, 0.85) 50%,
+    rgba(255, 255, 255, 0.5) 80%,
+    transparent 100%
+  );
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* Caustic light refraction pattern */
+.float-menu::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    ellipse 70% 50% at var(--light-x, 35%) var(--light-y, 15%),
+    rgba(255, 255, 255, 0.10) 0%,
+    rgba(255, 255, 255, 0.03) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 1;
+  animation: float-caustic-shift 8s ease-in-out infinite;
+}
+@keyframes float-caustic-shift {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.float-menu > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Scrolled state — slightly more opaque */
+.float-menu.scrolled {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.16) 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.10) 100%
+  );
+  box-shadow: var(--float-volumetric-hover);
+  border-color: rgba(255, 255, 255, 0.38);
+}
+
+@supports not (backdrop-filter: blur(20px)) {
+  .float-menu {
+    background: rgba(8, 7, 10, 0.92);
+  }
+  .float-menu::before,
+  .float-menu::after { display: none; }
+}
+@media (max-width: 768px) {
+  .float-menu { display: none; }
+}
+
+/* ─── Float Menu Nav Links ─── */
+.float-nav-link {
+  position: relative;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  border-radius: 9999px;
+  color: rgba(255, 255, 255, 0.55);
+  transition: color 0.25s ease, background 0.25s ease;
+  text-decoration: none;
+  white-space: nowrap;
+  z-index: 2;
+}
+.float-nav-link:hover {
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.06);
+}
+.float-nav-link.active {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+/* ─── Float Menu Sliding Indicator ─── */
+.float-pill-indicator {
+  position: absolute;
+  top: 4px;
+  left: 0;
+  height: calc(100% - 8px);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.10) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  border-radius: 9999px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 1;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* ─── Float Menu Search (closed) ─── */
+.float-search-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.7rem;
+  border-radius: 9999px;
+  color: rgba(255, 255, 255, 0.4);
+  transition: color 0.25s ease, background 0.25s ease;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  border: none;
+  background: transparent;
+  outline: none;
+}
+.float-search-btn:hover {
+  color: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.06);
+}
+.float-search-btn:active {
+  transform: scale(0.95);
+}
+
+/* ─── Float Menu Search (open — inline in pill) ─── */
+.float-search-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.6rem 0.3rem 0.8rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  animation: float-search-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: border-color 0.2s ease;
+}
+.float-search-inline:focus-within {
+  border-color: rgba(var(--accent-rgb), 0.35);
+  box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.12);
+}
+@keyframes float-search-in {
+  from { opacity: 0; transform: scaleX(0.85); transform-origin: right center; }
+  to { opacity: 1; transform: scaleX(1); transform-origin: right center; }
+}
+.float-search-inline input {
+ flex: 1;
+  min-width: 0;
+ background: transparent;
+  font-size: 0.8125rem;
+  color: white;
+  outline: none;
+  width: 160px;
+}
+.float-search-inline input::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+/* ─── Float Search Dropdown ─── */
+.float-search-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 340px;
+  border-radius: 20px;
+  overflow: hidden;
+  z-index: 60;
+  backdrop-filter: blur(var(--float-blur)) saturate(var(--float-saturate)) contrast(110%);
+  -webkit-backdrop-filter: blur(var(--float-blur)) saturate(var(--float-saturate)) contrast(110%);
+  background: linear-gradient(135deg, rgba(18, 18, 22, 0.92), rgba(12, 12, 14, 0.96));
+  border: 1.5px solid rgba(255, 255, 255, var(--float-border));
+  box-shadow:
+    0 20px 60px -12px rgba(0, 0, 0, 0.6),
+    0 8px 24px -8px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  animation: float-drop-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.float-search-dropdown::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 20%,
+    rgba(255, 255, 255, 0.5) 50%,
+    rgba(255, 255, 255, 0.3) 80%,
+    transparent 100%
+  );
+  z-index: 3;
+  pointer-events: none;
+}
+@keyframes float-drop-in {
+  from { opacity: 0; transform: translateY(-6px) scaleY(0.96); }
+  to { opacity: 1; transform: translateY(0) scaleY(1); }
+}
+.float-search-result {
+  width: 100%;
+  text-align: left;
+  padding: 0.55rem 0.7rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  color: rgba(255, 255, 255, 0.75);
+  transition: background 0.15s ease;
+  cursor: pointer;
+}
+.float-search-result:hover,
+.float-search-result-active {
+  background: rgba(var(--accent-rgb), 0.08);
+}
+
+/* ─── Divider inside float pill ─── */
+.float-divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.10);
+  flex-shrink: 0;
+  margin: 0 2px;
+}
+
+/* ─── Light mode ─── */
+html:not(.dark) .float-menu {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.65) 0%,
+    rgba(255, 255, 255, 0.35) 50%,
+    rgba(255, 255, 255, 0.45) 100%
+  );
+  border-color: rgba(0, 0, 0, 0.10);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    0 1px 2px rgba(0, 0, 0, 0.08),
+    0 var(--float-shadow-spread) var(--float-shadow-y) -6px rgba(0, 0, 0, 0.12);
+}
+html:not(.dark) .float-menu::before {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.6) 20%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(255, 255, 255, 0.6) 80%,
+    transparent 100%
+  );
+}
+html:not(.dark) .float-menu::after {
+  background: radial-gradient(
+    ellipse 70% 50% at 35% 15%,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0.1) 40%,
+    transparent 70%
+  );
+}
+html:not(.dark) .float-nav-link {
+  color: rgba(30, 30, 30, 0.55);
+}
+html:not(.dark) .float-nav-link:hover {
+  color: rgba(30, 30, 30, 0.9);
+  background: rgba(0, 0, 0, 0.05);
+}
+html:not(.dark) .float-nav-link.active {
+  color: rgba(30, 30, 30, 0.95);
+}
+html:not(.dark) .float-pill-indicator {
+  background: rgba(0, 0, 0, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+html:not(.dark) .float-search-btn {
+  color: rgba(0, 0, 0, 0.4);
+}
+html:not(.dark) .float-search-btn:hover {
+  color: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.05);
+}
+html:not(.dark) .float-search-inline {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+html:not(.dark) .float-search-inline input {
+  color: #1a1a1a;
+}
+html:not(.dark) .float-search-inline input::placeholder {
+  color: rgba(0, 0, 0, 0.3);
+}
+html:not(.dark) .float-divider {
+  background: rgba(0, 0, 0, 0.08);
+}
+html:not(.dark) .float-search-dropdown {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(248, 248, 250, 0.98));
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow:
+    0 20px 60px -12px rgba(0, 0, 0, 0.12),
+    0 8px 24px -8px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
 /* ─── Reduce motion (user toggle & system) ── */
 .reduced-motion *,
 .reduced-motion *::before,
@@ -3713,7 +4076,10 @@ button, a, [role="button"] {
   .glass-input::before,
   .glass-input::after,
   .liquid-glass-mobile-menu::before,
-  .liquid-glass-mobile-menu::after {
+  .liquid-glass-mobile-menu::after,
+  .float-menu::before,
+  .float-menu::after,
+  .float-search-dropdown::before {
     display: none !important;
   }
 

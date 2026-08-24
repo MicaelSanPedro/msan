@@ -2,13 +2,12 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { ArrowRight, Search as SearchIcon, User, Settings, X, Heart, LogOut } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { ArrowRight, Search as SearchIcon, User, Settings, X, LogOut } from "lucide-react";
 import { AuthButton } from "@/components/AuthButton";
 import { openSignInModal } from "@/components/SignInModal";
 import { useSession, signOut } from "next-auth/react";
 import { Logo } from "@/components/Logo";
-import { SearchBar } from "@/components/SearchBar";
 import type { PostSummary } from "@/lib/posts";
 
 const navLinks = [
@@ -24,9 +23,7 @@ interface NavbarProps {
 
 function MobileLoginButton({ onSignIn, setMobileOpen, delay }: { onSignIn: () => void; setMobileOpen: (v: boolean) => void; delay: number }) {
   const { data: session } = useSession();
-
   if (session?.user) return null;
-
   return (
     <button
       onClick={() => { setMobileOpen(false); onSignIn(); }}
@@ -46,9 +43,7 @@ function MobileLoginButton({ onSignIn, setMobileOpen, delay }: { onSignIn: () =>
 
 function MobileLogoutButton({ setMobileOpen, delay }: { setMobileOpen: (v: boolean) => void; delay: number }) {
   const { data: session } = useSession();
-
   if (!session?.user) return null;
-
   return (
     <button
       onClick={() => { setMobileOpen(false); signOut({ callbackUrl: "/" }); }}
@@ -77,12 +72,59 @@ export function Navbar({ allPosts }: NavbarProps) {
   const pathname = usePathname();
   const mobileInputRef = useRef<HTMLInputElement>(null);
 
-  // ── Mobile search filtering ──
+  // Desktop inline search state
+  const [desktopSearchOpen, setDesktopSearchOpen] = useState(false);
+  const [desktopQuery, setDesktopQuery] = useState("");
+  const [desktopResults, setDesktopResults] = useState<PostSummary[]>([]);
+  const [desktopSelectedIndex, setDesktopSelectedIndex] = useState(-1);
+  const desktopInputRef = useRef<HTMLInputElement>(null);
+  const desktopSearchRef = useRef<HTMLDivElement>(null);
+  const pillRef = useRef<HTMLDivElement>(null);
+  const indicatorRef = useRef<HTMLSpanElement>(null);
+  const linkRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
+  const router = useRouter();
+
+  // ── Desktop search filtering ──
   useEffect(() => {
-    if (mobileQuery.trim().length < 2) {
-      setMobileResults([]);
+    if (desktopQuery.trim().length < 2) {
+      setDesktopResults([]);
+      setDesktopSelectedIndex(-1);
       return;
     }
+    const q = desktopQuery.toLowerCase();
+    const filtered = allPosts.filter(
+      (post) =>
+        post.frontmatter.title.toLowerCase().includes(q) ||
+        post.frontmatter.excerpt.toLowerCase().includes(q) ||
+        post.frontmatter.category.toLowerCase().includes(q) ||
+        post.frontmatter.tags.some((tag) => tag.toLowerCase().includes(q))
+    );
+    setDesktopResults(filtered.slice(0, 6));
+    setDesktopSelectedIndex(-1);
+  }, [desktopQuery, allPosts]);
+
+  // Focus desktop search when opened
+  useEffect(() => {
+    if (desktopSearchOpen && desktopInputRef.current) {
+      desktopInputRef.current.focus();
+    }
+  }, [desktopSearchOpen]);
+
+  // Close desktop search on click outside
+  useEffect(() => {
+    if (!desktopSearchOpen) return;
+    function handleClick(e: MouseEvent) {
+      if (desktopSearchRef.current && !desktopSearchRef.current.contains(e.target as Node)) {
+        closeDesktopSearch();
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [desktopSearchOpen]);
+
+  // ── Mobile search filtering ──
+  useEffect(() => {
+    if (mobileQuery.trim().length < 2) { setMobileResults([]); return; }
     const q = mobileQuery.toLowerCase();
     const filtered = allPosts.filter(
       (post) =>
@@ -94,56 +136,36 @@ export function Navbar({ allPosts }: NavbarProps) {
     setMobileResults(filtered.slice(0, 5));
   }, [mobileQuery, allPosts]);
 
-  // Auto-focus mobile input when search is activated
   useEffect(() => {
-    if (mobileSearchActive && mobileInputRef.current) {
-      mobileInputRef.current.focus();
-    }
+    if (mobileSearchActive && mobileInputRef.current) mobileInputRef.current.focus();
   }, [mobileSearchActive]);
 
-  // ── Sliding indicator refs ──
-  const pillRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
-  const indicatorRef = useRef<HTMLSpanElement>(null);
-  const navRef = useRef<HTMLDivElement>(null);
-
+  // ── Sliding indicator ──
   const updateIndicator = useCallback(() => {
+    if (desktopSearchOpen) return;
     const activeLink = navLinks.find((l) => isActive(l.href));
-    if (!activeLink || !indicatorRef.current || !navRef.current) return;
-
-    const el = pillRefs.current.get(activeLink.href);
+    if (!activeLink || !indicatorRef.current || !pillRef.current) return;
+    const el = linkRefs.current.get(activeLink.href);
     if (!el) return;
-
-    const navRect = navRef.current.getBoundingClientRect();
-    const pillRect = el.getBoundingClientRect();
-    const navPadLeft = parseFloat(getComputedStyle(navRef.current).paddingLeft);
-
-    indicatorRef.current.style.transform = `translateX(${pillRect.left - navRect.left - navPadLeft}px)`;
-    indicatorRef.current.style.width = `${pillRect.width}px`;
+    const pillRect = pillRef.current.getBoundingClientRect();
+    const linkRect = el.getBoundingClientRect();
+    indicatorRef.current.style.transform = `translateX(${linkRect.left - pillRect.left}px)`;
+    indicatorRef.current.style.width = `${linkRect.width}px`;
     indicatorRef.current.style.opacity = "1";
-  }, [categoriesInView, pathname]);
+  }, [categoriesInView, pathname, desktopSearchOpen]);
 
+  useEffect(() => { updateIndicator(); }, [updateIndicator]);
   useEffect(() => {
-    updateIndicator();
-  }, [updateIndicator]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 768) updateIndicator();
-    };
+    const handleResize = () => { if (window.innerWidth >= 768) updateIndicator(); };
     window.addEventListener("resize", handleResize, { passive: true });
     return () => window.removeEventListener("resize", handleResize);
   }, [updateIndicator]);
 
+  // ── Scroll ──
   useEffect(() => {
     let ticking = false;
     const handleScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          setScrolled(window.scrollY > 20);
-          ticking = false;
-        });
-        ticking = true;
-      }
+      if (!ticking) { requestAnimationFrame(() => { setScrolled(window.scrollY > 20); ticking = false; }); ticking = true; }
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
@@ -151,37 +173,24 @@ export function Navbar({ allPosts }: NavbarProps) {
   }, []);
 
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 768) {
-        setMobileOpen(false);
-        setMobileSearchActive(false);
-      }
-    };
+    const handleResize = () => { if (window.innerWidth >= 768) { setMobileOpen(false); setMobileSearchActive(false); } };
     window.addEventListener("resize", handleResize, { passive: true });
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  useEffect(() => {
-    setMobileOpen(false);
-    setMobileSearchActive(false);
-    setMobileQuery("");
-  }, [pathname]);
+  useEffect(() => { setMobileOpen(false); setMobileSearchActive(false); setMobileQuery(""); setDesktopSearchOpen(false); setDesktopQuery(""); }, [pathname]);
 
-  // Lock body scroll when mobile menu or search results are open
+  // Lock body scroll
   useEffect(() => {
     if (mobileOpen || (mobileSearchActive && mobileResults.length > 0)) {
       document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    } else { document.body.style.overflow = ""; }
     return () => { document.body.style.overflow = ""; };
   }, [mobileOpen, mobileSearchActive, mobileResults.length]);
 
+  // Categories intersection observer
   useEffect(() => {
-    if (pathname !== "/") {
-      setCategoriesInView(false);
-      return;
-    }
+    if (pathname !== "/") { setCategoriesInView(false); return; }
     const section = document.getElementById("categories");
     if (!section) return;
     const observer = new IntersectionObserver(
@@ -192,15 +201,33 @@ export function Navbar({ allPosts }: NavbarProps) {
     return () => observer.disconnect();
   }, [pathname]);
 
-  const handleCategoriesClick = useCallback(() => {
-    setCategoriesInView(true);
-  }, []);
+  const handleCategoriesClick = useCallback(() => { setCategoriesInView(true); }, []);
 
   function isActive(href: string) {
     if (href === "/") return pathname === "/" && !categoriesInView;
     if (href === "/#categories") return pathname === "/" && categoriesInView;
     if (href.startsWith("/#")) return false;
     return pathname.startsWith(href);
+  }
+
+  function closeDesktopSearch() {
+    setDesktopSearchOpen(false);
+    setDesktopQuery("");
+    setDesktopResults([]);
+    setDesktopSelectedIndex(-1);
+  }
+
+  function handleDesktopSearchSelect(slug: string) {
+    closeDesktopSearch();
+    router.push(`/blog/${slug}`);
+  }
+
+  function handleDesktopKeyDown(e: React.KeyboardEvent) {
+    if (desktopResults.length === 0) return;
+    if (e.key === "ArrowDown") { e.preventDefault(); setDesktopSelectedIndex((p) => (p < desktopResults.length - 1 ? p + 1 : 0)); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); setDesktopSelectedIndex((p) => (p > 0 ? p - 1 : desktopResults.length - 1)); }
+    else if (e.key === "Enter" && desktopSelectedIndex >= 0) { e.preventDefault(); handleDesktopSearchSelect(desktopResults[desktopSelectedIndex].slug); }
+    else if (e.key === "Escape") { closeDesktopSearch(); }
   }
 
   function handleMobileSearchSelect(slug: string) {
@@ -210,92 +237,153 @@ export function Navbar({ allPosts }: NavbarProps) {
 
   return (
     <>
-      {/* ── Top Navbar ── */}
-      <nav
-        className={`fixed top-0 left-0 right-0 z-50 glass-nav ${scrolled ? "scrolled" : ""}`}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-14 sm:h-16 lg:h-[72px]">
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 sm:gap-2.5 group shrink-0">
-              <div className="relative transition-transform duration-300 group-hover:scale-105">
-                <Logo className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10" glow />
-              </div>
-              <span className="text-base sm:text-lg lg:text-xl font-bold tracking-tight flex items-center">
-                <span className="text-white">Tech</span>
-                <span className="shimmer-text">Mate</span>
-              </span>
-            </Link>
+      {/* ═══ Desktop Floating Liquid Glass Pill ═══ */}
+      <div ref={pillRef} className={`float-menu ${scrolled ? "scrolled" : ""}`}>
+        {/* Sliding indicator */}
+        <span
+          ref={indicatorRef}
+          aria-hidden="true"
+          className="float-pill-indicator"
+          style={{ opacity: 0, willChange: "transform, width" }}
+        />
 
-            {/* Desktop Navigation (center) */}
-            <div className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
-              <div
-                ref={navRef}
-                className="relative flex items-center gap-1 p-1 rounded-full liquid-glass-pill"
-              >
-                <span
-                  ref={indicatorRef}
-                  aria-hidden="true"
-                  className="absolute top-1 left-0 h-[calc(100%-8px)] rounded-full
-                             liquid-glass-pill
-                             transition-all duration-300 ease-out pointer-events-none opacity-0"
-                  style={{ willChange: "transform, width" }}
-                />
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2 shrink-0 mr-1">
+          <Logo className="w-7 h-7" glow />
+          <span className="text-sm font-bold tracking-tight flex items-center">
+            <span className="text-white">Tech</span>
+            <span className="shimmer-text">Mate</span>
+          </span>
+        </Link>
 
-                {navLinks.map((link) => {
-                  const active = isActive(link.href);
-                  return (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      onClick={link.href === "/#categories" ? handleCategoriesClick : undefined}
-                      ref={(el) => {
-                        if (el) pillRefs.current.set(link.href, el);
-                      }}
-                      className={`relative px-4 py-1.5 text-sm font-medium rounded-full transition-colors duration-300 ${
-                        active
-                          ? "text-emerald-100"
-                          : "text-white/70 hover:text-white"
-                      }`}
-                    >
-                      <span className="relative z-10">{link.label}</span>
-                    </Link>
-                  );
-                })}
-              </div>
+        {/* Nav links — hidden when search is open */}
+        {!desktopSearchOpen && (
+          <>
+            <span className="float-divider" />
+            <div className="flex items-center gap-0.5">
+              {navLinks.map((link) => {
+                const active = isActive(link.href);
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={link.href === "/#categories" ? handleCategoriesClick : undefined}
+                    ref={(el) => { if (el) linkRefs.current.set(link.href, el); }}
+                    className={`float-nav-link ${active ? "active" : ""}`}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
             </div>
+          </>
+        )}
 
-            {/* Right side (desktop only) */}
-            <div className="hidden md:flex items-center gap-2 shrink-0">
-              <SearchBar allPosts={allPosts} />
+        {/* Search area */}
+        <div ref={desktopSearchRef} className="relative ml-auto flex items-center">
+          {!desktopSearchOpen ? (
+            <button
+              onClick={() => setDesktopSearchOpen(true)}
+              className="float-search-btn"
+              aria-label="Buscar artigos"
+              type="button"
+            >
+              <SearchIcon className="w-3.5 h-3.5" />
+              <span className="hidden lg:inline text-xs">Buscar...</span>
+              <kbd className="hidden xl:inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono"
+                style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.3)" }}>
+                Ctrl K
+              </kbd>
+            </button>
+          ) : (
+            <div className="float-search-inline">
+              <SearchIcon className="w-3.5 h-3.5 shrink-0" style={{ color: "rgba(var(--accent-rgb), 0.7)" }} />
+              <input
+                ref={desktopInputRef}
+                type="text"
+                value={desktopQuery}
+                onChange={(e) => setDesktopQuery(e.target.value)}
+                onKeyDown={handleDesktopKeyDown}
+                placeholder="Buscar artigos, tags..."
+              />
+              <button
+                onClick={closeDesktopSearch}
+                className="p-0.5 rounded-full hover:bg-white/10 transition-colors shrink-0"
+                type="button"
+                aria-label="Fechar busca"
+              >
+                <X className="w-3 h-3 text-white/50" />
+              </button>
+
+              {/* Dropdown results */}
+              {desktopResults.length > 0 && desktopQuery.trim().length >= 2 && (
+                <div className="float-search-dropdown">
+                  <div className="p-1 max-h-[60vh] overflow-y-auto">
+                    {desktopResults.map((post, i) => (
+                      <button
+                        key={post.slug}
+                        onClick={() => handleDesktopSearchSelect(post.slug)}
+                        className={`float-search-result ${i === desktopSelectedIndex ? "float-search-result-active" : ""}`}
+                        type="button"
+                      >
+                        <span className="mt-0.5 shrink-0" style={{ color: "rgba(var(--accent-rgb), 0.7)" }}>
+                          <SearchIcon className="w-3.5 h-3.5" />
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm text-white font-medium truncate">{post.frontmatter.title}</p>
+                          <p className="text-xs text-white/40 truncate mt-0.5">
+                            {post.frontmatter.category} · {post.frontmatter.readTime} de leitura
+                          </p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                  <div className="px-3 py-2 border-t border-white/[0.04]">
+                    <p className="text-[11px] text-white/30">
+                      {desktopResults.length} resultado{desktopResults.length !== 1 ? "s" : ""} · Enter para abrir
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {desktopQuery.trim().length >= 2 && desktopResults.length === 0 && (
+                <div className="float-search-dropdown">
+                  <div className="px-4 py-8 text-center">
+                    <p className="text-sm text-white/40">Nenhum resultado para &quot;{desktopQuery}&quot;</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Divider + Auth — hidden when search is open */}
+        {!desktopSearchOpen && (
+          <>
+            <span className="float-divider" />
+            <div className="flex items-center">
               <AuthButton />
             </div>
-          </div>
-        </div>
-      </nav>
+          </>
+        )}
+      </div>
 
-      {/* ── Mobile Floating Search + Hamburger ── */}
+      {/* ═══ Mobile Floating Search + Hamburger ═══ */}
       <div className="md:hidden fixed bottom-6 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
         <div className={`mobile-search-bar pointer-events-auto flex items-center ${mobileSearchActive ? 'expanded' : ''}`}>
-          {/* Search area */}
           <div className="mobile-search-input-wrap flex items-center gap-1.5 py-2.5 pl-2.5 pr-0 min-w-0">
             <SearchIcon className="w-3.5 h-3.5 text-white/50 shrink-0" />
             <input
               ref={mobileInputRef}
               type="text"
               value={mobileQuery}
-              onChange={(e) => {
-                setMobileQuery(e.target.value);
-                if (!mobileSearchActive) setMobileSearchActive(true);
-              }}
+              onChange={(e) => { setMobileQuery(e.target.value); if (!mobileSearchActive) setMobileSearchActive(true); }}
               onFocus={() => setMobileSearchActive(true)}
               onBlur={() => { if (!mobileQuery) setMobileSearchActive(false); }}
               placeholder="Pesquisar"
               className="w-[70px] min-w-0 bg-transparent text-xs text-white placeholder:text-white/40 outline-none"
             />
           </div>
-
-          {/* Hamburger - pushed to right edge */}
           <div
             onClick={() => setMobileOpen(true)}
             role="button"
@@ -312,7 +400,7 @@ export function Navbar({ allPosts }: NavbarProps) {
         </div>
       </div>
 
-      {/* ── Mobile search results dropdown (above floating bar) ── */}
+      {/* Mobile search results */}
       {mobileSearchActive && mobileResults.length > 0 && (
         <div className="md:hidden fixed inset-x-0 bottom-24 z-[55] px-4 animate-fade-in">
           <div className="mobile-search-results relative">
@@ -322,88 +410,49 @@ export function Navbar({ allPosts }: NavbarProps) {
                   key={post.slug}
                   href={`/blog/${post.slug}`}
                   onClick={() => handleMobileSearchSelect(post.slug)}
-                  className="flex items-start gap-3 px-3 py-2.5 rounded-lg
-                             text-white/80 hover:bg-white/[0.05] active:bg-white/[0.06]
-                             transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
+                  className="flex items-start gap-3 px-3 py-2.5 rounded-lg text-white/80 hover:bg-white/[0.05] active:bg-white/[0.06] transition-all duration-[400ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
                 >
                   <span className="text-emerald-400 mt-0.5 shrink-0">
                     <SearchIcon className="w-3.5 h-3.5" />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm text-white font-medium truncate">
-                      {post.frontmatter.title}
-                    </p>
-                    <p className="text-xs text-white/40 truncate mt-0.5">
-                      {post.frontmatter.category} &middot; {post.frontmatter.readTime} de leitura
-                    </p>
+                    <p className="text-sm text-white font-medium truncate">{post.frontmatter.title}</p>
+                    <p className="text-xs text-white/40 truncate mt-0.5">{post.frontmatter.category} &middot; {post.frontmatter.readTime} de leitura</p>
                   </div>
                 </Link>
               ))}
             </div>
             <div className="px-3.5 py-2 border-t border-white/[0.04]">
-              <p className="text-[11px] text-white/30">
-                {mobileResults.length} resultado{mobileResults.length !== 1 ? "s" : ""}
-              </p>
+              <p className="text-[11px] text-white/30">{mobileResults.length} resultado{mobileResults.length !== 1 ? "s" : ""}</p>
             </div>
           </div>
         </div>
       )}
-
-      {/* No results overlay */}
       {mobileSearchActive && mobileQuery.trim().length >= 2 && mobileResults.length === 0 && (
         <div className="md:hidden fixed inset-x-0 bottom-24 z-[55] px-4 animate-fade-in">
-          <div className="mobile-search-results">
-            <div className="px-4 py-6 text-center">
-              <p className="text-sm text-white/40">
-                Nenhum resultado para &quot;{mobileQuery}&quot;
-              </p>
-            </div>
-          </div>
+          <div className="mobile-search-results"><div className="px-4 py-6 text-center"><p className="text-sm text-white/40">Nenhum resultado para &quot;{mobileQuery}&quot;</p></div></div>
         </div>
       )}
-
-      {/* Close mobile search results when tapping outside */}
       {mobileSearchActive && (
-        <div
-          className="md:hidden fixed inset-0 bottom-0 z-[54]"
-          onClick={() => {
-            setMobileSearchActive(false);
-            setMobileQuery("");
-          }}
-          aria-hidden
-        />
+        <div className="md:hidden fixed inset-0 bottom-0 z-[54]" onClick={() => { setMobileSearchActive(false); setMobileQuery(""); }} aria-hidden />
       )}
 
-      {/* ── Mobile Fullscreen Menu Overlay ── */}
-      <div
-        className={`mobile-menu-overlay md:hidden ${
-          mobileOpen ? "mobile-menu-open" : ""
-        }`}
-        aria-hidden={!mobileOpen}
-      >
+      {/* ═══ Mobile Fullscreen Menu Overlay ═══ */}
+      <div className={`mobile-menu-overlay md:hidden ${mobileOpen ? "mobile-menu-open" : ""}`} aria-hidden={!mobileOpen}>
         <div className="mobile-menu-backdrop" />
         <div className="mobile-menu-content">
-          <button
-            onClick={() => setMobileOpen(false)}
-            className="mobile-menu-close"
-            aria-label="Fechar menu"
-            type="button"
-          >
+          <button onClick={() => setMobileOpen(false)} className="mobile-menu-close" aria-label="Fechar menu" type="button">
             <X className="w-6 h-6" />
           </button>
-
           <div className="mobile-menu-links">
             {userName && (
               <div className="mobile-menu-user flex flex-col items-center">
                 {avatarUrl ? (
-                  <div className="w-14 h-14 rounded-full overflow-hidden shrink-0
-                              border-2 border-emerald-400/25
-                              shadow-[0_0_20px_var(--accent-glow)]">
+                  <div className="w-14 h-14 rounded-full overflow-hidden shrink-0 border-2 border-emerald-400/25 shadow-[0_0_20px_var(--accent-glow)]">
                     <img src={avatarUrl} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                   </div>
                 ) : (
-                  <div className="flex items-center justify-center w-12 h-12 rounded-full shrink-0
-                              bg-gradient-to-b from-emerald-400/20 to-emerald-500/10 border border-emerald-400/20">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-full shrink-0 bg-gradient-to-b from-emerald-400/20 to-emerald-500/10 border border-emerald-400/20">
                     <User className="w-5 h-5 text-emerald-400" />
                   </div>
                 )}
@@ -413,15 +462,11 @@ export function Navbar({ allPosts }: NavbarProps) {
                 </div>
               </div>
             )}
-
             <div className="mobile-menu-nav">
               {navLinks.map((link, index) => {
                 const active = isActive(link.href);
                 return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setMobileOpen(false)}
+                  <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)}
                     className={`mobile-menu-link ${active ? "active" : ""}`}
                     style={{ animationDelay: `${index * 80 + 100}ms` }}
                   >
@@ -430,31 +475,18 @@ export function Navbar({ allPosts }: NavbarProps) {
                   </Link>
                 );
               })}
-
-              <Link
-                href="/settings"
-                onClick={() => setMobileOpen(false)}
-                className="mobile-menu-link mobile-menu-link-secondary"
-                style={{ animationDelay: `${navLinks.length * 80 + 100}ms` }}
-              >
+              <Link href="/settings" onClick={() => setMobileOpen(false)} className="mobile-menu-link mobile-menu-link-secondary" style={{ animationDelay: `${navLinks.length * 80 + 100}ms` }}>
                 <div className="flex items-center gap-3">
                   <Settings className="w-4 h-4" />
                   <span className="mobile-menu-link-text">Configurações</span>
                 </div>
                 <ArrowRight className="w-4 h-4 opacity-40" />
               </Link>
-
-              {/* Mobile login / logout buttons */}
               <MobileLoginButton onSignIn={() => openSignInModal()} setMobileOpen={setMobileOpen} delay={navLinks.length * 80 + 180} />
               <MobileLogoutButton setMobileOpen={setMobileOpen} delay={navLinks.length * 80 + 260} />
             </div>
-
             <div className="mobile-menu-cta" style={{ animationDelay: `${navLinks.length * 80 + 200}ms` }}>
-              <Link
-                href="/blog"
-                onClick={() => setMobileOpen(false)}
-                className="mobile-menu-cta-btn"
-              >
+              <Link href="/blog" onClick={() => setMobileOpen(false)} className="mobile-menu-cta-btn">
                 Ler todos os artigos
                 <ArrowRight className="w-4 h-4" />
               </Link>
@@ -462,7 +494,6 @@ export function Navbar({ allPosts }: NavbarProps) {
           </div>
         </div>
       </div>
-
     </>
   );
 }
