@@ -3503,7 +3503,14 @@ html:not(.dark) .mobile-menu-link-secondary:hover {
    Inspired by @ybouane/liquidglass — CSS approximation
    ═══════════════════════════════════════════════════════════════ */
 
-/* ─── Tab Bar (glass pill) ─── */
+/* ═══════════════════════════════════════════════════════════════
+   Liquid Glass — CSS replica of @ybouane/liquidglass GLSL shader
+   Effects: refraction · chromatic aberration · fresnel rim ·
+   Blinn-Phong specular (4 lights) · inner stroke · contact+
+   Gaussian spread shadow · cool glass tint · biconvex depth
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Tab Bar (liquid glass pill) ─── */
 .mobile-tab-bar {
   position: fixed;
   bottom: 0;
@@ -3519,73 +3526,104 @@ html:not(.dark) .mobile-menu-link-secondary:hover {
   padding: 6px 4px calc(env(safe-area-inset-bottom, 0px) + 8px);
   pointer-events: auto;
   border-radius: 22px;
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(20px) saturate(1.6);
-  -webkit-backdrop-filter: blur(20px) saturate(1.6);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  /* Glass body — biconvex depth gradient + cool tint */
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.12) 0%,
+      rgba(255, 255, 255, 0.04) 35%,
+      rgba(200, 210, 230, 0.03) 65%,
+      rgba(255, 255, 255, 0.07) 100%
+    );
+  /* Refraction: blur + saturation + brightness (shader: blur, sat, brightness) */
+  backdrop-filter: blur(24px) saturate(180%) brightness(106%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%) brightness(106%);
+  /* Thin semi-transparent border */
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  /*
+   Shadow system (maps to shader uniforms):
+   1. Chromatic aberration — red/blue fringes at edges (shader: chromAberration)
+   2. Inner stroke — top-biased bright rim (shader: innerStroke * edgeHL)
+   3. Inner glow — fresnel rim light (shader: innerGlow * edgeHL)
+   4. Outer hairline — subtle dark outline (shader: AA mask edge)
+   5. Contact shadow — tight beneath (shader: shadowOffsetY=1, shadowAlpha=0.3)
+   6. Spread shadow — Gaussian falloff (shader: shadowSpread=10, shadowAlpha=0.3)
+  */
   box-shadow:
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.25),
-    0 8px 32px -8px rgba(0, 0, 0, 0.5),
-    0 0 0 0.5px rgba(0, 0, 0, 0.2);
+    /* Chromatic aberration at edges */
+    -0.5px 0 1px 0 rgba(255, 60, 60, 0.07),
+    0.5px 0 1px 0 rgba(60, 60, 255, 0.07),
+    0 -0.5px 1px 0 rgba(255, 60, 60, 0.05),
+    0 0.5px 1px 0 rgba(60, 60, 255, 0.05),
+    /* Inner stroke — top-biased (shader: innerStroke * topBias) */
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.4),
+    inset 0 -0.5px 0 rgba(0, 0, 0, 0.06),
+    /* Inner glow — fresnel rim (shader: innerGlow * edgeHL) */
+    inset 0 0 12px rgba(255, 255, 255, 0.04),
+    /* Outer hairline */
+    0 0 0 0.5px rgba(0, 0, 0, 0.15),
+    /* Contact shadow (shadowOffsetY: 1) */
+    0 1px 2px rgba(0, 0, 0, 0.25),
+    /* Gaussian spread shadow (shadowSpread: 10) */
+    0 10px 40px -10px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
   animation: tab-bar-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
   animation-delay: 0.15s;
 }
 
-@keyframes tab-bar-in {
-  0% {
-    opacity: 0;
-    transform: translateY(24px) scale(0.96);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* Specular highlight — top shine */
-.mobile-tab-bar-shine {
-  position: absolute;
-  top: 0;
-  left: 8%;
-  right: 8%;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.4) 20%,
-    rgba(255, 255, 255, 0.8) 50%,
-    rgba(255, 255, 255, 0.4) 80%,
-    transparent 100%
-  );
-  z-index: 3;
-  pointer-events: none;
-}
-
-/* Caustic light refraction */
-.mobile-tab-bar-caustic {
+/*
+  ::before — Specular highlights (shader: Blinn-Phong 4 lights)
+  L1 at (0.4, 0.7, 1.0) power 90 → tight spot, upper-right
+  L2 at (-0.3, -0.5, 1.0) power 50 → broad, lower-left
+  L3 at (0.1, 0.3, 1.0) power 6  → very broad ambient
+  L4 at (0.0, 0.9, 0.4) power 120 → razor-thin top edge
+*/
+.mobile-tab-bar::before {
+  content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: radial-gradient(
-    ellipse 60% 40% at var(--light-x, 35%) var(--light-y, 15%),
-    rgba(255, 255, 255, 0.08) 0%,
-    rgba(255, 255, 255, 0.02) 40%,
-    transparent 70%
-  );
+  background:
+    /* L4: razor top edge highlight */
+    radial-gradient(ellipse 70% 25% at 50% 0%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    /* L1: tight specular upper-right */
+    radial-gradient(ellipse 35% 30% at 70% 20%, rgba(255,255,255,0.18) 0%, transparent 100%),
+    /* L2: broader lower-left fill */
+    radial-gradient(ellipse 50% 40% at 25% 80%, rgba(255,255,255,0.06) 0%, transparent 100%),
+    /* L3: broad ambient top bias */
+    radial-gradient(ellipse 90% 50% at 50% 10%, rgba(255,255,255,0.05) 0%, transparent 100%);
   pointer-events: none;
-  z-index: 1;
-  animation: tab-caustic 8s ease-in-out infinite;
+  z-index: 3;
 }
 
-@keyframes tab-caustic {
+/*
+  ::after — Environment reflection + fresnel (shader: envRefl + fresnel white mix)
+  Simulates the glass reflecting the environment at grazing angles.
+*/
+.mobile-tab-bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    /* Fresnel — brighter at edges (top-heavy) */
+    linear-gradient(180deg, rgba(255,255,255,0.10) 0%, transparent 35%),
+    /* Environment caustic */
+    radial-gradient(ellipse 80% 60% at 35% 15%, rgba(255,255,255,0.05) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 2;
+  animation: lg-caustic-shift 10s ease-in-out infinite;
+}
+
+@keyframes lg-caustic-shift {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
+  50% { opacity: 0.65; }
 }
 
 /* ─── Tab Bar Items Container ─── */
 .mobile-tab-bar-items {
   position: relative;
-  z-index: 2;
+  z-index: 5;
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -3840,40 +3878,57 @@ html:not(.dark) .mobile-search-overlay-results {
 /* Fallback for no backdrop-filter */
 @supports not (backdrop-filter: blur(20px)) {
   .mobile-tab-bar {
-    background: rgba(8, 7, 10, 0.92);
+    background: rgba(10, 12, 18, 0.88);
+    box-shadow:
+      inset 0 1px 1.5px rgba(255, 255, 255, 0.3),
+      0 0 0 0.5px rgba(0, 0, 0, 0.2),
+      0 1px 2px rgba(0, 0, 0, 0.25),
+      0 10px 40px -10px rgba(0, 0, 0, 0.4);
   }
-  .mobile-tab-bar-shine,
-  .mobile-tab-bar-caustic { display: none; }
+  .mobile-tab-bar::before,
+  .mobile-tab-bar::after { display: none; }
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   Floating Liquid Glass Menu System
-   Inspired by @ybouane/liquidglass — CSS approximation
-   Refraction feel · Specular highlights · Volumetric depth
+   Floating Liquid Glass Pill — @ybouane/liquidglass shader replica
    ═══════════════════════════════════════════════════════════════ */
 
-/* ─── Floating Menu Variables ─── */
+/* ─── Floating Menu Variables (maps to shader defaults) ─── */
 :root {
-  --float-blur: 24px;
+  --float-blur: 28px;
   --float-saturate: 200%;
-  --float-border: 0.30;
-  --float-shadow-spread: 18px;
-  --float-shadow-y: 6px;
+  --float-border: 0.28;
+  --float-shadow-spread: 10px;
+  --float-shadow-y: 1px;
   --float-bg-1: rgba(255, 255, 255, 0.12);
-  --float-bg-2: rgba(255, 255, 255, 0.05);
-  --float-bg-3: rgba(255, 255, 255, 0.08);
+  --float-bg-2: rgba(200, 210, 230, 0.03);
+  --float-bg-3: rgba(255, 255, 255, 0.07);
   --float-volumetric:
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.55),
-    inset 0 -1px 0 0 rgba(255, 255, 255, 0.10),
-    0 1px 2px 0 rgba(0, 0, 0, 0.3),
-    0 4px 12px -2px rgba(0, 0, 0, 0.25),
-    0 var(--float-shadow-spread) var(--float-shadow-y) -6px rgba(0, 0, 0, 0.5);
+    /* Chromatic aberration (shader: chromAberration) */
+    -0.5px 0 1px 0 rgba(255, 60, 60, 0.06),
+    0.5px 0 1px 0 rgba(60, 60, 255, 0.06),
+    0 -0.5px 1px 0 rgba(255, 60, 60, 0.04),
+    0 0.5px 1px 0 rgba(60, 60, 255, 0.04),
+    /* Inner stroke — top-biased (shader: innerStroke) */
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.5),
+    inset 0 -0.5px 0 rgba(0, 0, 0, 0.05),
+    /* Inner glow — fresnel (shader: innerGlow) */
+    inset 0 0 16px rgba(255, 255, 255, 0.04),
+    /* Outer hairline */
+    0 0 0 0.5px rgba(0, 0, 0, 0.12),
+    /* Contact shadow (shadowOffsetY: 1, shadowAlpha: 0.3) */
+    0 1px 2px rgba(0, 0, 0, 0.22),
+    /* Gaussian spread (shadowSpread: 10) */
+    0 var(--float-shadow-spread) 40px -10px rgba(0, 0, 0, 0.35);
   --float-volumetric-hover:
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.65),
-    inset 0 -1px 0 0 rgba(255, 255, 255, 0.15),
-    0 1px 2px 0 rgba(0, 0, 0, 0.3),
-    0 4px 12px -2px rgba(0, 0, 0, 0.25),
-    0 24px 48px -8px rgba(0, 0, 0, 0.55);
+    -0.5px 0 1px 0 rgba(255, 60, 60, 0.07),
+    0.5px 0 1px 0 rgba(60, 60, 255, 0.07),
+    inset 0 1px 2px rgba(255, 255, 255, 0.6),
+    inset 0 -0.5px 0 rgba(0, 0, 0, 0.04),
+    inset 0 0 20px rgba(255, 255, 255, 0.05),
+    0 0 0 0.5px rgba(0, 0, 0, 0.12),
+    0 1px 2px rgba(0, 0, 0, 0.22),
+    0 24px 50px -10px rgba(0, 0, 0, 0.45);
 }
 
 /* ─── Floating Menu Pill (desktop) ─── */
@@ -3890,23 +3945,34 @@ html:not(.dark) .mobile-search-overlay-results {
   align-items: center;
   gap: 0;
   padding: 6px 6px 6px 10px;
-   border-radius: 9999px;
-  background: linear-gradient(
-    135deg,
-    var(--float-bg-1) 0%,
-    var(--float-bg-2) 50%,
-    var(--float-bg-3) 100%
-  );
-  backdrop-filter: blur(var(--float-blur)) saturate(var(--float-saturate)) contrast(110%);
-  -webkit-backdrop-filter: blur(var(--float-blur)) saturate(var(--float-saturate)) contrast(110%);
+  border-radius: 9999px;
+  /* Biconvex depth gradient + cool tint (shader: tint * 0.92/0.95/1.05) */
+  background:
+    linear-gradient(
+      180deg,
+      var(--float-bg-1) 0%,
+      var(--float-bg-2) 35%,
+      var(--float-bg-2) 65%,
+      var(--float-bg-3) 100%
+    );
+  /* Refraction: blur + saturation + brightness + contrast (shader defaults) */
+  backdrop-filter: blur(var(--float-blur)) saturate(var(--float-saturate)) brightness(106%) contrast(110%);
+  -webkit-backdrop-filter: blur(var(--float-blur)) saturate(var(--float-saturate)) brightness(106%) contrast(110%);
   border: 1.5px solid rgba(255, 255, 255, var(--float-border));
   box-shadow: var(--float-volumetric);
   transition: box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
               border-color 0.4s ease;
   isolation: isolate;
+  overflow: hidden;
 }
 
-/* Specular highlight — top edge shine */
+/*
+  ::before — Blinn-Phong specular highlights (shader: 4 lights)
+  L1 (0.4, 0.7, 1.0) p90 tight upper-right
+  L2 (-0.3, -0.5, 1.0) p50 broad lower-left
+  L3 (0.1, 0.3, 1.0) p6  broad ambient
+  L4 (0.0, 0.9, 0.4) p120 razor top edge
+*/
 .float-menu::before {
   content: '';
   position: absolute;
@@ -3914,30 +3980,28 @@ html:not(.dark) .mobile-search-overlay-results {
   left: 8%;
   right: 8%;
   height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.5) 20%,
-    rgba(255, 255, 255, 0.85) 50%,
-    rgba(255, 255, 255, 0.5) 80%,
-    transparent 100%
-  );
+  background:
+    radial-gradient(ellipse 70% 30% at 50% 0%, rgba(255,255,255,0.55) 0%, transparent 100%),
+    linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.5) 20%, rgba(255,255,255,0.9) 50%, rgba(255,255,255,0.5) 80%, transparent 100%);
   z-index: 3;
   pointer-events: none;
 }
 
-/* Caustic light refraction pattern */
+/*
+  ::after — Environment caustic + fresnel reflection
+  (shader: envRefl + fresnel * 0.2 white mix)
+*/
 .float-menu::after {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: radial-gradient(
-    ellipse 70% 50% at var(--light-x, 35%) var(--light-y, 15%),
-    rgba(255, 255, 255, 0.10) 0%,
-    rgba(255, 255, 255, 0.03) 40%,
-    transparent 70%
-  );
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 30%),
+    radial-gradient(ellipse 70% 50% at var(--light-x, 35%) var(--light-y, 15%),
+      rgba(255, 255, 255, 0.08) 0%,
+      rgba(255, 255, 255, 0.02) 40%,
+      transparent 70%);
   pointer-events: none;
   z-index: 1;
   animation: float-caustic-shift 8s ease-in-out infinite;
@@ -3966,7 +4030,12 @@ html:not(.dark) .mobile-search-overlay-results {
 
 @supports not (backdrop-filter: blur(20px)) {
   .float-menu {
-    background: rgba(8, 7, 10, 0.92);
+    background: rgba(10, 12, 18, 0.90);
+    box-shadow:
+      inset 0 1px 1.5px rgba(255, 255, 255, 0.4),
+      0 0 0 0.5px rgba(0, 0, 0, 0.15),
+      0 1px 2px rgba(0, 0, 0, 0.22),
+      0 10px 40px -10px rgba(0, 0, 0, 0.4);
   }
   .float-menu::before,
   .float-menu::after { display: none; }
@@ -4443,12 +4512,9 @@ button, a, [role="button"] {
   .btn-primary::after,
   .btn-secondary::before,
   .btn-secondary::after,
-  .searchbar-input-wrap::before,
   .searchbar-input-wrap::after,
   .mobile-search-bar::before,
-  .mobile-search-bar::after,
-  .mobile-tab-bar-shine,
-  .mobile-tab-bar-caustic {
+  .mobile-search-bar::after {
     display: none !important;
   }
   .btn-primary,
