@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { createPortal } from "react-dom";
 import { ArrowRight, Search as SearchIcon, User, Settings, X, LogOut, Home, BookOpen, Grid3X3, Heart, Menu } from "lucide-react";
 import { AuthButton } from "@/components/AuthButton";
 import { openSignInModal } from "@/components/SignInModal";
@@ -17,6 +18,44 @@ const navLinks = [
   { label: "Favoritos", href: "/favoritos", icon: Heart },
 ];
 
+// Liquid glass config for desktop floating pill
+const DESKTOP_GLASS_CONFIG = JSON.stringify({
+  cornerRadius: 9999,
+  zRadius: 35,
+  refraction: 0.55,
+  chromAberration: 0.04,
+  edgeHighlight: 0.12,
+  specular: 0.20,
+  fresnel: 0.90,
+  blurAmount: 0.01,
+  opacity: 0.95,
+  saturation: 0.04,
+  tintStrength: 0.02,
+  brightness: 0.02,
+  shadowOpacity: 0.35,
+  shadowSpread: 18,
+  shadowOffsetY: 6,
+});
+
+// Liquid glass config for mobile tab bar
+const MOBILE_GLASS_CONFIG = JSON.stringify({
+  cornerRadius: 22,
+  zRadius: 28,
+  refraction: 0.50,
+  chromAberration: 0.03,
+  edgeHighlight: 0.10,
+  specular: 0.15,
+  fresnel: 0.80,
+  blurAmount: 0.01,
+  opacity: 0.93,
+  saturation: 0.03,
+  tintStrength: 0.02,
+  brightness: 0.01,
+  shadowOpacity: 0.30,
+  shadowSpread: 14,
+  shadowOffsetY: 4,
+});
+
 interface NavbarProps {
   allPosts: PostSummary[];
 }
@@ -26,6 +65,7 @@ export function Navbar({ allPosts }: NavbarProps) {
   const [mobileSearchActive, setMobileSearchActive] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [categoriesInView, setCategoriesInView] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { data: session, status: authStatus } = useSession();
   const userName = (authStatus === "authenticated" && session?.user) ? (session.user.name || session.user.login || null) : null;
   const avatarUrl = (authStatus === "authenticated" && session?.user?.image) ? session.user.image : null;
@@ -46,6 +86,9 @@ export function Navbar({ allPosts }: NavbarProps) {
   const linkRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
   const router = useRouter();
 
+  // Portal mount point
+  useEffect(() => { setMounted(true); }, []);
+
   // ── Desktop search filtering ──
   useEffect(() => {
     if (desktopQuery.trim().length < 2) {
@@ -65,14 +108,12 @@ export function Navbar({ allPosts }: NavbarProps) {
     setDesktopSelectedIndex(-1);
   }, [desktopQuery, allPosts]);
 
-  // Focus desktop search when opened
   useEffect(() => {
     if (desktopSearchOpen && desktopInputRef.current) {
       desktopInputRef.current.focus();
     }
   }, [desktopSearchOpen]);
 
-  // Close desktop search on click outside
   useEffect(() => {
     if (!desktopSearchOpen) return;
     function handleClick(e: MouseEvent) {
@@ -197,195 +238,193 @@ export function Navbar({ allPosts }: NavbarProps) {
     setMobileQuery("");
   }
 
-  return (
-    <>
-      {/* ═══ Desktop Floating Liquid Glass Pill ═══ */}
-      <div ref={pillRef} className={`float-menu ${scrolled ? "scrolled" : ""}`}>
-        {/* Sliding indicator */}
-        <span
-          ref={indicatorRef}
-          aria-hidden="true"
-          className="float-pill-indicator"
-          style={{ opacity: 0, willChange: "transform, width" }}
-        />
-
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 shrink-0 mr-1">
-          <Logo className="w-7 h-7" glow />
-          <span className="text-sm font-bold tracking-tight flex items-center">
-            <span className="text-white">Tech</span>
-            <span className="shimmer-text">Mate</span>
-          </span>
-        </Link>
-
-        {/* Nav links — hidden when search is open */}
-        {!desktopSearchOpen && (
-          <>
-            <span className="float-divider" />
-            <div className="flex items-center gap-0.5">
-              {navLinks.map((link) => {
-                const active = isActive(link.href);
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={link.href === "/#categories" ? handleCategoriesClick : undefined}
-                    ref={(el) => { if (el) linkRefs.current.set(link.href, el); }}
-                    className={`float-nav-link ${active ? "active" : ""}`}
-                  >
-                    {link.label}
-                  </Link>
-                );
-              })}
-            </div>
-          </>
-        )}
-
-        {/* Search area */}
-        <div ref={desktopSearchRef} className="relative ml-auto flex items-center">
-          {!desktopSearchOpen ? (
-            <button
-              onClick={() => setDesktopSearchOpen(true)}
-              className="float-search-btn"
-              aria-label="Buscar artigos"
-              type="button"
-            >
-              <SearchIcon className="w-3.5 h-3.5" />
-              <span className="hidden lg:inline text-xs">Buscar...</span>
-              <kbd className="hidden xl:inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono"
-                style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.3)" }}>
-                Ctrl K
-              </kbd>
-            </button>
-          ) : (
-            <div className="float-search-inline">
-              <SearchIcon className="w-3.5 h-3.5 shrink-0" style={{ color: "rgba(var(--accent-rgb), 0.7)" }} />
-              <input
-                ref={desktopInputRef}
-                type="text"
-                value={desktopQuery}
-                onChange={(e) => setDesktopQuery(e.target.value)}
-                onKeyDown={handleDesktopKeyDown}
-                placeholder="Buscar artigos, tags..."
-              />
-              <button
-                onClick={closeDesktopSearch}
-                className="p-0.5 rounded-full hover:bg-white/10 transition-colors shrink-0"
-                type="button"
-                aria-label="Fechar busca"
-              >
-                <X className="w-3 h-3 text-white/50" />
-              </button>
-
-              {/* Dropdown results */}
-              {desktopResults.length > 0 && desktopQuery.trim().length >= 2 && (
-                <div className="float-search-dropdown">
-                  <div className="p-1 max-h-[60vh] overflow-y-auto">
-                    {desktopResults.map((post, i) => (
-                      <button
-                        key={post.slug}
-                        onClick={() => handleDesktopSearchSelect(post.slug)}
-                        className={`float-search-result ${i === desktopSelectedIndex ? "float-search-result-active" : ""}`}
-                        type="button"
-                      >
-                        <span className="mt-0.5 shrink-0" style={{ color: "rgba(var(--accent-rgb), 0.7)" }}>
-                          <SearchIcon className="w-3.5 h-3.5" />
-                        </span>
-                        <div className="min-w-0 flex-1">
-                          <p className="text-sm text-white font-medium truncate">{post.frontmatter.title}</p>
-                          <p className="text-xs text-white/40 truncate mt-0.5">
-                            {post.frontmatter.category} · {post.frontmatter.readTime} de leitura
-                          </p>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                  <div className="px-3 py-2 border-t border-white/[0.04]">
-                    <p className="text-[11px] text-white/30">
-                      {desktopResults.length} resultado{desktopResults.length !== 1 ? "s" : ""} · Enter para abrir
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {desktopQuery.trim().length >= 2 && desktopResults.length === 0 && (
-                <div className="float-search-dropdown">
-                  <div className="px-4 py-8 text-center">
-                    <p className="text-sm text-white/40">Nenhum resultado para &quot;{desktopQuery}&quot;</p>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* Divider + Auth — hidden when search is open */}
-        {!desktopSearchOpen && (
-          <>
-            <span className="float-divider" />
-            <div className="flex items-center">
-              <AuthButton />
-            </div>
-          </>
-        )}
-      </div>
-
-      {/* ═══ Mobile Floating Liquid Glass Tab Bar ═══ */}
-      <div className="md:hidden mobile-tab-bar-wrap">
-        <div className="mobile-tab-bar">
-          <div className="mobile-tab-bar-shine" aria-hidden="true" />
-          <div className="mobile-tab-bar-caustic" aria-hidden="true" />
-
-          <div className="mobile-tab-bar-items">
+  // ── Desktop Floating Liquid Glass Pill (portaled to body) ──
+  const desktopPill = (
+    <div
+      ref={pillRef}
+      className={`float-menu lg-glass ${scrolled ? "scrolled" : ""}`}
+      data-config={DESKTOP_GLASS_CONFIG}
+    >
+      <span
+        ref={indicatorRef}
+        aria-hidden="true"
+        className="float-pill-indicator"
+        style={{ opacity: 0, willChange: "transform, width" }}
+      />
+      <Link href="/" className="flex items-center gap-2 shrink-0 mr-1">
+        <Logo className="w-7 h-7" glow />
+        <span className="text-sm font-bold tracking-tight flex items-center">
+          <span className="text-white">Tech</span>
+          <span className="shimmer-text">Mate</span>
+        </span>
+      </Link>
+      {!desktopSearchOpen && (
+        <>
+          <span className="float-divider" />
+          <div className="flex items-center gap-0.5">
             {navLinks.map((link) => {
-              const Icon = link.icon;
               const active = isActive(link.href);
               return (
                 <Link
                   key={link.href}
                   href={link.href}
                   onClick={link.href === "/#categories" ? handleCategoriesClick : undefined}
-                  className={`mobile-tab-item ${active ? "active" : ""}`}
+                  ref={(el) => { if (el) linkRefs.current.set(link.href, el); }}
+                  className={`float-nav-link ${active ? "active" : ""}`}
                 >
-                  <div className="mobile-tab-icon-wrap">
-                    <Icon className="mobile-tab-icon" strokeWidth={active ? 2.2 : 1.8} />
-                    {active && <div className="mobile-tab-glow" />}
-                  </div>
-                  <span className="mobile-tab-label">{link.label}</span>
+                  {link.label}
                 </Link>
               );
             })}
-
-            <button
-              onClick={() => setMobileSearchActive(true)}
-              className={`mobile-tab-item ${mobileSearchActive ? "active" : ""}`}
-              type="button"
-              aria-label="Pesquisar"
-            >
-              <div className="mobile-tab-icon-wrap">
-                <SearchIcon className="mobile-tab-icon" strokeWidth={mobileSearchActive ? 2.2 : 1.8} />
-                {mobileSearchActive && <div className="mobile-tab-glow" />}
-              </div>
-              <span className="mobile-tab-label">Buscar</span>
-            </button>
-
-            <button
-              onClick={() => setMobileMoreOpen(true)}
-              className={`mobile-tab-item ${mobileMoreOpen ? "active" : ""}`}
-              type="button"
-              aria-label="Mais opções"
-            >
-              <div className="mobile-tab-icon-wrap">
-                <Menu className="mobile-tab-icon" strokeWidth={mobileMoreOpen ? 2.2 : 1.8} />
-                {mobileMoreOpen && <div className="mobile-tab-glow" />}
-              </div>
-              <span className="mobile-tab-label">Mais</span>
-            </button>
           </div>
-        </div>
+        </>
+      )}
+      <div ref={desktopSearchRef} className="relative ml-auto flex items-center">
+        {!desktopSearchOpen ? (
+          <button
+            onClick={() => setDesktopSearchOpen(true)}
+            className="float-search-btn"
+            aria-label="Buscar artigos"
+            type="button"
+          >
+            <SearchIcon className="w-3.5 h-3.5" />
+            <span className="hidden lg:inline text-xs">Buscar...</span>
+            <kbd className="hidden xl:inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono"
+              style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.3)" }}>
+              Ctrl K
+            </kbd>
+          </button>
+        ) : (
+          <div className="float-search-inline">
+            <SearchIcon className="w-3.5 h-3.5 shrink-0" style={{ color: "rgba(var(--accent-rgb), 0.7)" }} />
+            <input
+              ref={desktopInputRef}
+              type="text"
+              value={desktopQuery}
+              onChange={(e) => setDesktopQuery(e.target.value)}
+              onKeyDown={handleDesktopKeyDown}
+              placeholder="Buscar artigos, tags..."
+            />
+            <button
+              onClick={closeDesktopSearch}
+              className="p-0.5 rounded-full hover:bg-white/10 transition-colors shrink-0"
+              type="button"
+              aria-label="Fechar busca"
+            >
+              <X className="w-3 h-3 text-white/50" />
+            </button>
+            {desktopResults.length > 0 && desktopQuery.trim().length >= 2 && (
+              <div className="float-search-dropdown">
+                <div className="p-1 max-h-[60vh] overflow-y-auto">
+                  {desktopResults.map((post, i) => (
+                    <button
+                      key={post.slug}
+                      onClick={() => handleDesktopSearchSelect(post.slug)}
+                      className={`float-search-result ${i === desktopSelectedIndex ? "float-search-result-active" : ""}`}
+                      type="button"
+                    >
+                      <span className="mt-0.5 shrink-0" style={{ color: "rgba(var(--accent-rgb), 0.7)" }}>
+                        <SearchIcon className="w-3.5 h-3.5" />
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm text-white font-medium truncate">{post.frontmatter.title}</p>
+                        <p className="text-xs text-white/40 truncate mt-0.5">
+                          {post.frontmatter.category} · {post.frontmatter.readTime} de leitura
+                        </p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+                <div className="px-3 py-2 border-t border-white/[0.04]">
+                  <p className="text-[11px] text-white/30">
+                    {desktopResults.length} resultado{desktopResults.length !== 1 ? "s" : ""} · Enter para abrir
+                  </p>
+                </div>
+              </div>
+            )}
+            {desktopQuery.trim().length >= 2 && desktopResults.length === 0 && (
+              <div className="float-search-dropdown">
+                <div className="px-4 py-8 text-center">
+                  <p className="text-sm text-white/40">Nenhum resultado para &quot;{desktopQuery}&quot;</p>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
+      {!desktopSearchOpen && (
+        <>
+          <span className="float-divider" />
+          <div className="flex items-center">
+            <AuthButton />
+          </div>
+        </>
+      )}
+    </div>
+  );
 
-      {/* ═══ Mobile Search Overlay ═══ */}
+  // ── Mobile Floating Tab Bar (portaled to body) ──
+  const mobileTabBar = (
+    <div
+      className="mobile-tab-bar lg-glass"
+      data-config={MOBILE_GLASS_CONFIG}
+    >
+      <div className="mobile-tab-bar-items">
+        {navLinks.map((link) => {
+          const Icon = link.icon;
+          const active = isActive(link.href);
+          return (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={link.href === "/#categories" ? handleCategoriesClick : undefined}
+              className={`mobile-tab-item ${active ? "active" : ""}`}
+            >
+              <div className="mobile-tab-icon-wrap">
+                <Icon className="mobile-tab-icon" strokeWidth={active ? 2.2 : 1.8} />
+                {active && <div className="mobile-tab-glow" />}
+              </div>
+              <span className="mobile-tab-label">{link.label}</span>
+            </Link>
+          );
+        })}
+        <button
+          onClick={() => setMobileSearchActive(true)}
+          className={`mobile-tab-item ${mobileSearchActive ? "active" : ""}`}
+          type="button"
+          aria-label="Pesquisar"
+        >
+          <div className="mobile-tab-icon-wrap">
+            <SearchIcon className="mobile-tab-icon" strokeWidth={mobileSearchActive ? 2.2 : 1.8} />
+            {mobileSearchActive && <div className="mobile-tab-glow" />}
+          </div>
+          <span className="mobile-tab-label">Buscar</span>
+        </button>
+        <button
+          onClick={() => setMobileMoreOpen(true)}
+          className={`mobile-tab-item ${mobileMoreOpen ? "active" : ""}`}
+          type="button"
+          aria-label="Mais opções"
+        >
+          <div className="mobile-tab-icon-wrap">
+            <Menu className="mobile-tab-icon" strokeWidth={mobileMoreOpen ? 2.2 : 1.8} />
+            {mobileMoreOpen && <div className="mobile-tab-glow" />}
+          </div>
+          <span className="mobile-tab-label">Mais</span>
+        </button>
+      </div>
+    </div>
+  );
+
+  return (
+    <>
+      {/* Desktop pill — portaled to body as direct child for LiquidGlass lib */}
+      {mounted && createPortal(desktopPill, document.body)}
+
+      {/* Mobile tab bar — portaled to body as direct child for LiquidGlass lib */}
+      {mounted && createPortal(mobileTabBar, document.body)}
+
+      {/* Mobile Search Overlay (NOT a glass element, rendered normally) */}
       {mobileSearchActive && (
         <>
           <div
@@ -415,7 +454,6 @@ export function Navbar({ allPosts }: NavbarProps) {
                 <X className="w-4 h-4 text-white/50" />
               </button>
             </div>
-
             {mobileQuery.trim().length >= 2 && (
               <div className="mobile-search-overlay-results">
                 {mobileResults.length > 0 ? (
@@ -453,7 +491,7 @@ export function Navbar({ allPosts }: NavbarProps) {
         </>
       )}
 
-      {/* ═══ Mobile More Menu Overlay ═══ */}
+      {/* Mobile More Menu Overlay (NOT a glass element) */}
       <div className={`mobile-menu-overlay md:hidden ${mobileMoreOpen ? "mobile-menu-open" : ""}`} aria-hidden={!mobileMoreOpen}>
         <div className="mobile-menu-backdrop" onClick={() => setMobileMoreOpen(false)} />
         <div className="mobile-menu-content">

@@ -12,6 +12,7 @@ import { getAllPosts } from "@/lib/posts";
 import { SessionProvider } from "@/components/SessionProvider";
 import { FavoritesProvider } from "@/components/FavoritesProvider";
 import { GlobalSignInModal } from "@/components/GlobalSignInModal";
+import { LiquidGlassInit } from "@/components/LiquidGlassInit";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -99,6 +100,7 @@ export default function RootLayout({
             </div>
             <ScrollToTop />
             <GlobalSignInModal />
+            <LiquidGlassInit />
           </FavoritesProvider>
         </SessionProvider>
       </body>

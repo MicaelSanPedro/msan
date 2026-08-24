@@ -1,0 +1,1231 @@
+   280→                this._globalDirty = true;
+   281→                this._rafId = requestAnimationFrame(() => this._renderLoop());
+   282→        }
+   283→
+   284→        destroy(): void {
+   285→                this._running = false;
+   286→                cancelAnimationFrame(this._rafId);
+   287→
+   288→                this.root.style.removeProperty('user-select');
+   289→                this.root.style.removeProperty('-webkit-user-select');
+   290→
+   291→                window.removeEventListener('resize', this._onResize);
+   292→                this.root.removeEventListener('pointerdown', this._onPointerDown);
+   293→                window.removeEventListener('pointermove', this._onPointerMove);
+   294→                window.removeEventListener('pointerup', this._onPointerUp);
+   295→
+   296→                this._observer?.disconnect();
+   297→                this._observer = null;
+   298→                this._glassSubtreeObserver?.disconnect();
+   299→                this._glassSubtreeObserver = null;
+   300→
+   301→                for (const [el, canvas] of this.glassCanvases) {
+   302→                        canvas.remove();
+   303→                        el.style.removeProperty('position');
+   304→                        el.style.removeProperty('overflow');
+   305→                        el.style.removeProperty('touch-action');
+   306→                        el.classList.remove(BUTTON_CLASS);
+   307→                }
+   308→                this.glassCanvases.clear();
+   309→                this._glassCache.clear();
+   310→                this._glassContentImages.clear();
+   311→                this._glassLastSize.clear();
+   312→
+   313→                for (const removers of this._buttonListeners.values()) {
+   314→                        for (const r of removers) r();
+   315→                }
+   316→                this._buttonListeners.clear();
+   317→                this._buttonStates.clear();
+   318→
+   319→                document.getElementById(STYLE_ID)?.remove();
+   320→
+   321→                this.capture.destroy();
+   322→                this.renderer.destroy();
+   323→        }
+   324→
+   325→        // ────────────────────────────────────────────
+   326→        // Glass element setup
+   327→        // ────────────────────────────────────────────
+   328→
+   329→        private _setupGlassElements(): void {
+   330→                let needsButtonStyles = false;
+   331→
+   332→                for (const el of this.glassSet) {
+   333→                        // Glass elements must be direct children of the root.
+   334→                        if (el.parentElement !== this.root) {
+   335→                                console.warn('LiquidGlass: glass element must be a direct child of root, skipping.', el);
+   336→                                this.glassSet.delete(el);
+   337→                                continue;
+   338→                        }
+   339→
+   340→                        const currentPosition = window.getComputedStyle(el).position;
+   341→                        if (currentPosition === 'static') {
+   342→                                el.style.position = 'relative';
+   343→                        }
+   344→                        el.style.overflow = 'visible';
+   345→
+   346→                        const config = this._getConfig(el);
+   347→
+   348→                        // Prevent browser from hijacking pointer events for
+   349→                        // scroll/pan on floating (draggable) glass elements.
+   350→                        if (config.floating) {
+   351→                                el.style.touchAction = 'none';
+   352→                        }
+   353→
+   354→                        // Button mode — cursor + hover/press shader-state listeners
+   355→                        if (config.button) {
+   356→                                el.classList.add(BUTTON_CLASS);
+   357→                                needsButtonStyles = true;
+   358→                                this._setupButtonListeners(el);
+   359→                        }
+   360→
+   361→                        const canvas = document.createElement('canvas');
+   362→                        canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:-1;';
+   363→                        el.insertBefore(canvas, el.firstChild);
+   364→
+   365→                        this.glassCanvases.set(el, canvas);
+   366→                }
+   367→
+   368→                // Inject button styles once if any glass element uses button mode
+   369→                if (needsButtonStyles && !document.getElementById(STYLE_ID)) {
+   370→                        const style = document.createElement('style');
+   371→                        style.id = STYLE_ID;
+   372→                        style.textContent = BUTTON_CSS;
+   373→                        document.head.appendChild(style);
+   374→                }
+   375→
+   376→        }
+   377→
+   378→        /**
+   379→         * Walk up from a mutation target until we hit a glass element
+   380→         * registered on this instance. Returns null if the node isn't
+   381→         * inside any glass subtree (shouldn't normally happen since the
+   382→         * observers are scoped to glass elements, but the mutation target
+   383→         * may be a Text node or detached during a removal).
+   384→         */
+   385→        private _closestGlassAncestor(node: Node): HTMLElement | null {
+   386→                let cur: Node | null = node;
+   387→                while (cur) {
+   388→                        if (cur.nodeType === 1 && this.glassSet.has(cur as HTMLElement)) {
+   389→                                return cur as HTMLElement;
+   390→                        }
+   391→                        cur = cur.parentNode;
+   392→                }
+   393→                return null;
+   394→        }
+   395→
+   396→        /**
+   397→         * Mark a glass element (and any glass that visually depends on it
+   398→         * via z-order overlap) as needing a shader re-render on the next
+   399→         * frame.
+   400→         *
+   401→         * `rectOverride` lets callers pass a rect that differs from the
+   402→         * element's current bounding box — useful for drag, where we
+   403→         * want to invalidate both the *old* and *new* footprints in the
+   404→         * same call so glasses behind the dragged panel can clear its
+   405→         * trail and glasses ahead can pick up its new shadow.
+   406→         */
+   407→        private _markGlassAndDependents(
+   408→                element: HTMLElement,
+   409→                rectOverride?: DOMRect,
+   410→        ): void {
+   411→                // 1. The element itself, if it's a glass.
+   412→                if (this.glassSet.has(element)) {
+   413→                        this._glassDirty.add(element);
+   414→                }
+   415→
+   416→                // 2. Glass elements rendered AFTER `element` in the painting
+   417→                //    order whose sample rect intersects element's bounds.
+   418→                //    They read element via _composeSceneForGlass (either as a
+   419→                //    non-glass contributor or via _drawPriorGlassToScene).
+   420→                const rootRect = this.root.getBoundingClientRect();
+   421→                const dpr = window.devicePixelRatio || 1;
+   422→                const elementDOMRect = rectOverride ?? element.getBoundingClientRect();
+   423→                // Pad by SHADOW_PAD when the element itself is a glass — its
+   424→                // rendered output extends that far past its CSS box. For non-
+   425→                // glass contributors the bounds are exact (their paint overflow
+   426→                // is handled by `_getPaintOverflowPad` at draw time, which is
+   427→                // fine for visual fidelity but not relevant to dirty marking).
+   428→                const elementBox = this._getPixelRect(
+   429→                        elementDOMRect,
+   430→                        rootRect,
+   431→                        dpr,
+   432→                        this.glassSet.has(element) ? SHADOW_PAD : 0,
+   433→                );
+   434→
+   435→                let seenElement = false;
+   436→                for (const child of this._sortedChildren) {
+   437→                        if (child === element) { seenElement = true; continue; }
+   438→                        if (!seenElement) continue;
+   439→                        if (!this.glassSet.has(child)) continue;
+   440→                        const sampleRect = this._getPixelRect(
+   441→                                child.getBoundingClientRect(), rootRect, dpr, SHADOW_PAD,
+   442→                        );
+   443→                        if (LiquidGlass._rectsIntersect(elementBox, sampleRect)) {
+   444→                                this._glassDirty.add(child);
+   445→                        }
+   446→                }
+   447→        }
+   448→
+   449→        /**
+   450→         * Mark every glass element whose sample rect intersects the given
+   451→         * element's bounding rect, regardless of stacking order. Used by
+   452→         * the async cache-update callback (a wrapper's pixels just got
+   453→         * fresh, so any glass that samples them needs to re-render) and
+   454→         * by the public markChanged() API for elements outside the glass
+   455→         * set.
+   456→         */
+   457→        private _markGlassesIntersecting(element: HTMLElement): void {
+   458→                const rootRect = this.root.getBoundingClientRect();
+   459→                const dpr = window.devicePixelRatio || 1;
+   460→                const elementBox = this._getPixelRect(
+   461→                        element.getBoundingClientRect(), rootRect, dpr,
+   462→                        this.glassSet.has(element) ? SHADOW_PAD : 0,
+   463→                );
+   464→                for (const glass of this.glassSet) {
+   465→                        const sampleRect = this._getPixelRect(
+   466→                                glass.getBoundingClientRect(), rootRect, dpr, SHADOW_PAD,
+   467→                        );
+   468→                        if (LiquidGlass._rectsIntersect(elementBox, sampleRect)) {
+   469→                                this._glassDirty.add(glass);
+   470→                        }
+   471→                }
+   472→        }
+   473→
+   474→        /**
+   475→         * Public API: mark an element (or all glass elements when called
+   476→         * with no arguments) as needing a shader re-render on the next
+   477→         * frame. Useful for content the library can't observe on its own —
+   478→         * a `<canvas>` whose pixels you just updated, an `<img>` you just
+   479→         * swapped via JS, a wrapper whose CSS background-image you just
+   480→         * changed, etc.
+   481→         *
+   482→         * For elements registered via `data-dynamic`, the library already
+   483→         * treats them as always-dirty and re-renders affected glasses
+   484→         * every frame; calling markChanged() on them is a no-op but is
+   485→         * harmless.
+   486→         *
+   487→         * @param element The element that changed visually. Pass nothing
+   488→         * (or `undefined`) to mark every glass on this instance dirty.
+   489→         */
+   490→        markChanged(element?: HTMLElement): void {
+   491→                if (!element) {
+   492→                        this._globalDirty = true;
+   493→                        return;
+   494→                }
+   495→                this._userMarkedChanged.add(element);
+   496→        }
+   497→
+   498→        private _setupButtonListeners(el: HTMLElement): void {
+   499→                const state: ButtonState = { hover: false, pressed: false };
+   500→                this._buttonStates.set(el, state);
+   501→
+   502→                // Button state change just affects this button's shader uniforms
+   503→                // (brightness on hover, zRadius/shadowSpread on press) — only
+   504→                // this glass and any glass that overlays it need to re-render.
+   505→                const mark = () => this._markGlassAndDependents(el);
+   506→                const onOver = () => { state.hover = true; mark(); };
+   507→                const onOut = () => { state.hover = false; state.pressed = false; mark(); };
+   508→                const onDown = () => { state.pressed = true; mark(); };
+   509→                const onUp = () => { state.pressed = false; mark(); };
+   510→
+   511→                el.addEventListener('pointerover', onOver);
+   512→                el.addEventListener('pointerout', onOut);
+   513→                el.addEventListener('pointerdown', onDown);
+   514→                el.addEventListener('pointerup', onUp);
+   515→                el.addEventListener('pointercancel', onUp);
+   516→
+   517→                this._buttonListeners.set(el, [
+   518→                        () => el.removeEventListener('pointerover', onOver),
+   519→                        () => el.removeEventListener('pointerout', onOut),
+   520→                        () => el.removeEventListener('pointerdown', onDown),
+   521→                        () => el.removeEventListener('pointerup', onUp),
+   522→                        () => el.removeEventListener('pointercancel', onUp),
+   523→                ]);
+   524→        }
+   525→
+   526→        // ────────────────────────────────────────────
+   527→        // Glass content pre-capture
+   528→        // ────────────────────────────────────────────
+   529→
+   530→        /**
+   531→         * Re-capture the DOM content (text, icons, etc.) of glass elements
+   532→         * whose subtrees have been mutated since the last capture, hiding
+   533→         * the injected shader canvas so it isn't included.
+   534→         *
+   535→         * Pass `targets = null` to capture every glass element (used at
+   536→         * init and on resize); pass a Set to capture only specific ones.
+   537→         *
+   538→         * Guarded against concurrent execution: if a capture is already
+   539→         * running, the affected elements stay in `_glassContentDirty` and
+   540→         * the next render-loop tick picks them up.
+   541→         */
+   542→        private async _captureGlassContent(
+   543→                targets: Set<HTMLElement> | null = null,
+   544→        ): Promise<void> {
+   545→                if (this._capturingGlassContent) return;
+   546→                this._capturingGlassContent = true;
+   547→                try {
+   548→                        for (const [el, glassCanvas] of this.glassCanvases) {
+   549→                                if (targets && !targets.has(el)) continue;
+   550→                                const rect = el.getBoundingClientRect();
+   551→                                const img = await this.capture.captureToCanvas(
+   552→                                        el,
+   553→                                        rect.width,
+   554→                                        rect.height,
+   555→                                        [glassCanvas],
+   556→                                );
+   557→                                if (img) {
+   558→                                        this._glassContentImages.set(el, img);
+   559→                                }
+   560→                        }
+   561→                } finally {
+   562→                        this._capturingGlassContent = false;
+   563→                }
+   564→        }
+   565→
+   566→        /**
+   567→         * Synchronously walk every non-glass direct child of root and
+   568→         * await its html-to-image capture so the cache is fully populated
+   569→         * by the time the render loop starts. Without this, the first
+   570→         * frame's glass shader sees an empty (white) local scene for
+   571→         * ~one or two frames while the async captures resolve.
+   572→         */
+   573→        private async _prewarmStaticCaptures(): Promise<void> {
+   574→                for (const child of this._sortedChildren) {
+   575→                        if (this.glassSet.has(child)) continue;
+   576→                        const tag = child.tagName;
+   577→                        if (tag === 'CANVAS' || tag === 'IMG' || tag === 'VIDEO') continue;
+   578→                        if (child.hasAttribute('data-dynamic')) continue;
+   579→                        try {
+   580→                                await this.capture.captureElement(child, false);
+   581→                        } catch (err) {
+   582→                                console.warn('LiquidGlass: prewarm capture failed:', child, err);
+   583→                        }
+   584→                }
+   585→        }
+   586→
+   587→        // ────────────────────────────────────────────
+   588→        // Child ordering & stacking context
+   589→        // ────────────────────────────────────────────
+   590→
+   591→        private _getSortedChildren(): HTMLElement[] {
+   592→                const children = Array.from(this.root.children) as HTMLElement[];
+   593→                const rootDisplay = window.getComputedStyle(this.root).display;
+   594→                const isFlexOrGridParent =
+   595→                        rootDisplay === 'flex' || rootDisplay === 'inline-flex' ||
+   596→                        rootDisplay === 'grid' || rootDisplay === 'inline-grid';
+   597→
+   598→                const tagged = children.map((el, domIndex) => {
+   599→                        const style = window.getComputedStyle(el);
+   600→                        const hasStackingContext =
+   601→                                LiquidGlass._formsStackingContext(style, isFlexOrGridParent);
+   602→                        const rawZ = parseInt(style.zIndex, 10);
+   603→                        const zIndex = isNaN(rawZ) ? 0 : rawZ;
+   604→                        return { el, domIndex, hasStackingContext, zIndex };
+   605→                });
+   606→
+   607→                tagged.sort((a, b) => {
+   608→                        if (!a.hasStackingContext && b.hasStackingContext) return -1;
+   609→                        if (a.hasStackingContext && !b.hasStackingContext) return 1;
+   610→                        if (a.hasStackingContext && b.hasStackingContext) {
+   611→                                if (a.zIndex !== b.zIndex) return a.zIndex - b.zIndex;
+   612→                        }
+   613→                        return a.domIndex - b.domIndex;
+   614→                });
+   615→
+   616→                return tagged.map(t => t.el);
+   617→        }
+   618→
+   619→        /**
+   620→         * Returns true when the element forms a CSS stacking context — i.e.
+   621→         * when its z-index participates in painting order. Mirrors the spec:
+   622→         * https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_positioned_layout/Stacking_context
+   623→         *
+   624→         * Used by `_getSortedChildren` to decide painting order for the
+   625→         * local scene assembly. The set of triggers needs to match the
+   626→         * browser's actual stacking model — otherwise overlays end up
+   627→         * painted before the background image and get erased.
+   628→         */
+   629→        private static _formsStackingContext(
+   630→                style: CSSStyleDeclaration,
+   631→                isFlexOrGridParent: boolean,
+   632→        ): boolean {
+   633→                if (style.position !== 'static') return true;
+   634→                if (isFlexOrGridParent && style.zIndex !== 'auto') return true;
+   635→                if (parseFloat(style.opacity) < 1) return true;
+   636→                if (style.transform !== 'none' && style.transform !== '') return true;
+   637→                if (style.filter !== 'none' && style.filter !== '') return true;
+   638→                if (style.perspective !== 'none' && style.perspective !== '') return true;
+   639→                if (style.clipPath !== 'none' && style.clipPath !== '') return true;
+   640→                if (style.mixBlendMode !== 'normal' && style.mixBlendMode !== '') return true;
+   641→                if (style.isolation === 'isolate') return true;
+   642→
+   643→                const bf = style.backdropFilter
+   644→                        || (style as unknown as { webkitBackdropFilter?: string }).webkitBackdropFilter;
+   645→                if (bf && bf !== 'none') return true;
+   646→
+   647→                const mask = style.maskImage
+   648→                        || (style as unknown as { webkitMaskImage?: string }).webkitMaskImage;
+   649→                if (mask && mask !== 'none') return true;
+   650→
+   651→                const contain = style.contain;
+   652→                if (contain && /\b(layout|paint|strict|content)\b/.test(contain)) return true;
+   653→
+   654→                if (style.willChange) {
+   655→                        const triggers = new Set([
+   656→                                'transform', 'opacity', 'filter', 'backdrop-filter',
+   657→                                'perspective', 'clip-path', 'mask', 'mask-image',
+   658→                                'isolation', 'mix-blend-mode',
+   659→                        ]);
+   660→                        const tokens = style.willChange.split(',').map(t => t.trim());
+   661→                        for (const t of tokens) {
+   662→                                if (triggers.has(t)) return true;
+   663→                        }
+   664→                }
+   665→
+   666→                return false;
+   667→        }
+   668→
+   669→        private _detectDynamic(): boolean {
+   670→                // Check the entire subtree for data-dynamic elements
+   671→                // (video with data-dynamic, etc.).
+   672→                const dynEls = this.root.querySelectorAll('[data-dynamic]');
+   673→                for (const el of dynEls) {
+   674→                        if (!this.glassSet.has(el as HTMLElement)) {
+   675→                                return true;
+   676→                        }
+   677→                }
+   678→                // Also: any video element is implicitly dynamic (live frames).
+   679→                const videos = this.root.querySelectorAll('video');
+   680→                for (const vid of videos) {
+   681→                        if (!this.glassSet.has(vid as unknown as HTMLElement)) {
+   682→                                return true;
+   683→                        }
+   684→                }
+   685→                return false;
+   686→        }
+   687→
+   688→        // ────────────────────────────────────────────
+   689→        // Configuration
+   690→        // ────────────────────────────────────────────
+   691→
+   692→        private _getConfig(el: HTMLElement): GlassConfig {
+   693→                const cachedEl = el as ConfigCachedElement;
+   694→                const configKey = el.dataset.config ?? '';
+   695→
+   696→                if (cachedEl.configCacheKey !== configKey) {
+   697→                        let perElement: Partial<GlassConfig> = {};
+   698→                        if (configKey) {
+   699→                                try {
+   700→                                        const parsed = JSON.parse(configKey);
+   701→                                        if (parsed && typeof parsed === 'object') {
+   702→                                                perElement = parsed as Partial<GlassConfig>;
+   703→                                        } else {
+   704→                                                console.warn('LiquidGlass: data-config must decode to an object for element:', el);
+   705→                                        }
+   706→                                } catch (_e) {
+   707→                                        console.warn('LiquidGlass: invalid JSON in data-config for element:', el);
+   708→                                }
+   709→                        }
+   710→                        cachedEl.configCache = perElement;
+   711→                        cachedEl.configCacheKey = configKey;
+   712→                }
+   713→
+   714→                const config = { ...this.defaults, ...(cachedEl.configCache || {}) };
+   715→
+   716→                if (config.button) {
+   717→                        const state = this._buttonStates.get(el);
+   718→                        if (state) {
+   719→                                if (state.pressed) {
+   720→                                        config.zRadius = config.zRadius * 0.8;
+   721→                                        config.shadowSpread = config.shadowSpread * 1.2;
+   722→                                        // brightness reset to original (no hover boost)
+   723→                                } else if (state.hover) {
+   724→                                        config.brightness = config.brightness + 0.2;
+   725→                                }
+   726→                        }
+   727→                }
+   728→
+   729→                return config;
+   730→        }
+   731→
+   732→        // ────────────────────────────────────────────
+   733→        // Resize
+   734→        // ────────────────────────────────────────────
+   735→
+   736→        private _handleResize(): void {
+   737→                const dpr = window.devicePixelRatio || 1;
+   738→                const rect = this.root.getBoundingClientRect();
+   739→
+   740→                this.capture.resize(dpr);
+   741→                this.renderer.resize(Math.round(rect.width * dpr), Math.round(rect.height * dpr));
+   742→
+   743→                for (const el of this.glassSet) {
+   744→                        this._updateGlassCanvasSize(el);
+   745→                }
+   746→
+   747→                this._glassCache.clear();
+   748→                // Resize affects every glass canvas — mark all of them dirty
+   749→                // (both content image and shader output).
+   750→                for (const el of this.glassSet) this._glassContentDirty.add(el);
+   751→                this._globalDirty = true;
+   752→        }
+   753→
+   754→        private _updateGlassCanvasSize(el: HTMLElement): void {
+   755→                const canvas = this.glassCanvases.get(el);
+   756→                if (!canvas) return;
+   757→                const dpr = window.devicePixelRatio || 1;
+   758→                // Use offsetWidth/Height — the CSS box size before transforms.
+   759→                // This prevents button hover scale from inflating the canvas.
+   760→                const elW = Math.round(el.offsetWidth);
+   761→                const elH = Math.round(el.offsetHeight);
+   762→                const padW = SHADOW_PAD * 2;
+   763→                const padH = SHADOW_PAD * 2;
+   764→                canvas.width = Math.round((elW + padW) * dpr);
+   765→                canvas.height = Math.round((elH + padH) * dpr);
+   766→                canvas.style.cssText = [
+   767→                        'position:absolute',
+   768→                        `left:${-SHADOW_PAD}px`,
+   769→                        `top:${-SHADOW_PAD}px`,
+   770→                        `width:${elW + padW}px`,
+   771→                        `height:${elH + padH}px`,
+   772→                        'pointer-events:none',
+   773→                        'z-index:-1'
+   774→                ].join(';') + ';';
+   775→                this._glassLastSize.set(el, { w: elW, h: elH });
+   776→        }
+   777→
+   778→        private _checkGlassSizeChanges(): boolean {
+   779→                let changed = false;
+   780→                for (const el of this.glassSet) {
+   781→                        // Use offsetWidth/Height instead of getBoundingClientRect so
+   782→                        // CSS transforms (e.g. button hover scale) don't trigger
+   783→                        // false size-change detections and render loops.
+   784→                        const w = el.offsetWidth;
+   785→                        const h = el.offsetHeight;
+   786→                        const last = this._glassLastSize.get(el);
+   787→                        if (!last
+   788→                                || Math.abs(last.w - w) > 0.5
+   789→                                || Math.abs(last.h - h) > 0.5
+   790→                        ) {
+   791→                                this._updateGlassCanvasSize(el);
+   792→                                this._glassCache.delete(el);
+   793→                                this.capture.invalidateCache(el);
+   794→                                // Only this element's content image needs to be
+   795→                                // re-captured, not every glass on the page.
+   796→                                this._glassContentDirty.add(el);
+   797→                                changed = true;
+   798→                        }
+   799→                }
+   800→                return changed;
+   801→        }
+   802→
+   803→        // ────────────────────────────────────────────
+   804→        // Floating (drag) behaviour — Pointer Events
+   805→        // ────────────────────────────────────────────
+   806→
+   807→        /** Parse the current translate(x, y) values from an element's transform. */
+   808→        private static _getTranslateXY(el: HTMLElement): [number, number] {
+   809→                const style = getComputedStyle(el);
+   810→                const matrix = style.transform;
+   811→                if (!matrix || matrix === 'none') return [0, 0];
+   812→                // matrix(a, b, c, d, tx, ty)
+   813→                const m = matrix.match(/matrix\(([^)]+)\)/);
+   814→                if (m) {
+   815→                        const parts = m[1].split(',').map(Number);
+   816→                        return [parts[4] || 0, parts[5] || 0];
+   817→                }
+   818→                return [0, 0];
+   819→        }
+   820→
+   821→        private _handlePointerDown(e: PointerEvent): void {
+   822→                // Iterate all glass elements in reverse stacking order (topmost first).
+   823→                for (let i = this._sortedChildren.length - 1; i >= 0; i--) {
+   824→                        const el = this._sortedChildren[i];
+   825→                        if (!this.glassSet.has(el)) continue;
+   826→
+   827→                        const config = this._getConfig(el);
+   828→                        if (!config.floating) continue;
+   829→
+   830→                        const rect = el.getBoundingClientRect();
+   831→                        // Use the CSS box size (offsetWidth/Height) for hit testing,
+   832→                        // but use the bounding rect position (which is correct for
+   833→                        // elements positioned via CSS, grid, etc.).
+   834→                        const elW = el.offsetWidth;
+   835→                        const elH = el.offsetHeight;
+   836→                        // The visual position includes the shadow canvas overflow.
+   837→                        // Compute the element's true visual origin by centering the
+   838→                        // offset size within the bounding rect.
+   839→                        const visualLeft = rect.left + (rect.width - elW) / 2;
+   840→                        const visualTop = rect.top + (rect.height - elH) / 2;
+   841→
+   842→                        if (
+   843→                                e.clientX >= visualLeft && e.clientX <= visualLeft + elW &&
+   844→                                e.clientY >= visualTop && e.clientY <= visualTop + elH
+   845→                        ) {
+   846→                                const [tx, ty] = LiquidGlass._getTranslateXY(el);
+   847→                                this._drag.active = true;
+   848→                                this._drag.element = el;
+   849→                                this._drag.startX = e.clientX;
+   850→                                this._drag.startY = e.clientY;
+   851→                                this._drag.origTx = tx;
+   852→                                this._drag.origTy = ty;
+   853→                                el.style.cursor = 'grabbing';
+   854→                                el.setPointerCapture(e.pointerId);
+   855→                                e.preventDefault();
+   856→                                break;
+   857→                        }
+   858→                }
+   859→        }
+   860→
+   861→        private _handlePointerMove(e: PointerEvent): void {
+   862→                if (!this._drag.active) {
+   863→                        for (const el of this.glassSet) {
+   864→                                const config = this._getConfig(el);
+   865→                                if (!config.floating) continue;
+   866→                                const rect = el.getBoundingClientRect();
+   867→                                const elW = el.offsetWidth;
+   868→                                const elH = el.offsetHeight;
+   869→                                const visualLeft = rect.left + (rect.width - elW) / 2;
+   870→                                const visualTop = rect.top + (rect.height - elH) / 2;
+   871→                                if (
+   872→                                        e.clientX >= visualLeft && e.clientX <= visualLeft + elW &&
+   873→                                        e.clientY >= visualTop && e.clientY <= visualTop + elH
+   874→                                ) {
+   875→                                        el.style.cursor = 'grab';
+   876→                                } else {
+   877→                                        el.style.cursor = '';
+   878→                                }
+   879→                        }
+   880→                        return;
+   881→                }
+   882→
+   883→                const el = this._drag.element!;
+   884→                const dx = e.clientX - this._drag.startX;
+   885→                const dy = e.clientY - this._drag.startY;
+   886→                let newTx = this._drag.origTx + dx;
+   887→                let newTy = this._drag.origTy + dy;
+   888→
+   889→                // Constrain within root bounds with margin.
+   890→                // For nested elements, offsetLeft/Top is relative to offsetParent
+   891→                // (which may not be root). Use getBoundingClientRect to compute
+   892→                // the element's position relative to root, then subtract the
+   893→                // current translate to get the base (CSS layout) position.
+   894→                const rootRect = this.root.getBoundingClientRect();
+   895→                const elW = el.offsetWidth;
+   896→                const elH = el.offsetHeight;
+   897→                const elRect = el.getBoundingClientRect();
+   898→                const [curTx, curTy] = LiquidGlass._getTranslateXY(el);
+   899→                const baseLeft = (elRect.left + (elRect.width - elW) / 2) - rootRect.left - curTx;
+   900→                const baseTop = (elRect.top + (elRect.height - elH) / 2) - rootRect.top - curTy;
+   901→                const margin = 10;
+   902→                const posLeft = baseLeft + newTx;
+   903→                const posTop = baseTop + newTy;
+   904→                const maxLeft = rootRect.width - elW - margin;
+   905→                const maxTop = rootRect.height - elH - margin;
+   906→                if (posLeft < margin) newTx += margin - posLeft;
+   907→                if (posTop < margin) newTy += margin - posTop;
+   908→                if (posLeft > maxLeft) newTx -= posLeft - maxLeft;
+   909→                if (posTop > maxTop) newTy -= posTop - maxTop;
+   910→
+   911→                // Mark glasses overlapping the OLD position so they re-render
+   912→                // to clear the dragged element's previous footprint, THEN move
+   913→                // the element, THEN mark glasses overlapping the NEW position
+   914→                // so they pick up its new footprint.
+   915→                const oldRect = el.getBoundingClientRect();
+   916→                this._markGlassAndDependents(el, oldRect);
+   917→                el.style.transform = `translate(${newTx}px, ${newTy}px)`;
+   918→                this._markGlassAndDependents(el);
+   919→        }
+   920→
+   921→        private _handlePointerUp(_e: PointerEvent): void {
+   922→                if (!this._drag.active) return;
+   923→                const dragged = this._drag.element!;
+   924→                dragged.style.cursor = '';
+   925→                this._drag.active = false;
+   926→                this._drag.element = null;
+   927→                // `isDragging` flips off, so the per-glass gate stops forcing
+   928→                // every-frame re-renders for this glass and its overlapping
+   929→                // neighbours. Mark them once so they get a final clean render.
+   930→                this._markGlassAndDependents(dragged);
+   931→        }
+   932→
+   933→        // ────────────────────────────────────────────
+   934→        // Render loop
+   935→        // ────────────────────────────────────────────
+   936→
+   937→        private _renderLoop(): void {
+   938→                if (!this._running) return;
+   939→
+   940→                // FPS tracking
+   941→                const now = performance.now();
+   942→                this._fpsFrames++;
+   943→                if (now - this._fpsTime >= 1000) {
+   944→                        this.fps = this._fpsFrames;
+   945→                        this._fpsFrames = 0;
+   946→                        this._fpsTime = now;
+   947→                }
+   948→
+   949→                if (this._checkGlassSizeChanges()) {
+   950→                        // _checkGlassSizeChanges already added the resized
+   951→                        // elements to _glassDirty per-element; nothing more to do.
+   952→                }
+   953→
+   954→                if (this._glassContentDirty.size > 0 && !this._capturingGlassContent) {
+   955→                        // Snapshot the dirty set before draining: any mutations
+   956→                        // that arrive while the async capture is in flight stay
+   957→                        // in the live set and are picked up on the next tick.
+   958→                        const targets = new Set(this._glassContentDirty);
+   959→                        this._glassContentDirty.clear();
+   960→                        this._captureGlassContent(targets);
+   961→                }
+   962→
+   963→                try {
+   964→                        this._renderFrame();
+   965→                } catch (err) {
+   966→                        console.error('LiquidGlass: render error:', err);
+   967→                }
+   968→
+   969→                this._rafId = requestAnimationFrame(() => this._renderLoop());
+   970→        }
+   971→
+   972→        private _renderFrame(): void {
+   973→                const dpr = window.devicePixelRatio || 1;
+   974→                const rootRect = this.root.getBoundingClientRect();
+   975→                const isDragging = this._drag.active;
+   976→
+   977→                // 1. Fan out user markChanged() calls into per-glass dirty marks.
+   978→                if (this._userMarkedChanged.size > 0) {
+   979→                        for (const el of this._userMarkedChanged) {
+   980→                                this._markGlassesIntersecting(el);
+   981→                        }
+   982→                        this._userMarkedChanged.clear();
+   983→                }
+   984→
+   985→                // 2. Promote any global dirty into per-element dirties so the
+   986→                //    rest of the loop only ever consults `_glassDirty`.
+   987→                if (this._globalDirty) {
+   988→                        for (const el of this.glassSet) this._glassDirty.add(el);
+   989→                        this._globalDirty = false;
+   990→                }
+   991→
+   992→                const needsRender = this._glassDirty.size > 0
+   993→                        || this._hasDynamic
+   994→                        || isDragging;
+   995→                if (!needsRender) return;
+   996→
+   997→                // 3. Snapshot + drain the dirty set so anything added during
+   998→                //    this frame's work (e.g. async cache landings) is picked
+   999→                //    up on the next frame instead of getting clobbered.
+  1000→                const dirtyTargets = new Set(this._glassDirty);
+  1001→                this._glassDirty.clear();
+  1002→
+  1003→                // 4. Track which glass elements actually re-rendered this
+  1004→                //    frame, with their sample rect, so later glasses in the
+  1005→                //    z-order can detect "a prior glass that I overlap just
+  1006→                //    re-rendered → I need to refresh too."
+  1007→                const renderedThisFrame: Array<{ rect: SampleRect }> = [];
+  1008→
+  1009→                for (const child of this._sortedChildren) {
+  1010→                        if (!this.glassSet.has(child)) continue;
+  1011→                        this._renderGlassElement(
+  1012→                                child,
+  1013→                                rootRect,
+  1014→                                dpr,
+  1015→                                isDragging,
+  1016→                                dirtyTargets,
+  1017→                                renderedThisFrame,
+  1018→                        );
+  1019→                }
+  1020→        }
+  1021→
+  1022→        /**
+  1023→         * Render a single glass element by composing just the scene region
+  1024→         * that can affect it, then running the shader over that local input.
+  1025→         *
+  1026→         * Whether the shader actually re-runs depends on:
+  1027→         *   - explicit dirty mark for this element (in `dirtyTargets`),
+  1028→         *   - any earlier glass in z-order that re-rendered this frame
+  1029→         *     and whose rect intersects this glass's sample rect,
+  1030→         *   - this glass having moved since last frame (position cache),
+  1031→         *   - this glass having dynamic contributors in its sample (video,
+  1032→         *     data-dynamic),
+  1033→         *   - or active drag involving this element.
+  1034→         *
+  1035→         * On render, an entry is pushed to `renderedThisFrame` so later
+  1036→         * glasses can check whether they need to refresh too.
+  1037→         */
+  1038→        private _renderGlassElement(
+  1039→                child: HTMLElement,
+  1040→                rootRect: DOMRect,
+  1041→                dpr: number,
+  1042→                isDragging: boolean,
+  1043→                dirtyTargets: Set<HTMLElement>,
+  1044→                renderedThisFrame: Array<{ rect: SampleRect }>,
+  1045→        ): void {
+  1046→                const config = this._getConfig(child);
+  1047→                const elRect = child.getBoundingClientRect();
+  1048→                const elW = child.offsetWidth;
+  1049→                const elH = child.offsetHeight;
+  1050→                const centerX = (elRect.left - rootRect.left) + elRect.width / 2;
+  1051→                const centerY = (elRect.top - rootRect.top) + elRect.height / 2;
+  1052→                const glassCanvas = this.glassCanvases.get(child);
+  1053→                const isBeingDragged = isDragging && this._drag.element === child;
+  1054→                const sampleRect = this._getPixelRect(elRect, rootRect, dpr, SHADOW_PAD);
+  1055→
+  1056→                const cached = this._glassCache.get(child);
+  1057→                const posChanged = !cached
+  1058→                        || Math.abs(cached.centerX - centerX) > 0.5
+  1059→                        || Math.abs(cached.centerY - centerY) > 0.5;
+  1060→                const hasDynamicContributors = this._hasDynamic
+  1061→                        && this._glassHasDynamicContributors(child, sampleRect, rootRect, dpr);
+  1062→
+  1063→                // Did any earlier-rendered glass actually overlap this glass's
+  1064→                // sample rect? Replaces the old monotonic `bgChanged` boolean
+  1065→                // with a per-element intersection check.
+  1066→                let priorGlassChanged = false;
+  1067→                for (const r of renderedThisFrame) {
+  1068→                        if (LiquidGlass._rectsIntersect(r.rect, sampleRect)) {
+  1069→                                priorGlassChanged = true;
+  1070→                                break;
+  1071→                        }
+  1072→                }
+  1073→
+  1074→                const isExplicitlyDirty = dirtyTargets.has(child);
+  1075→
+  1076→                const needsShaderRender = isDragging
+  1077→                        ? (isBeingDragged || isExplicitlyDirty || priorGlassChanged || hasDynamicContributors)
+  1078→                        : (!cached || posChanged || isExplicitlyDirty || priorGlassChanged || hasDynamicContributors);
+  1079→
+  1080→                if (needsShaderRender && glassCanvas) {
+  1081→                        // Use glassCanvas dimensions as the authoritative size for
+  1082→                        // the renderer pass. sampleRect.w/h (from getBoundingClientRect)
+  1083→                        // can differ from glassCanvas.width/height (from offsetWidth)
+  1084→                        // by ±1 device pixel due to sub-pixel rounding differences.
+  1085→                        // If the renderer clears fewer pixels than drawImage copies,
+  1086→                        // the rightmost/bottom columns contain stale pixels → a thin
+  1087→                        // visible line. Using the same source of truth for both avoids
+  1088→                        // the mismatch.
+  1089→                        const renderW = glassCanvas.width;
+  1090→                        const renderH = glassCanvas.height;
+  1091→                        this._composeSceneForGlass(child, sampleRect, rootRect, dpr);
+  1092→                        this.renderer.uploadAndBlur(
+  1093→                                this._sceneCanvas,
+  1094→                                0,
+  1095→                                0,
+  1096→                                renderW,
+  1097→                                renderH,
+  1098→                                config.blurAmount,
+  1099→                        );
+  1100→                        this.renderer.clear();
+  1101→                        this.renderer.renderGlassPanel(
+  1102→                                config,
+  1103→                                elW,
+  1104→                                elH,
+  1105→                                dpr,
+  1106→                        );
+  1107→
+  1108→                        const ctx = glassCanvas.getContext('2d')!;
+  1109→                        ctx.clearRect(0, 0, glassCanvas.width, glassCanvas.height);
+  1110→                        ctx.drawImage(
+  1111→                                this.renderer.canvas,
+  1112→                                0, 0, glassCanvas.width, glassCanvas.height,
+  1113→                                0, 0, glassCanvas.width, glassCanvas.height,
+  1114→                        );
+  1115→
+  1116→                        this._glassCache.set(child, { centerX, centerY });
+  1117→                        renderedThisFrame.push({ rect: sampleRect });
+  1118→                }
+  1119→        }
+  1120→
+  1121→        /**
+  1122→         * Build the local input scene for a glass panel by walking only the
+  1123→         * contributors that paint before it in the stacking order.
+  1124→         */
+  1125→        private _composeSceneForGlass(
+  1126→                currentGlass: HTMLElement,
+  1127→                sampleRect: SampleRect,
+  1128→                rootRect: DOMRect,
+  1129→                dpr: number,
+  1130→        ): void {
+  1131→                this._prepareSceneCanvas(sampleRect.w, sampleRect.h);
+  1132→
+  1133→                for (const child of this._sortedChildren) {
+  1134→                        if (child === currentGlass) break;
+  1135→                        if (this.glassSet.has(child)) {
+  1136→                                this._drawPriorGlassToScene(child, sampleRect, rootRect, dpr);
+  1137→                        } else {
+  1138→                                this._drawNonGlassChildToScene(child, sampleRect, rootRect, dpr);
+  1139→                        }
+  1140→                }
+  1141→        }
+  1142→
+  1143→        private _prepareSceneCanvas(width: number, height: number): void {
+  1144→                if (this._sceneCanvas.width !== width || this._sceneCanvas.height !== height) {
+  1145→                        this._sceneCanvas.width = width;
+  1146→                        this._sceneCanvas.height = height;
+  1147→                } else {
+  1148→                        this._sceneCtx.clearRect(0, 0, width, height);
+  1149→                }
+  1150→                this._sceneCtx.fillStyle = '#ffffff';
+  1151→                this._sceneCtx.fillRect(0, 0, width, height);
+  1152→        }
+  1153→
+  1154→        private _glassHasDynamicContributors(
+  1155→                currentGlass: HTMLElement,
+  1156→                sampleRect: SampleRect,
+  1157→                rootRect: DOMRect,
+  1158→                dpr: number,
+  1159→        ): boolean {
+  1160→                // A glass element marked data-dynamic on its own root counts
+  1161→                // as always-dirty: forces every-frame shader re-runs.
+  1162→                if (this._childHasDynamicContent(currentGlass)) return true;
+  1163→
+  1164→                for (const child of this._sortedChildren) {
+  1165→                        if (child === currentGlass) break;
+  1166→                        if (this.glassSet.has(child)) continue;
+  1167→                        if (!this._childHasDynamicContent(child)) continue;
+  1168→                        if (this._childTouchesSample(child, sampleRect, rootRect, dpr)) {
+  1169→                                return true;
+  1170→                        }
+  1171→                }
+  1172→                return false;
+  1173→        }
+  1174→
+  1175→        private _childHasDynamicContent(child: HTMLElement): boolean {
+  1176→                if (child.hasAttribute('data-dynamic')) return true;
+  1177→                if (child.tagName === 'VIDEO') return true;
+  1178→                return child.querySelector('[data-dynamic], video') !== null;
+  1179→        }
+  1180→
+  1181→        private _drawNonGlassChildToScene(
+  1182→                child: HTMLElement,
+  1183→                sampleRect: SampleRect,
+  1184→                rootRect: DOMRect,
+  1185→                dpr: number,
+  1186→        ): void {
+  1187→                const tag = child.tagName;
+  1188→
+  1189→                if (tag === 'CANVAS' || tag === 'IMG' || tag === 'VIDEO') {
+  1190→                        this._drawMediaElement(child, this._sceneCtx, sampleRect, rootRect, dpr);
+  1191→                        return;
+  1192→                }
+  1193→
+  1194→                // Wrapper-level early-out: if the wrapper's own (paint-padded)
+  1195→                // bounds don't intersect the sample rect, neither it nor its
+  1196→                // descendants can affect this glass panel — skip the entire
+  1197→                // querySelectorAll + html-to-image work.
+  1198→                //
+  1199→                // Caveat: a descendant absolutely-positioned outside the
+  1200→                // wrapper's box won't be drawn here. Such descendants are
+  1201→                // vanishingly rare in practice; if you hit it, give the escaped
+  1202→                // element its own wrapper or a `data-dynamic` annotation.
+  1203→                if (!this._elementTouchesSample(child, sampleRect, rootRect, dpr)) {
+  1204→                        return;
+  1205→                }
+  1206→
+  1207→                // Draw any live media descendants (img/video/canvas) directly
+  1208→                // from their source elements via the fast `drawImage` path,
+  1209→                // since html-to-image can't rasterise videos.
+  1210→                this._captureMediaDescendants(child, this._sceneCtx, sampleRect, rootRect, dpr);
+  1211→
+  1212→                // Then composite the wrapper's HTML content via the cached
+  1213→                // html-to-image snapshot. captureElement is async; concurrent
+  1214→                // calls for the same element from multiple glass panels in the
+  1215→                // same frame are deduped via HtmlCapture's `_capturing` set,
+  1216→                // so the html-to-image pipeline runs at most once per frame
+  1217→                // per element regardless of how many glasses overlap it.
+  1218→                const isDynamic = child.hasAttribute('data-dynamic');
+  1219→                this.capture.captureElement(child, isDynamic);
+  1220→                const rect = this._getPixelRect(child.getBoundingClientRect(), rootRect, dpr);
+  1221→                this.capture.drawCachedElement(
+  1222→                        child,
+  1223→                        this._sceneCtx,
+  1224→                        rect.x - sampleRect.x,
+  1225→                        rect.y - sampleRect.y,
+  1226→                        rect.w,
+  1227→                        rect.h,
+  1228→                );
+  1229→                // On the very first frame nothing is in the cache yet — the
+  1230→                // async capture will fire onCacheUpdate when it lands, which
+  1231→                // adds the affected glasses back to _glassDirty for the next
+  1232→                // frame. No need to set a dirty flag synchronously.
+  1233→        }
+  1234→
+  1235→        /**
+  1236→         * Recursively find and draw all img/video/canvas elements inside
+  1237→         * a wrapper, skipping any glass elements and their injected canvases.
+  1238→         */
+  1239→        private _captureMediaDescendants(
+  1240→                parent: HTMLElement,
+  1241→                targetCtx: CanvasRenderingContext2D,
+  1242→                sampleRect: SampleRect,
+  1243→                rootRect: DOMRect,
+  1244→                dpr: number,
+  1245→        ): void {
+  1246→                const mediaEls = parent.querySelectorAll('img, video, canvas');
+  1247→                for (const el of mediaEls) {
+  1248→                        const htmlEl = el as HTMLElement;
+  1249→                        // Skip the injected glass shader canvases
+  1250→                        let isGlassCanvas = false;
+  1251→                        for (const [, gc] of this.glassCanvases) {
+  1252→                                if (gc === el) { isGlassCanvas = true; break; }
+  1253→                        }
+  1254→                        if (isGlassCanvas) continue;
+  1255→
+  1256→                        this._drawMediaElement(htmlEl, targetCtx, sampleRect, rootRect, dpr);
+  1257→                }
+  1258→        }
+  1259→
+  1260→        /** Draw a single img/video/canvas into a local scene canvas. */
+  1261→        private _drawMediaElement(
+  1262→                el: HTMLElement,
+  1263→                targetCtx: CanvasRenderingContext2D,
+  1264→                sampleRect: SampleRect,
+  1265→                rootRect: DOMRect,
+  1266→                dpr: number,
+  1267→        ): boolean {
+  1268→                const tag = el.tagName;
+  1269→                const r = el.getBoundingClientRect();
+  1270→                if (!this._elementTouchesSample(el, sampleRect, rootRect, dpr)) return false;
+  1271→                const rect = this._getPixelRect(r, rootRect, dpr);
+  1272→                const dx = rect.x - sampleRect.x;
+  1273→                const dy = rect.y - sampleRect.y;
+  1274→                const dw = rect.w;
+  1275→                const dh = rect.h;
+  1276→
+  1277→                // Hidden / collapsed media element — nothing to draw, but
+  1278→                // drawImage with zero dimensions throws InvalidStateError, so
+  1279→                // short-circuit.
+  1280→                if (dw <= 0 || dh <= 0) return false;
+  1281→
+  1282→                if (tag === 'CANVAS') {
+  1283→                        const liveCanvas = el as HTMLCanvasElement;
+  1284→                        if (liveCanvas.width <= 0 || liveCanvas.height <= 0) return false;
+  1285→                        targetCtx.drawImage(liveCanvas, dx, dy, dw, dh);
+  1286→                        return true;
+  1287→                } else if (tag === 'IMG') {
+  1288→                        const img = el as HTMLImageElement;
+  1289→                        if (!img.complete || img.naturalWidth === 0) return false;
+  1290→                        this._drawMediaFitted(
+  1291→                                targetCtx,
+  1292→                                img,
+  1293→                                img.naturalWidth,
+  1294→                                img.naturalHeight,
+  1295→                                el,
+  1296→                                r,
+  1297→                                dx,
+  1298→                                dy,
+  1299→                                dw,
+  1300→                                dh,
+  1301→                        );
+  1302→                        return true;
+  1303→                } else if (tag === 'VIDEO') {
+  1304→                        const vid = el as HTMLVideoElement;
+  1305→                        // readyState 0 = HAVE_NOTHING (no data at all — skip).
+  1306→                        // readyState >= 1 = HAVE_METADATA (dimensions known; during
+  1307→                        // seeking the readyState may drop to 1, but drawImage still
+  1308→                        // draws the last decoded frame, which is far better than a
+  1309→                        // white hole in the glass effect).
+  1310→                        if (vid.readyState < 1) return false;
+  1311→                        try {
+  1312→                                this._drawMediaFitted(
+  1313→                                        targetCtx,
+  1314→                                        vid,
+  1315→                                        vid.videoWidth,
+  1316→                                        vid.videoHeight,
+  1317→                                        el,
+  1318→                                        r,
+  1319→                                        dx,
+  1320→                                        dy,
+  1321→                                        dw,
+  1322→                                        dh,
+  1323→                                );
+  1324→                        } catch {
+  1325→                                // Broken source, revoked blob URL, or decoder error —
+  1326→                                // skip gracefully rather than crashing the render loop.
+  1327→                                return false;
+  1328→                        }
+  1329→                        return true;
+  1330→                }
+  1331→                return false;
+  1332→        }
+  1333→
+  1334→        /** Draw an img or video onto a local scene canvas, respecting object-fit. */
+  1335→        private _drawMediaFitted(
+  1336→                targetCtx: CanvasRenderingContext2D,
+  1337→                mediaEl: HTMLImageElement | HTMLVideoElement,
+  1338→                natW: number,
+  1339→                natH: number,
+  1340→                child: HTMLElement,
+  1341→                r: DOMRect,
+  1342→                dx: number,
+  1343→                dy: number,
+  1344→                dw: number,
+  1345→                dh: number,
+  1346→        ): void {
+  1347→                if (natW && natH) {
+  1348→                        const computed = getComputedStyle(child);
+  1349→                        const fit = computed.objectFit || 'fill';
+  1350→                        const pos = computed.objectPosition || '50% 50%';
+  1351→                        const src = LiquidGlass._objectFitRect(natW, natH, r.width, r.height, fit, pos);
+  1352→                        targetCtx.drawImage(mediaEl, src.sx, src.sy, src.sw, src.sh, dx, dy, dw, dh);
+  1353→                } else {
+  1354→                        targetCtx.drawImage(mediaEl, dx, dy, dw, dh);
+  1355→                }
+  1356→        }
+  1357→
+  1358→        private _drawPriorGlassToScene(
+  1359→                child: HTMLElement,
+  1360→                sampleRect: SampleRect,
+  1361→                rootRect: DOMRect,
+  1362→                dpr: number,
+  1363→        ): void {
+  1364→                const glassCanvas = this.glassCanvases.get(child);
+  1365→                const elRect = child.getBoundingClientRect();
+  1366→                if (glassCanvas) {
+  1367→                        const shaderRect = this._getPixelRect(elRect, rootRect, dpr, SHADOW_PAD);
+  1368→                        if (LiquidGlass._rectsIntersect(shaderRect, sampleRect)) {
+  1369→                                this._sceneCtx.drawImage(
+  1370→                                        glassCanvas,
+  1371→                                        0,
+  1372→                                        0,
+  1373→                                        glassCanvas.width,
+  1374→                                        glassCanvas.height,
+  1375→                                        shaderRect.x - sampleRect.x,
+  1376→                                        shaderRect.y - sampleRect.y,
+  1377→                                        shaderRect.w,
+  1378→                                        shaderRect.h,
+  1379→                                );
+  1380→                        }
+  1381→                }
+  1382→
+  1383→                const contentImg = this._glassContentImages.get(child);
+  1384→                if (!contentImg) return;
+  1385→                const contentRect = this._getPixelRect(elRect, rootRect, dpr);
+  1386→                if (!LiquidGlass._rectsIntersect(contentRect, sampleRect)) return;
+  1387→                this._sceneCtx.drawImage(
+  1388→                        contentImg,
+  1389→                        contentRect.x - sampleRect.x,
+  1390→                        contentRect.y - sampleRect.y,
+  1391→                        contentRect.w,
+  1392→                        contentRect.h,
+  1393→                );
+  1394→        }
+  1395→
+  1396→        private _getPixelRect(
+  1397→                rect: DOMRect,
+  1398→                rootRect: DOMRect,
+  1399→                dpr: number,
+  1400→                pad = 0,
+  1401→        ): SampleRect {
+  1402→                return {
+  1403→                        x: Math.round((rect.left - rootRect.left - pad) * dpr),
+  1404→                        y: Math.round((rect.top - rootRect.top - pad) * dpr),
+  1405→                        w: Math.round((rect.width + pad * 2) * dpr),
+  1406→                        h: Math.round((rect.height + pad * 2) * dpr),
+  1407→                };
+  1408→        }
+  1409→
+  1410→        private _childTouchesSample(
+  1411→                child: HTMLElement,
+  1412→                sampleRect: SampleRect,
+  1413→                rootRect: DOMRect,
+  1414→                dpr: number,
+  1415→        ): boolean {
+  1416→                if (this._elementTouchesSample(child, sampleRect, rootRect, dpr)) return true;
+  1417→
+  1418→                for (const el of child.querySelectorAll('[data-dynamic], video')) {
+  1419→                        if (this._elementTouchesSample(el as HTMLElement, sampleRect, rootRect, dpr)) {
+  1420→                                return true;
+  1421→                        }
+  1422→                }
+  1423→                return false;
+  1424→        }
+  1425→
+  1426→        private _elementTouchesSample(
+  1427→                element: HTMLElement,
+  1428→                sampleRect: SampleRect,
+  1429→                rootRect: DOMRect,
+  1430→                dpr: number,
+  1431→        ): boolean {
+  1432→                const pad = this._getPaintOverflowPad(element);
+  1433→                const bounds = this._getPixelRect(element.getBoundingClientRect(), rootRect, dpr, pad);
+  1434→                return LiquidGlass._rectsIntersect(bounds, sampleRect);
+  1435→        }
+  1436→
+  1437→        private _getPaintOverflowPad(element: HTMLElement): number {
+  1438→                if (this.glassSet.has(element)) return SHADOW_PAD;
+  1439→
+  1440→                const style = getComputedStyle(element);
+  1441→                const backdropFilter = style.backdropFilter
+  1442→                        || (style as CSSStyleDeclaration & { webkitBackdropFilter?: string }).webkitBackdropFilter;
+  1443→                const maskImage = style.maskImage
+  1444→                        || (style as CSSStyleDeclaration & { webkitMaskImage?: string }).webkitMaskImage;
+  1445→
+  1446→                const paintsOutsideBounds =
+  1447→                        (style.boxShadow && style.boxShadow !== 'none')
+  1448→                        || (style.textShadow && style.textShadow !== 'none')
+  1449→                        || (style.filter && style.filter !== 'none')
+  1450→                        || (backdropFilter && backdropFilter !== 'none')
+  1451→                        || (maskImage && maskImage !== 'none')
+  1452→                        || (style.mixBlendMode && style.mixBlendMode !== 'normal');
+  1453→
+  1454→                return paintsOutsideBounds ? SHADOW_PAD : 0;
+  1455→        }
+  1456→
+  1457→        private static _rectsIntersect(a: SampleRect, b: SampleRect): boolean {
+  1458→                return a.x < b.x + b.w
+  1459→                        && a.x + a.w > b.x
+  1460→                        && a.y < b.y + b.h
+  1461→                        && a.y + a.h > b.y;
+  1462→        }
+  1463→
+  1464→        /** Compute the source rectangle for drawImage that replicates CSS object-fit / object-position. */
+  1465→        static _objectFitRect(
+  1466→                natW: number,
+  1467→                natH: number,
+  1468→                boxW: number,
+  1469→                boxH: number,
+  1470→                fit: string,
+  1471→                pos: string,
+  1472→        ): ObjectFitRect {
+  1473→                let sx = 0, sy = 0, sw = natW, sh = natH;
+  1474→
+  1475→                if (fit === 'fill' || (fit === 'scale-down' && natW <= boxW && natH <= boxH)) {
+  1476→                        return { sx, sy, sw, sh };
+  1477→                }
+  1478→
+  1479→                const parts = pos.split(/\s+/);
+  1480→                const parseFrac = (v: string, total: number): number => {
+  1481→                        if (v.endsWith('%')) return parseFloat(v) / 100;
+  1482→                        return parseFloat(v) / total;
+  1483→                };
+  1484→                const fx = parseFrac(parts[0] || '50%', boxW);
+  1485→                const fy = parseFrac(parts[1] || '50%', boxH);
+  1486→
+  1487→                if (fit === 'cover') {
+  1488→                        const scale = Math.max(boxW / natW, boxH / natH);
+  1489→                        sw = boxW / scale;
+  1490→                        sh = boxH / scale;
+  1491→                        sx = (natW - sw) * fx;
+  1492→                        sy = (natH - sh) * fy;
+  1493→                } else if (fit === 'contain' || fit === 'scale-down') {
+  1494→                        return { sx: 0, sy: 0, sw: natW, sh: natH };
+  1495→                } else if (fit === 'none') {
+  1496→                        sw = boxW;
+  1497→                        sh = boxH;
+  1498→                        sx = (natW - sw) * fx;
+  1499→                        sy = (natH - sh) * fy;
+  1500→                }
+  1501→
+  1502→                sx = Math.max(0, Math.min(sx, natW - 1));
+  1503→                sy = Math.max(0, Math.min(sy, natH - 1));
+  1504→                sw = Math.min(sw, natW - sx);
+  1505→                sh = Math.min(sh, natH - sy);
+  1506→
+  1507→                return { sx, sy, sw, sh };
+  1508→        }
+  1509→}
+  1510→
