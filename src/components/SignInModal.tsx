@@ -31,7 +31,7 @@ export function SignInModal({ open, onClose }: SignInModalProps) {
 
   const handleGitHubSignIn = async () => {
     setLoading(true);
-    await signIn("github", { callbackUrl: window.location.pathname });
+    await signIn("github", { callbackUrl: window.location.origin + window.location.pathname });
   };
 
   if (!open && !visible) return null;
@@ -114,7 +114,7 @@ export function SignInModal({ open, onClose }: SignInModalProps) {
 
             {/* Google */}
             <button
-              onClick={async () => { setLoading(true); await signIn("google", { callbackUrl: window.location.pathname }); }}
+              onClick={async () => { setLoading(true); await signIn("google", { callbackUrl: window.location.origin + window.location.pathname }); }}
               disabled={loading}
               className="liquid-glass-pill w-full flex items-center justify-center gap-3 px-4 py-3.5
                 active:scale-[0.98] transition-all duration-200
