@@ -39,6 +39,7 @@
     "node_modules",
     "skills",
     "scripts",
-    "tool-results"
+    "tool-results",
+    "examples"
   ]
 }

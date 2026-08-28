@@ -958,6 +958,16 @@ html:not(.dark) .liquid-glass-mobile-menu a[class*="shadow-"] {
   position: relative;
   z-index: 2;
 }
+/*
+  Fix: children that need position:absolute (close buttons, overlays)
+  must override the relative above. Tailwind's .absolute is same specificity
+  as .liquid-glass-panel > *, so we force absolute here for elements
+  that have 'absolute' in their class list.
+*/
+.liquid-glass-panel > .absolute,
+.liquid-glass-panel > [style*="position: absolute"] {
+  position: absolute !important;
+}
 @supports not (backdrop-filter: blur(20px)) {
   .liquid-glass-panel { background: rgba(10, 10, 10, 0.97); }
 }

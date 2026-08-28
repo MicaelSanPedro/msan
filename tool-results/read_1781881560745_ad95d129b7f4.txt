@@ -1,0 +1,2002 @@
+     1→     1→@import "tailwindcss";
+     2→     2→@import "tw-animate-css";
+     3→     3→
+     4→     4→@custom-variant dark (&:is(.dark *));
+     5→     5→
+     6→     6→:root {
+     7→     7→  /* ─── Color tokens (dark by default) ─── */
+     8→     8→  --background: #08070a;
+     9→     9→  --foreground: #ece8df;
+    10→    10→  --muted: rgba(236, 232, 223, 0.55);
+    11→    11→  --muted-2: rgba(236, 232, 223, 0.32);
+    12→    12→
+    13→    13→  --accent: #f9bd18;          /* amber 400 */
+    14→    14→  --accent-2: #fbbf24;        /* amber 300 */
+    15→    15→  --accent-deep: #cb8c0a;     /* amber 600 */
+    16→    16→  --accent-glow: rgba(249, 189, 24, 0.45);
+    17→    17→
+    18→    18→  /* Surfaces */
+    19→    19→  --surface-1: rgba(255, 255, 255, 0.035);
+    20→    20→  --surface-2: rgba(255, 255, 255, 0.06);
+    21→    21→  --border-1: rgba(255, 255, 255, 0.07);
+    22→    22→  --border-2: rgba(255, 255, 255, 0.12);
+    23→    23→
+    24→    24→  /* Radii */
+    25→    25→  --r-sm: 0.5rem;
+    26→    26→  --r-md: 0.75rem;
+    27→    27→  --r-lg: 1rem;
+    28→    28→  --r-xl: 1.25rem;
+    29→    29→  --r-2xl: 1.75rem;
+    30→    30→}
+    31→    31→
+    32→    32→/* ─── Light mode overrides ─── */
+    33→    33→html:not(.dark) {
+    34→    34→  --background: #f8f7f5;
+    35→    35→  --foreground: #1a1a1a;
+    36→    36→  --muted: rgba(30, 30, 30, 0.5);
+    37→    37→  --muted-2: rgba(30, 30, 30, 0.3);
+    38→    38→
+    39→    39→  --surface-1: rgba(0, 0, 0, 0.03);
+    40→    40→  --surface-2: rgba(0, 0, 0, 0.05);
+    41→    41→  --border-1: rgba(0, 0, 0, 0.08);
+    42→    42→  --border-2: rgba(0, 0, 0, 0.12);
+    43→    43→}
+    44→    44→html:not(.dark) body {
+    45→    45→  background: var(--background);
+    46→    46→  color: var(--foreground);
+    47→    47→}
+    48→    48→/* Light mode: glass surfaces become light */
+    49→    49→html:not(.dark) .glass-nav,
+    50→    50→html:not(.dark) .liquid-glass-mobile-menu {
+    51→    51→  background: rgba(255, 255, 255, 0.72) !important;
+    52→    52→  border-color: rgba(0, 0, 0, 0.08) !important;
+    53→    53→}
+    54→    54→html:not(.dark) .glass-nav.scrolled {
+    55→    55→  background: rgba(255, 255, 255, 0.85) !important;
+    56→    56→}
+    57→    57→html:not(.dark) .site-backdrop {
+    58→    58→  background: #f8f7f5;
+    59→    59→}
+    60→    60→html:not(.dark) .ambient-orb {
+    61→    61→  opacity: 0.3;
+    62→    62→}
+    63→    63→html:not(.dark) .noise-overlay {
+    64→    64→  opacity: 0.02;
+    65→    65→}
+    66→    66→html:not(.dark) .cinema-vignette {
+    67→    67→  background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.06) 100%);
+    68→    68→}
+    69→    69→html:not(.dark) .cinema-grain {
+    70→    70→  opacity: 0.015;
+    71→    71→}
+    72→    72→html:not(.dark) .liquid-glass-card {
+    73→    73→  background: rgba(255, 255, 255, 0.6) !important;
+    74→    74→  border-color: rgba(0, 0, 0, 0.06) !important;
+    75→    75→  box-shadow: 0 8px 32px -8px rgba(0,0,0,0.08) !important;
+    76→    76→}
+    77→    77→html:not(.dark) .post-card {
+    78→    78→  background: rgba(255, 255, 255, 0.6);
+    79→    79→  border-color: rgba(0, 0, 0, 0.06);
+    80→    80→}
+    81→    81→html:not(.dark) .prose-custom h1,
+    82→    82→html:not(.dark) .prose-custom h2,
+    83→    83→html:not(.dark) .prose-custom h3 {
+    84→    84→  color: rgba(30, 30, 30, 0.9);
+    85→    85→}
+    86→    86→html:not(.dark) .prose-custom p,
+    87→    87→html:not(.dark) .prose-custom li {
+    88→    88→  color: rgba(30, 30, 30, 0.7);
+    89→    89→}
+    90→    90→html:not(.dark) .prose-custom strong {
+    91→    91→  color: rgba(30, 30, 30, 0.85);
+    92→    92→}
+    93→    93→html:not(.dark) .prose-custom code {
+    94→    94→  background: rgba(0, 0, 0, 0.05);
+    95→    95→  color: rgba(30, 30, 30, 0.8);
+    96→    96→}
+    97→    97→html:not(.dark) .prose-custom pre {
+    98→    98→  background: rgba(0, 0, 0, 0.04) !important;
+    99→    99→  border-color: rgba(0, 0, 0, 0.08) !important;
+   100→   100→}
+   101→   101→html:not(.dark) .prose-custom th {
+   102→   102→  background: rgba(249, 189, 24, 0.06) !important;
+   103→   103→  color: #92400e !important;
+   104→   104→}
+   105→   105→html:not(.dark) .prose-custom td {
+   106→   106→  color: rgba(30, 30, 30, 0.65) !important;
+   107→   107→  border-color: rgba(0, 0, 0, 0.05) !important;
+   108→   108→}
+   109→   109→html:not(.dark) .prose-custom td:first-child,
+   110→   110→html:not(.dark) .prose-custom th:first-child {
+   111→   111→  color: rgba(30, 30, 30, 0.8) !important;
+   112→   112→}
+   113→   113→html:not(.dark) .prose-custom a {
+   114→   114→  color: #b45309;
+   115→   115→}
+   116→   116→html:not(.dark) .prose-custom blockquote {
+   117→   117→  border-color: rgba(249, 189, 24, 0.3) !important;
+   118→   118→  background: rgba(249, 189, 24, 0.04) !important;
+   119→   119→}
+   120→   120→html:not(.dark) .prose-custom {
+   121→   121→  --tw-prose-body: rgba(30, 30, 30, 0.7);
+   122→   122→  --tw-prose-headings: rgba(30, 30, 30, 0.9);
+   123→   123→  --tw-prose-links: #b45309;
+   124→   124→  --tw-prose-bold: rgba(30, 30, 30, 0.85);
+   125→   125→}
+   126→   126→html:not(.dark) .shimmer-text {
+   127→   127→  background: linear-gradient(90deg, #b45309 0%, #d97706 25%, #f59e0b 50%, #d97706 75%, #b45309 100%);
+   128→   128→  background-size: 200% auto;
+   129→   129→  -webkit-background-clip: text;
+   130→   130→  background-clip: text;
+   131→   131→}
+   132→   132→html:not(.dark) .settings-panel {
+   133→   133→  background: rgba(255, 255, 255, 0.9) !important;
+   134→   134→  border-color: rgba(0, 0, 0, 0.08) !important;
+   135→   135→}
+   136→   136→html:not(.dark) .settings-panel span,
+   137→   137→html:not(.dark) .settings-panel p {
+   138→   138→  color: rgba(30, 30, 30, 0.7);
+   139→   139→}
+   140→   140→html:not(.dark) .settings-panel p.text-sm {
+   141→   141→  color: rgba(30, 30, 30, 0.8);
+   142→   142→}
+   143→   143→html:not(.dark) .settings-panel span.text-sm {
+   144→   144→  color: rgba(30, 30, 30, 0.8);
+   145→   145→}
+   146→   146→html:not(.dark) .welcome-overlay {
+   147→   147→  background: #f8f7f5;
+   148→   148→}
+   149→   149→html:not(.dark) .welcome-letterbox {
+   150→   150→  background: #f8f7f5;
+   151→   151→}
+   152→   152→html:not(.dark) .welcome-title--tech {
+   153→   153→  color: rgba(30, 30, 30, 0.8);
+   154→   154→}
+   155→   155→html:not(.dark) .welcome-tagline {
+   156→   156→  color: rgba(30, 30, 30, 0.45);
+   157→   157→}
+   158→   158→html:not(.dark) .welcome-vignette {
+   159→   159→  background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.08) 100%);
+   160→   160→}
+   161→   161→html:not(.dark) .welcome-glow {
+   162→   162→  background: radial-gradient(circle, rgba(249, 189, 24, 0.12) 0%, rgba(249, 189, 24, 0.03) 40%, transparent 70%);
+   163→   163→}
+   164→   164→html:not(.dark) .welcome-progress-track {
+   165→   165→  background: rgba(0, 0, 0, 0.06);
+   166→   166→}
+   167→   167→html:not(.dark) .footer-glass {
+   168→   168→  background: rgba(255, 255, 255, 0.7) !important;
+   169→   169→  border-color: rgba(0, 0, 0, 0.06) !important;
+   170→   170→}
+   171→   171→
+   172→   172→/* ═══════════════════════════════════════════════════════════════
+   173→   173→   COMPREHENSIVE LIGHT MODE SYSTEM
+   174→   174→   Maps all white-on-dark text to dark-on-light equivalents
+   175→   175→   ═══════════════════════════════════════════════════════════════ */
+   176→   176→
+   177→   177→/* ── Text: white → dark (all opacity levels) ── */
+   178→   178→html:not(.dark) .text-white { color: #1a1a1a !important; }
+   179→   179→html:not(.dark) .text-white\/90 { color: rgba(30,30,30,0.9) !important; }
+   180→   180→html:not(.dark) .text-white\/85 { color: rgba(30,30,30,0.85) !important; }
+   181→   181→html:not(.dark) .text-white\/80 { color: rgba(30,30,30,0.8) !important; }
+   182→   182→html:not(.dark) .text-white\/75 { color: rgba(30,30,30,0.75) !important; }
+   183→   183→html:not(.dark) .text-white\/70 { color: rgba(30,30,30,0.7) !important; }
+   184→   184→html:not(.dark) .text-white\/65 { color: rgba(30,30,30,0.65) !important; }
+   185→   185→html:not(.dark) .text-white\/60 { color: rgba(30,30,30,0.6) !important; }
+   186→   186→html:not(.dark) .text-white\/55 { color: rgba(30,30,30,0.55) !important; }
+   187→   187→html:not(.dark) .text-white\/50 { color: rgba(30,30,30,0.5) !important; }
+   188→   188→html:not(.dark) .text-white\/45 { color: rgba(30,30,30,0.45) !important; }
+   189→   189→html:not(.dark) .text-white\/40 { color: rgba(30,30,30,0.4) !important; }
+   190→   190→html:not(.dark) .text-white\/35 { color: rgba(30,30,30,0.35) !important; }
+   191→   191→html:not(.dark) .text-white\/30 { color: rgba(30,30,30,0.3) !important; }
+   192→   192→html:not(.dark) .text-white\/25 { color: rgba(30,30,30,0.25) !important; }
+   193→   193→html:not(.dark) .text-white\/20 { color: rgba(30,30,30,0.2) !important; }
+   194→   194→html:not(.dark) .text-white\/15 { color: rgba(30,30,30,0.15) !important; }
+   195→   195→
+   196→   196→/* ── Colored text: light variants → dark readable variants ── */
+   197→   197→html:not(.dark) .text-amber-100 { color: #92400e !important; }
+   198→   198→html:not(.dark) .text-amber-200 { color: #b45309 !important; }
+   199→   199→html:not(.dark) .text-amber-300 { color: #b45309 !important; }
+   200→   200→html:not(.dark) .text-amber-300\/80 { color: #b45309 !important; }
+   201→   201→html:not(.dark) .text-sky-300 { color: #0369a1 !important; }
+   202→   202→html:not(.dark) .text-sky-300\/80 { color: #0369a1 !important; }
+   203→   203→html:not(.dark) .text-emerald-300 { color: #047857 !important; }
+   204→   204→html:not(.dark) .text-emerald-300\/80 { color: #047857 !important; }
+   205→   205→html:not(.dark) .text-lime-300 { color: #4d7c0f !important; }
+   206→   206→html:not(.dark) .text-lime-300\/80 { color: #4d7c0f !important; }
+   207→   207→
+   208→   208→/* ── Placeholder text ── */
+   209→   209→html:not(.dark) input::placeholder,
+   210→   210→html:not(.dark) textarea::placeholder {
+   211→   211→  color: rgba(30, 30, 30, 0.3) !important;
+   212→   212→}
+   213→   213→
+   214→   214→/* ── Selection ── */
+   215→   215→html:not(.dark) ::selection {
+   216→   216→  color: #1a1a1a;
+   217→   217→}
+   218→   218→
+   219→   219→/* ── Gradient muted text ── */
+   220→   220→html:not(.dark) .gradient-text-muted {
+   221→   221→  background: linear-gradient(180deg, rgba(30,30,30,0.95) 0%, rgba(30,30,30,0.55) 100%);
+   222→   222→  -webkit-background-clip: text;
+   223→   223→  background-clip: text;
+   224→   224→}
+   225→   225→
+   226→   226→/* ── Button: secondary ── */
+   227→   227→html:not(.dark) .btn-secondary {
+   228→   228→  color: rgba(30, 30, 30, 0.85) !important;
+   229→   229→  background: linear-gradient(135deg, rgba(0, 0, 0, 0.04) 0%, rgba(0, 0, 0, 0.02) 100%) !important;
+   230→   230→  border-color: rgba(0, 0, 0, 0.08) !important;
+   231→   231→}
+   232→   232→html:not(.dark) .btn-secondary:hover {
+   233→   233→  background: linear-gradient(135deg, rgba(0, 0, 0, 0.06) 0%, rgba(0, 0, 0, 0.03) 100%) !important;
+   234→   234→  border-color: rgba(0, 0, 0, 0.12) !important;
+   235→   235→  color: #1a1a1a !important;
+   236→   236→}
+   237→   237→html:not(.dark) .btn-secondary::before {
+   238→   238→  background: linear-gradient(135deg, rgba(0,0,0,0.03) 0%, transparent 100%) !important;
+   239→   239→}
+   240→   240→
+   241→   241→/* ── Glass surfaces: gradient stops (white → dark tint) ── */
+   242→   242→html:not(.dark) [class*="from-white\/"] {
+   243→   243→  --tw-gradient-from: rgba(0, 0, 0, 0.03) !important;
+   244→   244→}
+   245→   245→html:not(.dark) [class*="to-white\/"] {
+   246→   246→  --tw-gradient-to: rgba(0, 0, 0, 0.01) !important;
+   247→   247→}
+   248→   248→
+   249→   249→/* ── Glass surfaces: borders (white → dark tint) ── */
+   250→   250→html:not(.dark) [class*="border-white\/"] {
+   251→   251→  border-color: rgba(0, 0, 0, 0.07) !important;
+   252→   252→}
+   253→   253→
+   254→   254→/* ── Glass surfaces: flat backgrounds (white → dark tint) ── */
+   255→   255→html:not(.dark) [class*="bg-white\/"] {
+   256→   256→  background-color: rgba(0, 0, 0, 0.03) !important;
+   257→   257→}
+   258→   258→
+   259→   259→/* ── Liquid glass panel (SearchBar dropdown) ── */
+   260→   260→html:not(.dark) .liquid-glass-panel {
+   261→   261→  background: linear-gradient(145deg, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0.94) 100%) !important;
+   262→   262→  border-color: rgba(0, 0, 0, 0.06) !important;
+   263→   263→  box-shadow: 0 16px 48px -12px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+   264→   264→}
+   265→   265→
+   266→   266→/* ── Category badges: bg/text/border for light mode ── */
+   267→   267→html:not(.dark) .bg-amber-900\/60 { background: rgba(254, 243, 199, 0.7) !important; }
+   268→   268→html:not(.dark) .bg-sky-900\/60 { background: rgba(224, 242, 254, 0.7) !important; }
+   269→   269→html:not(.dark) .bg-emerald-900\/60 { background: rgba(209, 250, 229, 0.7) !important; }
+   270→   270→html:not(.dark) .bg-rose-900\/60 { background: rgba(255, 241, 242, 0.7) !important; }
+   271→   271→html:not(.dark) .bg-violet-900\/60 { background: rgba(237, 233, 254, 0.7) !important; }
+   272→   272→html:not(.dark) .bg-cyan-900\/60 { background: rgba(207, 250, 254, 0.7) !important; }
+   273→   273→html:not(.dark) .bg-lime-900\/60 { background: rgba(236, 252, 203, 0.7) !important; }
+   274→   274→html:not(.dark) .border-amber-500\/50 { border-color: rgba(217, 119, 6, 0.25) !important; }
+   275→   275→html:not(.dark) .border-sky-500\/50 { border-color: rgba(14, 165, 233, 0.25) !important; }
+   276→   276→html:not(.dark) .border-emerald-500\/50 { border-color: rgba(16, 185, 129, 0.25) !important; }
+   277→   277→html:not(.dark) .border-rose-500\/50 { border-color: rgba(244, 63, 94, 0.25) !important; }
+   278→   278→html:not(.dark) .border-violet-500\/50 { border-color: rgba(139, 92, 246, 0.25) !important; }
+   279→   279→html:not(.dark) .border-cyan-500\/50 { border-color: rgba(6, 182, 212, 0.25) !important; }
+   280→   280→html:not(.dark) .border-lime-500\/50 { border-color: rgba(132, 204, 22, 0.25) !important; }
+   281→   281→
+   282→   282→/* ── Nav scrolled: lighter shadow ── */
+   283→   283→html:not(.dark) .glass-nav.scrolled {
+   284→   284→  box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+   285→   285→  border-bottom-color: rgba(0, 0, 0, 0.06) !important;
+   286→   286→}
+   287→   287→
+   288→   288→/* ── Nav specular highlights ── */
+   289→   289→html:not(.dark) .glass-nav::before {
+   290→   290→  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 15%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.15) 85%, transparent 100%) !important;
+   291→   291→}
+   292→   292→html:not(.dark) .liquid-glass-mobile-menu::before {
+   293→   293→  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 20%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0.15) 80%, transparent 100%) !important;
+   294→   294→}
+   295→   295→
+   296→   296→/* ── Settings panel refinements ── */
+   297→   297→html:not(.dark) .settings-input {
+   298→   298→  background: rgba(0, 0, 0, 0.03) !important;
+   299→   299→  border-color: rgba(0, 0, 0, 0.1) !important;
+   300→   300→  color: rgba(30, 30, 30, 0.85) !important;
+   301→   301→}
+   302→   302→html:not(.dark) .settings-input:focus {
+   303→   303→  border-color: rgba(249, 189, 24, 0.4) !important;
+   304→   304→  box-shadow: 0 0 0 2px rgba(249, 189, 24, 0.1) !important;
+   305→   305→}
+   306→   306→html:not(.dark) .settings-btn-cancel {
+   307→   307→  border-color: rgba(0, 0, 0, 0.08) !important;
+   308→   308→  background: rgba(0, 0, 0, 0.03) !important;
+   309→   309→  color: rgba(30, 30, 30, 0.5) !important;
+   310→   310→}
+   311→   311→html:not(.dark) .settings-btn-cancel:hover {
+   312→   312→  background: rgba(0, 0, 0, 0.06) !important;
+   313→   313→}
+   314→   314→html:not(.dark) .settings-divider {
+   315→   315→  background: linear-gradient(90deg, transparent, rgba(0,0,0,0.06), transparent) !important;
+   316→   316→}
+   317→   317→
+   318→   318→/* ── Search bar ── */
+   319→   319→html:not(.dark) .search-glow:focus-within {
+   320→   320→  box-shadow: 0 0 0 3px rgba(249, 189, 24, 0.1), 0 8px 32px -8px rgba(249, 189, 24, 0.08) !important;
+   321→   321→  border-color: rgba(249, 189, 24, 0.3) !important;
+   322→   322→}
+   323→   323→
+   324→   324→/* ── Welcome screen name input ── */
+   325→   325→html:not(.dark) .welcome-name-heading {
+   326→   326→  color: rgba(30, 30, 30, 0.85) !important;
+   327→   327→}
+   328→   328→html:not(.dark) .welcome-name-input {
+   329→   329→  background: rgba(0, 0, 0, 0.03) !important;
+   330→   330→  border-color: rgba(0, 0, 0, 0.1) !important;
+   331→   331→  color: rgba(30, 30, 30, 0.9) !important;
+   332→   332→  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+   333→   333→}
+   334→   334→html:not(.dark) .welcome-name-input:focus {
+   335→   335→  border-color: rgba(249, 189, 24, 0.4) !important;
+   336→   336→  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 0 0 3px rgba(249, 189, 24, 0.1) !important;
+   337→   337→}
+   338→   338→
+   339→   339→/* ── Scrollbar ── */
+   340→   340→html:not(.dark) ::-webkit-scrollbar-thumb {
+   341→   341→  background: linear-gradient(180deg, rgba(249,189,24,0.4), rgba(203,140,10,0.4)) !important;
+   342→   342→}
+   343→   343→html:not(.dark) {
+   344→   344→  scrollbar-color: rgba(249, 189, 24, 0.4) transparent;
+   345→   345→}
+   346→   346→
+   347→   347→/* ── Card shine: dark highlight for light mode ── */
+   348→   348→html:not(.dark) .card-shine::after {
+   349→   349→  background: linear-gradient(to bottom right, transparent 35%, rgba(0,0,0,0.04) 45%, rgba(0,0,0,0.02) 55%, transparent 65%) !important;
+   350→   350→}
+   351→   351→
+   352→   352→/* ── Category cards: light mode ── */
+   353→   353→html:not(.dark) .category-card {
+   354→   354→  background: linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0.2) 100%) !important;
+   355→   355→  box-shadow: 0 8px 32px -8px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.5) !important;
+   356→   356→  backdrop-filter: blur(40px) saturate(180%) brightness(102%) !important;
+   357→   357→  -webkit-backdrop-filter: blur(40px) saturate(180%) brightness(102%) !important;
+   358→   358→}
+   359→   359→/* Specular top highlight */
+   360→   360→html:not(.dark) .category-card > div:first-child {
+   361→   361→  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 20%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0.4) 80%, transparent 100%) !important;
+   362→   362→}
+   363→   363→/* Inner refraction glow */
+   364→   364→html:not(.dark) .category-card > div:nth-child(2) {
+   365→   365→  background: radial-gradient(ellipse at 25% 12%, rgba(255,255,255,0.25) 0%, transparent 45%) !important;
+   366→   366→}
+   367→   367→/* Hover spotlight */
+   368→   368→html:not(.dark) .category-card > div:nth-child(3) {
+   369→   369→  background: radial-gradient(400px circle at var(--mx, 50%) var(--my, 50%), rgba(0,0,0,0.03), transparent 60%) !important;
+   370→   370→}
+   371→   371→/* Glow blob: reduce opacity */
+   372→   372→html:not(.dark) .category-card > div:nth-child(4) {
+   373→   373→  opacity: 0.08 !important;
+   374→   374→}
+   375→   375→html:not(.dark) .category-card:hover > div:nth-child(4) {
+   376→   376→  opacity: 0.15 !important;
+   377→   377→}
+   378→   378→/* Icon container shadow */
+   379→   379→html:not(.dark) .category-card [class*="rounded-xl"][style*="box-shadow"] {
+   380→   380→  box-shadow: 0 4px 12px -4px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.5) !important;
+   381→   381→}
+   382→   382→/* Arrow container shadow */
+   383→   383→html:not(.dark) .category-card div[class*="opacity-60"][style*="box-shadow"] {
+   384→   384→  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4) !important;
+   385→   385→}
+   386→   386→/* Article count pill */
+   387→   387→html:not(.dark) .category-card div[class*="rounded-full"][style*="border"] {
+   388→   388→  background: rgba(0, 0, 0, 0.03) !important;
+   389→   389→  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4) !important;
+   390→   390→}
+   391→   391→/* Border glow on hover */
+   392→   392→html:not(.dark) .category-card > div:last-child {
+   393→   393→  box-shadow: 0 0 0 1px rgba(0,0,0,0.05) inset, 0 12px 40px -10px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.3) !important;
+   394→   394→}
+   395→   395→
+   396→   396→/* ── Mobile menu: light mode shadows ── */
+   397→   397→html:not(.dark) .liquid-glass-mobile-menu {
+   398→   398→  box-shadow: 0 16px 48px -12px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+   399→   399→}
+   400→   400→/* Nav buttons (hamburger, search, settings) */
+   401→   401→html:not(.dark) nav button[class*="shadow-"],
+   402→   402→html:not(.dark) nav a[class*="shadow-"] {
+   403→   403→  --tw-shadow: 0 4px 12px -4px rgba(0,0,0,0.06) !important;
+   404→   404→  --tw-shadow-colored: 0 4px 12px -4px rgba(0,0,0,0.06) !important;
+   405→   405→  box-shadow: var(--tw-shadow-offset, 0 0 0 0) var(--tw-ring-offset, 0 0 0 0) var(--tw-ring, 0 0 0 0), var(--tw-shadow) !important;
+   406→   406→}
+   407→   407→/* Mobile menu links */
+   408→   408→html:not(.dark) .liquid-glass-mobile-menu a[class*="shadow-"] {
+   409→   409→  --tw-shadow: inset 0 1px 0 rgba(255,255,255,0.3) !important;
+   410→   410→  --tw-shadow-colored: inset 0 1px 0 rgba(255,255,255,0.3) !important;
+   411→   411→  box-shadow: var(--tw-shadow-offset, 0 0 0 0) var(--tw-ring-offset, 0 0 0 0) var(--tw-ring, 0 0 0 0), var(--tw-shadow) !important;
+   412→   412→}
+   413→   413→
+   414→   414→@layer base {
+   415→   415→  * {
+   416→   416→    box-sizing: border-box;
+   417→   417→    margin: 0;
+   418→   418→    padding: 0;
+   419→   419→  }
+   420→   420→  html {
+   421→   421→    scroll-behavior: smooth;
+   422→   422→  }
+   423→   423→  body {
+   424→   424→    background: var(--background);
+   425→   425→    color: var(--foreground);
+   426→   426→    overflow-x: hidden;
+   427→   427→    width: 100%;
+   428→   428→    position: relative;
+   429→   429→    font-feature-settings: "ss01", "ss02", "cv01", "cv11";
+   430→   430→    -webkit-font-smoothing: antialiased;
+   431→   431→    text-rendering: optimizeLegibility;
+   432→   432→  }
+   433→   433→  ::selection {
+   434→   434→    background: rgba(249, 189, 24, 0.35);
+   435→   435→    color: #fff;
+   436→   436→  }
+   437→   437→}
+   438→   438→
+   439→   439→/* ─────────────────────────────────────────────
+   440→   440→   Animations
+   441→   441→   ───────────────────────────────────────────── */
+   442→   442→@keyframes orb-float-1 {
+   443→   443→  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+   444→   444→  25% { transform: translate3d(100px, -50px, 0) scale(1.1); }
+   445→   445→  50% { transform: translate3d(50px, 100px, 0) scale(0.9); }
+   446→   446→  75% { transform: translate3d(-50px, 50px, 0) scale(1.05); }
+   447→   447→}
+   448→   448→@keyframes orb-float-2 {
+   449→   449→  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+   450→   450→  25% { transform: translate3d(-80px, 60px, 0) scale(0.95); }
+   451→   451→  50% { transform: translate3d(60px, -80px, 0) scale(1.1); }
+   452→   452→  75% { transform: translate3d(80px, -30px, 0) scale(1); }
+   453→   453→}
+   454→   454→@keyframes orb-float-3 {
+   455→   455→  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+   456→   456→  33% { transform: translate3d(120px, 80px, 0) scale(1.15); }
+   457→   457→  66% { transform: translate3d(-60px, -100px, 0) scale(0.9); }
+   458→   458→}
+   459→   459→@keyframes shimmer {
+   460→   460→  0% { background-position: -200% center; }
+   461→   461→  100% { background-position: 200% center; }
+   462→   462→}
+   463→   463→@keyframes rotate-slow {
+   464→   464→  from { transform: rotate(0deg); }
+   465→   465→  to { transform: rotate(360deg); }
+   466→   466→}
+   467→   467→@keyframes terminal-blink {
+   468→   468→  0%, 100% { opacity: 1; }
+   469→   469→  50% { opacity: 0; }
+   470→   470→}
+   471→   471→@keyframes pulse-dot {
+   472→   472→  0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6); }
+   473→   473→  50% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+   474→   474→}
+   475→   475→@keyframes fade-up {
+   476→   476→  0% { opacity: 0; transform: translateY(20px); filter: blur(8px); }
+   477→   477→  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+   478→   478→}
+   479→   479→@keyframes fade-in {
+   480→   480→  from { opacity: 0; }
+   481→   481→  to { opacity: 1; }
+   482→   482→}
+   483→   483→@keyframes gradient-shift {
+   484→   484→  0%, 100% { background-position: 0% 50%; }
+   485→   485→  50% { background-position: 100% 50%; }
+   486→   486→}
+   487→   487→@keyframes float-y {
+   488→   488→  0%, 100% { transform: translateY(0); }
+   489→   489→  50% { transform: translateY(-6px); }
+   490→   490→}
+   491→   491→
+   492→   492→/* ─── Utility classes ──────────────────────── */
+   493→   493→.animate-orb-1 { animation: orb-float-1 22s ease-in-out infinite; will-change: transform; }
+   494→   494→.animate-orb-2 { animation: orb-float-2 26s ease-in-out infinite; will-change: transform; }
+   495→   495→.animate-orb-3 { animation: orb-float-3 20s ease-in-out infinite; will-change: transform; }
+   496→   496→.animate-rotate-slow { animation: rotate-slow 30s linear infinite; }
+   497→   497→.animate-terminal-blink { animation: terminal-blink 1s step-end infinite; }
+   498→   498→.animate-pulse-dot { animation: pulse-dot 2s ease-out infinite; }
+   499→   499→.animate-fade-up { animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+   500→   500→.animate-fade-in { animation: fade-in 0.6s ease-out both; }
+   501→   501→.animate-float-y { animation: float-y 4s ease-in-out infinite; }
+   502→   502→
+   503→   503→/* Staggered delays */
+   504→   504→.delay-0  { animation-delay: 0ms; }
+   505→   505→.delay-1  { animation-delay: 80ms; }
+   506→   506→.delay-2  { animation-delay: 160ms; }
+   507→   507→.delay-3  { animation-delay: 240ms; }
+   508→   508→.delay-4  { animation-delay: 320ms; }
+   509→   509→.delay-5  { animation-delay: 400ms; }
+   510→   510→.delay-6  { animation-delay: 480ms; }
+   511→   511→
+   512→   512→.shimmer-text {
+   513→   513→  background: linear-gradient(90deg, #f9bd18 0%, #fbbf24 25%, #fde68a 50%, #fbbf24 75%, #f9bd18 100%);
+   514→   514→  background-size: 200% auto;
+   515→   515→  -webkit-background-clip: text;
+   516→   516→  -webkit-text-fill-color: transparent;
+   517→   517→  background-clip: text;
+   518→   518→  color: transparent;
+   519→   519→  animation: shimmer 5s linear infinite;
+   520→   520→}
+   521→   521→
+   522→   522→.gradient-text-muted {
+   523→   523→  background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.55) 100%);
+   524→   524→  -webkit-background-clip: text;
+   525→   525→  -webkit-text-fill-color: transparent;
+   526→   526→  background-clip: text;
+   527→   527→  color: transparent;
+   528→   528→}
+   529→   529→
+   530→   530→.text-balance {
+   531→   531→  text-wrap: balance;
+   532→   532→}
+   533→   533→.text-pretty {
+   534→   534→  text-wrap: pretty;
+   535→   535→}
+   536→   536→
+   537→   537→/* ─── Liquid Glass System ──────────────────── */
+   538→   538→
+   539→   539→/* Base liquid glass material */
+   540→   540→.liquid-glass {
+   541→   541→  background: linear-gradient(
+   542→   542→    135deg,
+   543→   543→    rgba(255, 255, 255, 0.10) 0%,
+   544→   544→    rgba(255, 255, 255, 0.035) 50%,
+   545→   545→    rgba(255, 255, 255, 0.012) 100%
+   546→   546→  );
+   547→   547→  backdrop-filter: blur(40px) saturate(200%) brightness(105%);
+   548→   548→  -webkit-backdrop-filter: blur(40px) saturate(200%) brightness(105%);
+   549→   549→  border: 0.5px solid rgba(255, 255, 255, 0.18);
+   550→   550→  overflow: hidden;
+   551→   551→}
+   552→   552→
+   553→   553→/* Specular top highlight */
+   554→   554→.liquid-glass::before {
+   555→   555→  content: '';
+   556→   556→  position: absolute;
+   557→   557→  top: 0;
+   558→   558→  left: 5%;
+   559→   559→  right: 5%;
+   560→   560→  height: 1px;
+   561→   561→  background: linear-gradient(
+   562→   562→    90deg,
+   563→   563→    transparent 0%,
+   564→   564→    rgba(255, 255, 255, 0.45) 20%,
+   565→   565→    rgba(255, 255, 255, 0.7) 50%,
+   566→   566→    rgba(255, 255, 255, 0.45) 80%,
+   567→   567→    transparent 100%
+   568→   568→  );
+   569→   569→  z-index: 2;
+   570→   570→  pointer-events: none;
+   571→   571→}
+   572→   572→
+   573→   573→/* Inner refraction glow */
+   574→   574→.liquid-glass::after {
+   575→   575→  content: '';
+   576→   576→  position: absolute;
+   577→   577→  inset: 0;
+   578→   578→  border-radius: inherit;
+   579→   579→  background: radial-gradient(
+   580→   580→    ellipse at 25% 15%,
+   581→   581→    rgba(255, 255, 255, 0.07) 0%,
+   582→   582→    transparent 50%
+   583→   583→  );
+   584→   584→  pointer-events: none;
+   585→   585→  z-index: 1;
+   586→   586→}
+   587→   587→
+   588→   588→/* Liquid glass — nav variant */
+   589→   589→.liquid-glass-nav {
+   590→   590→  background: linear-gradient(
+   591→   591→    180deg,
+   592→   592→    rgba(255, 255, 255, 0.07) 0%,
+   593→   593→    rgba(255, 255, 255, 0.02) 100%
+   594→   594→  );
+   595→   595→  backdrop-filter: blur(50px) saturate(220%) brightness(108%);
+   596→   596→  -webkit-backdrop-filter: blur(50px) saturate(220%) brightness(108%);
+   597→   597→  border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
+   598→   598→}
+   599→   599→.liquid-glass-nav::before {
+   600→   600→  content: '';
+   601→   601→  position: absolute;
+   602→   602→  top: 0;
+   603→   603→  left: 3%;
+   604→   604→  right: 3%;
+   605→   605→  height: 1px;
+   606→   606→  background: linear-gradient(
+   607→   607→    90deg,
+   608→   608→    transparent 0%,
+   609→   609→    rgba(255, 255, 255, 0.35) 15%,
+   610→   610→    rgba(255, 255, 255, 0.55) 50%,
+   611→   611→    rgba(255, 255, 255, 0.35) 85%,
+   612→   612→    transparent 100%
+   613→   613→  );
+   614→   614→  z-index: 2;
+   615→   615→  pointer-events: none;
+   616→   616→}
+   617→   617→.liquid-glass-nav::after {
+   618→   618→  content: '';
+   619→   619→  position: absolute;
+   620→   620→  bottom: -28px;
+   621→   621→  left: 0;
+   622→   622→  right: 0;
+   623→   623→  height: 28px;
+   624→   624→  background: linear-gradient(to bottom, rgba(8, 7, 10, 0.5), transparent);
+   625→   625→  pointer-events: none;
+   626→   626→  z-index: -1;
+   627→   627→}
+   628→   628→.liquid-glass-nav.scrolled {
+   629→   629→  background: linear-gradient(
+   630→   630→    180deg,
+   631→   631→    rgba(255, 255, 255, 0.10) 0%,
+   632→   632→    rgba(255, 255, 255, 0.04) 100%
+   633→   633→  );
+   634→   634→  box-shadow:
+   635→   635→    0 8px 32px -8px rgba(0, 0, 0, 0.45),
+   636→   636→    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+   637→   637→    inset 0 -0.5px 0 rgba(249, 189, 24, 0.06);
+   638→   638→  border-bottom: 0.5px solid rgba(255, 255, 255, 0.15);
+   639→   639→}
+   640→   640→@supports not (backdrop-filter: blur(20px)) {
+   641→   641→  .liquid-glass-nav { background: rgba(8, 7, 10, 0.95); }
+   642→   642→  .liquid-glass-nav::before { display: none; }
+   643→   643→  .liquid-glass-nav::after { display: none; }
+   644→   644→}
+   645→   645→@media (max-width: 640px) {
+   646→   646→  .liquid-glass-nav::after { display: none; }
+   647→   647→}
+   648→   648→
+   649→   649→/* Liquid glass — card variant */
+   650→   650→.liquid-glass-card {
+   651→   651→  background: linear-gradient(
+   652→   652→    135deg,
+   653→   653→    rgba(255, 255, 255, 0.08) 0%,
+   654→   654→    rgba(255, 255, 255, 0.025) 50%,
+   655→   655→    rgba(255, 255, 255, 0.008) 100%
+   656→   656→  );
+   657→   657→  backdrop-filter: blur(40px) saturate(200%) brightness(105%);
+   658→   658→  -webkit-backdrop-filter: blur(40px) saturate(200%) brightness(105%);
+   659→   659→  border: 0.5px solid rgba(255, 255, 255, 0.15);
+   660→   660→  border-radius: 1rem;
+   661→   661→  box-shadow:
+   662→   662→    0 8px 32px -8px rgba(0, 0, 0, 0.35),
+   663→   663→    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+   664→   664→  overflow: hidden;
+   665→   665→  transition: box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+   666→   666→              border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+   667→   667→              backdrop-filter 0.4s ease;
+   668→   668→}
+   669→   669→.liquid-glass-card::before {
+   670→   670→  content: '';
+   671→   671→  position: absolute;
+   672→   672→  top: 0;
+   673→   673→  left: 8%;
+   674→   674→  right: 8%;
+   675→   675→  height: 1px;
+   676→   676→  background: linear-gradient(
+   677→   677→    90deg,
+   678→   678→    transparent 0%,
+   679→   679→    rgba(255, 255, 255, 0.4) 20%,
+   680→   680→    rgba(255, 255, 255, 0.6) 50%,
+   681→   681→    rgba(255, 255, 255, 0.4) 80%,
+   682→   682→    transparent 100%
+   683→   683→  );
+   684→   684→  z-index: 2;
+   685→   685→  pointer-events: none;
+   686→   686→}
+   687→   687→.liquid-glass-card::after {
+   688→   688→  content: '';
+   689→   689→  position: absolute;
+   690→   690→  inset: 0;
+   691→   691→  border-radius: inherit;
+   692→   692→  background: radial-gradient(
+   693→   693→    ellipse at 25% 12%,
+   694→   694→    rgba(255, 255, 255, 0.06) 0%,
+   695→   695→    transparent 45%
+   696→   696→  );
+   697→   697→  pointer-events: none;
+   698→   698→  z-index: 1;
+   699→   699→}
+   700→   700→.liquid-glass-card:hover {
+   701→   701→  box-shadow:
+   702→   702→    0 12px 40px -8px rgba(0, 0, 0, 0.45),
+   703→   703→    0 0 0 1px rgba(249, 189, 24, 0.08) inset,
+   704→   704→    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+   705→   705→  border-color: rgba(255, 255, 255, 0.22);
+   706→   706→}
+   707→   707→@supports not (backdrop-filter: blur(16px)) {
+   708→   708→  .liquid-glass-card { background: rgba(13, 13, 13, 0.92); }
+   709→   709→}
+   710→   710→
+   711→   711→/* Liquid glass — pill variant */
+   712→   712→.liquid-glass-pill {
+   713→   713→  background: linear-gradient(
+   714→   714→    135deg,
+   715→   715→    rgba(255, 255, 255, 0.08) 0%,
+   716→   716→    rgba(255, 255, 255, 0.03) 100%
+   717→   717→  );
+   718→   718→  backdrop-filter: blur(40px) saturate(180%) brightness(105%);
+   719→   719→  -webkit-backdrop-filter: blur(40px) saturate(180%) brightness(105%);
+   720→   720→  border: 0.5px solid rgba(255, 255, 255, 0.14);
+   721→   721→  border-radius: 9999px;
+   722→   722→  box-shadow:
+   723→   723→    0 4px 16px -4px rgba(0, 0, 0, 0.3),
+   724→   724→    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+   725→   725→  overflow: hidden;
+   726→   726→  transition: box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+   727→   727→}
+   728→   728→.liquid-glass-pill::before {
+   729→   729→  content: '';
+   730→   730→  position: absolute;
+   731→   731→  top: 0;
+   732→   732→  left: 12%;
+   733→   733→  right: 12%;
+   734→   734→  height: 1px;
+   735→   735→  background: linear-gradient(
+   736→   736→    90deg,
+   737→   737→    transparent 0%,
+   738→   738→    rgba(255, 255, 255, 0.5) 30%,
+   739→   739→    rgba(255, 255, 255, 0.7) 50%,
+   740→   740→    rgba(255, 255, 255, 0.5) 70%,
+   741→   741→    transparent 100%
+   742→   742→  );
+   743→   743→  z-index: 2;
+   744→   744→  pointer-events: none;
+   745→   745→}
+   746→   746→@supports not (backdrop-filter: blur(16px)) {
+   747→   747→  .liquid-glass-pill { background: rgba(13, 13, 13, 0.9); }
+   748→   748→}
+   749→   749→
+   750→   750→/* Liquid glass — panel variant (dropdowns/modals) */
+   751→   751→.liquid-glass-panel {
+   752→   752→  background: linear-gradient(
+   753→   753→    145deg,
+   754→   754→    rgba(18, 18, 22, 0.85) 0%,
+   755→   755→    rgba(12, 12, 14, 0.92) 100%
+   756→   756→  );
+   757→   757→  backdrop-filter: blur(50px) saturate(220%) brightness(110%);
+   758→   758→  -webkit-backdrop-filter: blur(50px) saturate(220%) brightness(110%);
+   759→   759→  border: 0.5px solid rgba(255, 255, 255, 0.12);
+   760→   760→  border-radius: 1rem;
+   761→   761→  box-shadow:
+   762→   762→    0 16px 48px -12px rgba(0, 0, 0, 0.6),
+   763→   763→    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+   764→   764→  overflow: hidden;
+   765→   765→}
+   766→   766→.liquid-glass-panel::before {
+   767→   767→  content: '';
+   768→   768→  position: absolute;
+   769→   769→  top: 0;
+   770→   770→  left: 5%;
+   771→   771→  right: 5%;
+   772→   772→  height: 1px;
+   773→   773→  background: linear-gradient(
+   774→   774→    90deg,
+   775→   775→    transparent 0%,
+   776→   776→    rgba(255, 255, 255, 0.3) 20%,
+   777→   777→    rgba(255, 255, 255, 0.5) 50%,
+   778→   778→    rgba(255, 255, 255, 0.3) 80%,
+   779→   779→    transparent 100%
+   780→   780→  );
+   781→   781→  z-index: 2;
+   782→   782→  pointer-events: none;
+   783→   783→}
+   784→   784→@supports not (backdrop-filter: blur(20px)) {
+   785→   785→  .liquid-glass-panel { background: rgba(10, 10, 10, 0.97); }
+   786→   786→}
+   787→   787→
+   788→   788→/* Liquid glass — input variant */
+   789→   789→.liquid-glass-input {
+   790→   790→  background: linear-gradient(
+   791→   791→    135deg,
+   792→   792→    rgba(255, 255, 255, 0.06) 0%,
+   793→   793→    rgba(255, 255, 255, 0.02) 100%
+   794→   794→  );
+   795→   795→  backdrop-filter: blur(40px) saturate(200%) brightness(105%);
+   796→   796→  -webkit-backdrop-filter: blur(40px) saturate(200%) brightness(105%);
+   797→   797→  border: 0.5px solid rgba(249, 189, 24, 0.2);
+   798→   798→  box-shadow:
+   799→   799→    0 4px 20px -4px rgba(0, 0, 0, 0.3),
+   800→   800→    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+   801→   801→  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+   802→   802→}
+   803→   803→
+   804→   804→/* Liquid glass — mobile menu variant */
+   805→   805→.liquid-glass-mobile-menu {
+   806→   806→  background: linear-gradient(
+   807→   807→    180deg,
+   808→   808→    rgba(18, 18, 22, 0.88) 0%,
+   809→   809→    rgba(12, 12, 14, 0.95) 100%
+   810→   810→  );
+   811→   811→  backdrop-filter: blur(50px) saturate(220%) brightness(110%);
+   812→   812→  -webkit-backdrop-filter: blur(50px) saturate(220%) brightness(110%);
+   813→   813→  border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
+   814→   814→  box-shadow:
+   815→   815→    0 16px 48px -12px rgba(0, 0, 0, 0.5),
+   816→   816→    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+   817→   817→  overflow: hidden;
+   818→   818→}
+   819→   819→.liquid-glass-mobile-menu::before {
+   820→   820→  content: '';
+   821→   821→  position: absolute;
+   822→   822→  top: 0;
+   823→   823→  left: 5%;
+   824→   824→  right: 5%;
+   825→   825→  height: 1px;
+   826→   826→  background: linear-gradient(
+   827→   827→    90deg,
+   828→   828→    transparent 0%,
+   829→   829→    rgba(255, 255, 255, 0.25) 20%,
+   830→   830→    rgba(255, 255, 255, 0.4) 50%,
+   831→   831→    rgba(255, 255, 255, 0.25) 80%,
+   832→   832→    transparent 100%
+   833→   833→  );
+   834→   834→  z-index: 2;
+   835→   835→  pointer-events: none;
+   836→   836→}
+   837→   837→
+   838→   838→/* Prismatic / rainbow edge effect */
+   839→   839→.liquid-glass-prismatic {
+   840→   840→  border-image: linear-gradient(
+   841→   841→    135deg,
+   842→   842→    rgba(255, 100, 100, 0.25),
+   843→   843→    rgba(100, 255, 100, 0.25),
+   844→   844→    rgba(100, 100, 255, 0.25),
+   845→   845→    rgba(255, 255, 100, 0.25)
+   846→   846→  ) 1;
+   847→   847→}
+   848→   848→
+   849→   849→/* ─── Legacy Glass Classes (updated to liquid glass) ─── */
+   850→   850→.glass-card {
+   851→   851→  background: linear-gradient(
+   852→   852→    135deg,
+   853→   853→    rgba(255, 255, 255, 0.08) 0%,
+   854→   854→    rgba(255, 255, 255, 0.025) 50%,
+   855→   855→    rgba(255, 255, 255, 0.008) 100%
+   856→   856→  );
+   857→   857→  backdrop-filter: blur(40px) saturate(200%) brightness(105%);
+   858→   858→  -webkit-backdrop-filter: blur(40px) saturate(200%) brightness(105%);
+   859→   859→  border: 0.5px solid rgba(255, 255, 255, 0.15);
+   860→   860→  border-radius: var(--r-lg);
+   861→   861→  box-shadow:
+   862→   862→    0 8px 32px -8px rgba(0, 0, 0, 0.35),
+   863→   863→    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+   864→   864→  overflow: hidden;
+   865→   865→}
+   866→   866→.glass-card::before {
+   867→   867→  content: '';
+   868→   868→  position: absolute;
+   869→   869→  top: 0;
+   870→   870→  left: 8%;
+   871→   871→  right: 8%;
+   872→   872→  height: 1px;
+   873→   873→  background: linear-gradient(
+   874→   874→    90deg,
+   875→   875→    transparent 0%,
+   876→   876→    rgba(255, 255, 255, 0.4) 20%,
+   877→   877→    rgba(255, 255, 255, 0.6) 50%,
+   878→   878→    rgba(255, 255, 255, 0.4) 80%,
+   879→   879→    transparent 100%
+   880→   880→  );
+   881→   881→  z-index: 2;
+   882→   882→  pointer-events: none;
+   883→   883→}
+   884→   884→@supports not (backdrop-filter: blur(16px)) {
+   885→   885→  .glass-card { background: rgba(13, 13, 13, 0.92); }
+   886→   886→}
+   887→   887→
+   888→   888→.glass-nav {
+   889→   889→  background: linear-gradient(
+   890→   890→    180deg,
+   891→   891→    rgba(255, 255, 255, 0.07) 0%,
+   892→   892→    rgba(255, 255, 255, 0.02) 100%
+   893→   893→  );
+   894→   894→  backdrop-filter: blur(50px) saturate(220%) brightness(108%);
+   895→   895→  -webkit-backdrop-filter: blur(50px) saturate(220%) brightness(108%);
+   896→   896→  border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
+   897→   897→  transition: background 0.3s ease, box-shadow 0.3s ease;
+   898→   898→}
+   899→   899→.glass-nav::after {
+   900→   900→  content: '';
+   901→   901→  position: absolute;
+   902→   902→  bottom: -28px;
+   903→   903→  left: 0;
+   904→   904→  right: 0;
+   905→   905→  height: 28px;
+   906→   906→  background: linear-gradient(to bottom, rgba(8, 7, 10, 0.5), transparent);
+   907→   907→  pointer-events: none;
+   908→   908→  z-index: -1;
+   909→   909→}
+   910→   910→.glass-nav::before {
+   911→   911→  content: '';
+   912→   912→  position: absolute;
+   913→   913→  top: 0;
+   914→   914→  left: 3%;
+   915→   915→  right: 3%;
+   916→   916→  height: 1px;
+   917→   917→  background: linear-gradient(
+   918→   918→    90deg,
+   919→   919→    transparent 0%,
+   920→   920→    rgba(255, 255, 255, 0.35) 15%,
+   921→   921→    rgba(255, 255, 255, 0.55) 50%,
+   922→   922→    rgba(255, 255, 255, 0.35) 85%,
+   923→   923→    transparent 100%
+   924→   924→  );
+   925→   925→  z-index: 2;
+   926→   926→  pointer-events: none;
+   927→   927→}
+   928→   928→.glass-nav.scrolled {
+   929→   929→  background: linear-gradient(
+   930→   930→    180deg,
+   931→   931→    rgba(255, 255, 255, 0.10) 0%,
+   932→   932→    rgba(255, 255, 255, 0.04) 100%
+   933→   933→  );
+   934→   934→  box-shadow:
+   935→   935→    0 8px 32px -8px rgba(0, 0, 0, 0.45),
+   936→   936→    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+   937→   937→    inset 0 -0.5px 0 rgba(249, 189, 24, 0.06);
+   938→   938→  border-bottom: 0.5px solid rgba(255, 255, 255, 0.15);
+   939→   939→}
+   940→   940→@supports not (backdrop-filter: blur(20px)) {
+   941→   941→  .glass-nav { background: rgba(8, 7, 10, 0.95); }
+   942→   942→  .glass-nav::before { display: none; }
+   943→   943→  .glass-nav::after { display: none; }
+   944→   944→}
+   945→   945→@media (max-width: 640px) {
+   946→   946→  .glass-nav::after { display: none; }
+   947→   947→}
+   948→   948→
+   949→   949→.glass-input {
+   950→   950→  background: linear-gradient(
+   951→   951→    135deg,
+   952→   952→    rgba(255, 255, 255, 0.06) 0%,
+   953→   953→    rgba(255, 255, 255, 0.02) 100%
+   954→   954→  );
+   955→   955→  backdrop-filter: blur(40px) saturate(200%) brightness(105%);
+   956→   956→  -webkit-backdrop-filter: blur(40px) saturate(200%) brightness(105%);
+   957→   957→  border: 0.5px solid var(--border-1);
+   958→   958→  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+   959→   959→}
+   960→   960→
+   961→   961→.glass-light {
+   962→   962→  background: rgba(255, 255, 255, 0.03);
+   963→   963→  border: 0.5px solid rgba(255, 255, 255, 0.12);
+   964→   964→}
+   965→   965→
+   966→   966→/* ─── Global Backdrop ──────────────────────── */
+   967→   967→.site-backdrop {
+   968→   968→  position: fixed;
+   969→   969→  inset: 0;
+   970→   970→  z-index: 0;
+   971→   971→  overflow: hidden;
+   972→   972→  pointer-events: none;
+   973→   973→}
+   974→   974→.site-backdrop .grid-bg {
+   975→   975→  position: absolute;
+   976→   976→  inset: 0;
+   977→   977→}
+   978→   978→.site-backdrop .noise-overlay {
+   979→   979→  position: absolute;
+   980→   980→  inset: 0;
+   981→   981→}
+   982→   982→
+   983→   983→/* ─── Ambient orbs ─────────────────────────── */
+   984→   984→.ambient-orb {
+   985→   985→  position: absolute;
+   986→   986→  border-radius: 50%;
+   987→   987→  filter: blur(120px);
+   988→   988→  pointer-events: none;
+   989→   989→  contain: layout style paint;
+   990→   990→}
+   991→   991→
+   992→   992→/* ─── Noise / film grain overlay ───────────── */
+   993→   993→.noise-overlay {
+   994→   994→  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+   995→   995→  opacity: 0.04;
+   996→   996→  mix-blend-mode: overlay;
+   997→   997→}
+   998→   998→
+   999→   999→/* ─── Card shine effect (liquid glass refraction) ── */
+  1000→  1000→.card-shine {
+  1001→  1001→  position: relative;
+  1002→  1002→  overflow: hidden;
+  1003→  1003→}
+  1004→  1004→.card-shine::after {
+  1005→  1005→  content: '';
+  1006→  1006→  position: absolute;
+  1007→  1007→  inset: -50%;
+  1008→  1008→  background: linear-gradient(
+  1009→  1009→    to bottom right,
+  1010→  1010→    transparent 35%,
+  1011→  1011→    rgba(255, 255, 255, 0.08) 45%,
+  1012→  1012→    rgba(255, 255, 255, 0.03) 55%,
+  1013→  1013→    transparent 65%
+  1014→  1014→  );
+  1015→  1015→  transform: translate3d(-100%, -100%, 0) rotate(-30deg);
+  1016→  1016→  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  1017→  1017→  pointer-events: none;
+  1018→  1018→}
+  1019→  1019→.card-shine:hover::after {
+  1020→  1020→  transform: translate3d(50%, 50%, 0) rotate(-30deg);
+  1021→  1021→}
+  1022→  1022→
+  1023→  1023→/* ─── Spotlight (mouse-follow) hover (liquid glass) ──── */
+  1024→  1024→.spotlight {
+  1025→  1025→  position: relative;
+  1026→  1026→  isolation: isolate;
+  1027→  1027→}
+  1028→  1028→.spotlight::before {
+  1029→  1029→  content: '';
+  1030→  1030→  position: absolute;
+  1031→  1031→  inset: 0;
+  1032→  1032→  border-radius: inherit;
+  1033→  1033→  background: radial-gradient(
+  1034→  1034→    400px circle at var(--x, 50%) var(--y, 50%),
+  1035→  1035→    rgba(255, 255, 255, 0.06),
+  1036→  1036→    transparent 50%
+  1037→  1037→  );
+  1038→  1038→  opacity: 0;
+  1039→  1039→  transition: opacity 0.3s ease;
+  1040→  1040→  pointer-events: none;
+  1041→  1041→  z-index: 0;
+  1042→  1042→}
+  1043→  1043→.spotlight:hover::before { opacity: 1; }
+  1044→  1044→.spotlight > * { position: relative; z-index: 1; }
+  1045→  1045→
+  1046→  1046→/* ─── Conic border glow ─────────────────────── */
+  1047→  1047→.conic-border {
+  1048→  1048→  position: relative;
+  1049→  1049→  border-radius: var(--r-xl);
+  1050→  1050→  background: linear-gradient(var(--background), var(--background)) padding-box,
+  1051→  1051→              conic-gradient(from 180deg at 50% 50%,
+  1052→  1052→                rgba(249, 189, 24, 0.4),
+  1053→  1053→                rgba(249, 189, 24, 0.0) 25%,
+  1054→  1054→                rgba(249, 189, 24, 0.0) 75%,
+  1055→  1055→                rgba(249, 189, 24, 0.4) 100%) border-box;
+  1056→  1056→  border: 1px solid transparent;
+  1057→  1057→}
+  1058→  1058→
+  1059→  1059→/* ─── Grid background ───────────────────────── */
+  1060→  1060→.grid-bg {
+  1061→  1061→  background-image:
+  1062→  1062→    linear-gradient(rgba(249, 189, 24, 0.025) 1px, transparent 1px),
+  1063→  1063→    linear-gradient(90deg, rgba(249, 189, 24, 0.025) 1px, transparent 1px);
+  1064→  1064→  background-size: 64px 64px;
+  1065→  1065→  mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  1066→  1066→  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  1067→  1067→}
+  1068→  1068→
+  1069→  1069→/* ─── Scroll Reveal ───────────────────────── */
+  1070→  1070→[data-scroll-reveal] {
+  1071→  1071→  opacity: 0;
+  1072→  1072→  transform: translateY(28px);
+  1073→  1073→  filter: blur(8px);
+  1074→  1074→  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+  1075→  1075→              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+  1076→  1076→              filter 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  1077→  1077→}
+  1078→  1078→[data-scroll-reveal].revealed {
+  1079→  1079→  opacity: 1;
+  1080→  1080→  transform: translateY(0);
+  1081→  1081→  filter: blur(0);
+  1082→  1082→}
+  1083→  1083→
+  1084→  1084→/* ─── Prose auto-reveal (blog content) ───── */
+  1085→  1085→.prose-custom.revealed,
+  1086→  1086→.prose-custom.revealed > * {
+  1087→  1087→  opacity: 1 !important;
+  1088→  1088→  transform: none !important;
+  1089→  1089→  filter: none !important;
+  1090→  1090→}
+  1091→  1091→.prose-custom > h2,
+  1092→  1092→.prose-custom > h3,
+  1093→  1093→.prose-custom > h4,
+  1094→  1094→.prose-custom > pre,
+  1095→  1095→.prose-custom > img,
+  1096→  1096→.prose-custom > hr,
+  1097→  1097→.prose-custom > table {
+  1098→  1098→  opacity: 0;
+  1099→  1099→  transform: translateY(20px);
+  1100→  1100→  filter: blur(5px);
+  1101→  1101→  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+  1102→  1102→              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+  1103→  1103→              filter 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  1104→  1104→}
+  1105→  1105→.prose-custom > h2.revealed,
+  1106→  1106→.prose-custom > h3.revealed,
+  1107→  1107→.prose-custom > h4.revealed,
+  1108→  1108→.prose-custom > pre.revealed,
+  1109→  1109→.prose-custom > img.revealed,
+  1110→  1110→.prose-custom > hr.revealed,
+  1111→  1111→.prose-custom > table.revealed {
+  1112→  1112→  opacity: 1;
+  1113→  1113→  transform: translateY(0);
+  1114→  1114→  filter: blur(0);
+  1115→  1115→}
+  1116→  1116→.prose-custom > blockquote {
+  1117→  1117→  opacity: 0;
+  1118→  1118→  transform: translateX(-12px);
+  1119→  1119→  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+  1120→  1120→              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  1121→  1121→}
+  1122→  1122→.prose-custom > blockquote.revealed {
+  1123→  1123→  opacity: 1;
+  1124→  1124→  transform: translateX(0);
+  1125→  1125→}
+  1126→  1126→.prose-custom > p,
+  1127→  1127→.prose-custom > ul,
+  1128→  1128→.prose-custom > ol {
+  1129→  1129→  opacity: 0;
+  1130→  1130→  transform: translateY(10px);
+  1131→  1131→  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+  1132→  1132→              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  1133→  1133→}
+  1134→  1134→.prose-custom > p.revealed,
+  1135→  1135→.prose-custom > ul.revealed,
+  1136→  1136→.prose-custom > ol.revealed {
+  1137→  1137→  opacity: 1;
+  1138→  1138→  transform: translateY(0);
+  1139→  1139→}
+  1140→  1140→
+  1141→  1141→/* ─── Terminal code block ──────────────────── */
+  1142→  1142→.terminal-block {
+  1143→  1143→  background: rgba(0, 0, 0, 0.6);
+  1144→  1144→  border: 1px solid rgba(249, 189, 24, 0.15);
+  1145→  1145→  border-radius: 0.75rem;
+  1146→  1146→  font-family: var(--font-jetbrains-mono), 'JetBrains Mono', monospace;
+  1147→  1147→}
+  1148→  1148→.terminal-block .terminal-header {
+  1149→  1149→  background: rgba(249, 189, 24, 0.05);
+  1150→  1150→  border-bottom: 1px solid rgba(249, 189, 24, 0.1);
+  1151→  1151→  padding: 0.5rem 1rem;
+  1152→  1152→  display: flex;
+  1153→  1153→  align-items: center;
+  1154→  1154→  gap: 0.5rem;
+  1155→  1155→}
+  1156→  1156→.terminal-block .terminal-dot { width: 8px; height: 8px; border-radius: 50%; }
+  1157→  1157→.terminal-block .terminal-body {
+  1158→  1158→  padding: 1rem 1.25rem;
+  1159→  1159→  color: #d4c8b8;
+  1160→  1160→  font-size: 0.875rem;
+  1161→  1161→  line-height: 1.6;
+  1162→  1162→}
+  1163→  1163→.terminal-block .terminal-prompt { color: #f9bd18; }
+  1164→  1164→.terminal-block .terminal-command { color: #e8e5df; }
+  1165→  1165→.terminal-block .terminal-comment { color: #5a5648; }
+  1166→  1166→
+  1167→  1167→/* ─── Scrollbar ─────────────────────────────── */
+  1168→  1168→::-webkit-scrollbar { width: 10px; height: 10px; }
+  1169→  1169→::-webkit-scrollbar-track { background: transparent; }
+  1170→  1170→::-webkit-scrollbar-thumb {
+  1171→  1171→  background: linear-gradient(180deg, rgba(249,189,24,0.5), rgba(203,140,10,0.5));
+  1172→  1172→  border-radius: 10px;
+  1173→  1173→  border: 2px solid transparent;
+  1174→  1174→  background-clip: padding-box;
+  1175→  1175→}
+  1176→  1176→::-webkit-scrollbar-thumb:hover {
+  1177→  1177→  background: linear-gradient(180deg, #fbbf24, #f9bd18);
+  1178→  1178→  background-clip: padding-box;
+  1179→  1179→}
+  1180→  1180→* { scrollbar-width: thin; scrollbar-color: rgba(249, 189, 24, 0.5) transparent; }
+  1181→  1181→
+  1182→  1182→/* ─── Search (liquid glass) ────────────────── */
+  1183→  1183→.search-glow:focus-within {
+  1184→  1184→  box-shadow:
+  1185→  1185→    0 0 0 3px rgba(249, 189, 24, 0.15),
+  1186→  1186→    0 8px 32px -8px rgba(249, 189, 24, 0.2),
+  1187→  1187→    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  1188→  1188→  border-color: rgba(249, 189, 24, 0.4);
+  1189→  1189→}
+  1190→  1190→
+  1191→  1191→/* ─── Card hover glow (liquid glass) ──────── */
+  1192→  1192→.card-glow-hover {
+  1193→  1193→  transition: box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  1194→  1194→}
+  1195→  1195→.card-glow-hover:hover {
+  1196→  1196→  box-shadow:
+  1197→  1197→    0 12px 40px -8px rgba(0, 0, 0, 0.45),
+  1198→  1198→    0 0 32px -4px rgba(249, 189, 24, 0.15),
+  1199→  1199→    0 0 0 1px rgba(249, 189, 24, 0.12) inset,
+  1200→  1200→    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  1201→  1201→  border-color: rgba(255, 255, 255, 0.22);
+  1202→  1202→}
+  1203→  1203→
+  1204→  1204→/* ─── Hero ring decoration ──────────────────── */
+  1205→  1205→.hero-ring {
+  1206→  1206→  position: absolute;
+  1207→  1207→  border-radius: 9999px;
+  1208→  1208→  border: 1px solid rgba(249, 189, 24, 0.08);
+  1209→  1209→  pointer-events: none;
+  1210→  1210→}
+  1211→  1211→
+  1212→  1212→/* ─── Buttons ───────────────────────────────── */
+  1213→  1213→.btn-primary {
+  1214→  1214→  position: relative;
+  1215→  1215→  display: inline-flex;
+  1216→  1216→  align-items: center;
+  1217→  1217→  gap: 0.5rem;
+  1218→  1218→  padding: 0.7rem 1.4rem;
+  1219→  1219→  border-radius: 9999px;
+  1220→  1220→  font-weight: 600;
+  1221→  1221→  font-size: 0.9rem;
+  1222→  1222→  color: #1a1206;
+  1223→  1223→  background: linear-gradient(135deg, #fde68a 0%, #fbbf24 45%, #f9bd18 100%);
+  1224→  1224→  box-shadow:
+  1225→  1225→    0 1px 0 rgba(255,255,255,0.4) inset,
+  1226→  1226→    0 -2px 0 rgba(0,0,0,0.15) inset,
+  1227→  1227→    0 12px 32px -8px rgba(249, 189, 24, 0.45),
+  1228→  1228→    0 0 0 1px rgba(249, 189, 24, 0.4);
+  1229→  1229→  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, filter 0.2s ease;
+  1230→  1230→  overflow: hidden;
+  1231→  1231→}
+  1232→  1232→/* Glass sheen overlay on btn-primary */
+  1233→  1233→.btn-primary::before {
+  1234→  1234→  content: '';
+  1235→  1235→  position: absolute;
+  1236→  1236→  inset: 0;
+  1237→  1237→  border-radius: inherit;
+  1238→  1238→  background: linear-gradient(
+  1239→  1239→    135deg,
+  1240→  1240→    rgba(255, 255, 255, 0.35) 0%,
+  1241→  1241→    rgba(255, 255, 255, 0.08) 40%,
+  1242→  1242→    rgba(255, 255, 255, 0.0) 100%
+  1243→  1243→  );
+  1244→  1244→  pointer-events: none;
+  1245→  1245→  z-index: 1;
+  1246→  1246→}
+  1247→  1247→/* Specular top highlight on btn-primary */
+  1248→  1248→.btn-primary::after {
+  1249→  1249→  content: '';
+  1250→  1250→  position: absolute;
+  1251→  1251→  top: 0;
+  1252→  1252→  left: 15%;
+  1253→  1253→  right: 15%;
+  1254→  1254→  height: 1px;
+  1255→  1255→  background: linear-gradient(
+  1256→  1256→    90deg,
+  1257→  1257→    transparent 0%,
+  1258→  1258→    rgba(255, 255, 255, 0.6) 30%,
+  1259→  1259→    rgba(255, 255, 255, 0.85) 50%,
+  1260→  1260→    rgba(255, 255, 255, 0.6) 70%,
+  1261→  1261→    transparent 100%
+  1262→  1262→  );
+  1263→  1263→  z-index: 2;
+  1264→  1264→  pointer-events: none;
+  1265→  1265→}
+  1266→  1266→.btn-primary:hover {
+  1267→  1267→  transform: translateY(-1px);
+  1268→  1268→  filter: brightness(1.08);
+  1269→  1269→  box-shadow:
+  1270→  1270→    0 1px 0 rgba(255,255,255,0.5) inset,
+  1271→  1271→    0 -2px 0 rgba(0,0,0,0.2) inset,
+  1272→  1272→    0 18px 40px -8px rgba(249, 189, 24, 0.55),
+  1273→  1273→    0 0 0 1px rgba(249, 189, 24, 0.6);
+  1274→  1274→}
+  1275→  1275→.btn-primary:active { transform: translateY(0); }
+  1276→  1276→.btn-primary > * { position: relative; z-index: 3; }
+  1277→  1277→
+  1278→  1278→.btn-secondary {
+  1279→  1279→  display: inline-flex;
+  1280→  1280→  align-items: center;
+  1281→  1281→  gap: 0.5rem;
+  1282→  1282→  padding: 0.7rem 1.4rem;
+  1283→  1283→  border-radius: 9999px;
+  1284→  1284→  font-weight: 500;
+  1285→  1285→  font-size: 0.9rem;
+  1286→  1286→  color: rgba(255,255,255,0.85);
+  1287→  1287→  background: linear-gradient(
+  1288→  1288→    135deg,
+  1289→  1289→    rgba(255, 255, 255, 0.08) 0%,
+  1290→  1290→    rgba(255, 255, 255, 0.03) 100%
+  1291→  1291→  );
+  1292→  1292→  border: 0.5px solid rgba(255, 255, 255, 0.14);
+  1293→  1293→  backdrop-filter: blur(40px) saturate(180%) brightness(105%);
+  1294→  1294→  -webkit-backdrop-filter: blur(40px) saturate(180%) brightness(105%);
+  1295→  1295→  box-shadow:
+  1296→  1296→    0 4px 16px -4px rgba(0, 0, 0, 0.3),
+  1297→  1297→    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  1298→  1298→  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  1299→  1299→  position: relative;
+  1300→  1300→  overflow: hidden;
+  1301→  1301→}
+  1302→  1302→.btn-secondary::before {
+  1303→  1303→  content: '';
+  1304→  1304→  position: absolute;
+  1305→  1305→  top: 0;
+  1306→  1306→  left: 12%;
+  1307→  1307→  right: 12%;
+  1308→  1308→  height: 1px;
+  1309→  1309→  background: linear-gradient(
+  1310→  1310→    90deg,
+  1311→  1311→    transparent 0%,
+  1312→  1312→    rgba(255, 255, 255, 0.45) 30%,
+  1313→  1313→    rgba(255, 255, 255, 0.6) 50%,
+  1314→  1314→    rgba(255, 255, 255, 0.45) 70%,
+  1315→  1315→    transparent 100%
+  1316→  1316→  );
+  1317→  1317→  z-index: 1;
+  1318→  1318→  pointer-events: none;
+  1319→  1319→}
+  1320→  1320→.btn-secondary:hover {
+  1321→  1321→  background: linear-gradient(
+  1322→  1322→    135deg,
+  1323→  1323→    rgba(255, 255, 255, 0.12) 0%,
+  1324→  1324→    rgba(255, 255, 255, 0.06) 100%
+  1325→  1325→  );
+  1326→  1326→  border-color: rgba(255, 255, 255, 0.22);
+  1327→  1327→  box-shadow:
+  1328→  1328→    0 8px 24px -4px rgba(0, 0, 0, 0.35),
+  1329→  1329→    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  1330→  1330→  color: #fff;
+  1331→  1331→}
+  1332→  1332→.btn-secondary > * { position: relative; z-index: 2; }
+  1333→  1333→
+  1334→  1334→/* ─── Live dot ─────────────────────────────── */
+  1335→  1335→.live-dot {
+  1336→  1336→  display: inline-block;
+  1337→  1337→  width: 6px;
+  1338→  1338→  height: 6px;
+  1339→  1339→  border-radius: 50%;
+  1340→  1340→  background: #22c55e;
+  1341→  1341→  animation: pulse-dot 2s ease-out infinite;
+  1342→  1342→}
+  1343→  1343→
+  1344→  1344→/* ─── Rating stars ─────────────────────────── */
+  1345→  1345→.star-filled { color: #f9bd18; fill: #f9bd18; }
+  1346→  1346→.star-empty { color: #3a3830; }
+  1347→  1347→
+  1348→  1348→/* ─── Blog Prose ────────────────────────────── */
+  1349→  1349→.prose-custom {
+  1350→  1350→  color: #ece8df;
+  1351→  1351→  line-height: 1.8;
+  1352→  1352→  font-size: 1.05rem;
+  1353→  1353→}
+  1354→  1354→.prose-custom h1,
+  1355→  1355→.prose-custom h2,
+  1356→  1356→.prose-custom h3,
+  1357→  1357→.prose-custom h4 {
+  1358→  1358→  color: #fff;
+  1359→  1359→  font-weight: 700;
+  1360→  1360→  margin-top: 2em;
+  1361→  1361→  margin-bottom: 0.75em;
+  1362→  1362→  line-height: 1.25;
+  1363→  1363→  letter-spacing: -0.01em;
+  1364→  1364→}
+  1365→  1365→.prose-custom h1 { font-size: 2rem; letter-spacing: -0.025em; }
+  1366→  1366→.prose-custom h2 {
+  1367→  1367→  font-size: 1.6rem;
+  1368→  1368→  padding-bottom: 0.5em;
+  1369→  1369→  border-bottom: 1px solid rgba(255,255,255,0.06);
+  1370→  1370→}
+  1371→  1371→.prose-custom h3 { font-size: 1.3rem; }
+  1372→  1372→.prose-custom h4 { font-size: 1.1rem; }
+  1373→  1373→.prose-custom p {
+  1374→  1374→  margin-bottom: 1.25em;
+  1375→  1375→  color: rgba(236, 232, 223, 0.78);
+  1376→  1376→}
+  1377→  1377→.prose-custom a {
+  1378→  1378→  color: #fbbf24;
+  1379→  1379→  text-decoration: none;
+  1380→  1380→  background-image: linear-gradient(currentColor, currentColor);
+  1381→  1381→  background-size: 100% 1px;
+  1382→  1382→  background-repeat: no-repeat;
+  1383→  1383→  background-position: 0 100%;
+  1384→  1384→  transition: color 0.2s, background-size 0.2s, gap 0.2s;
+  1385→  1385→  display: inline-flex;
+  1386→  1386→  align-items: center;
+  1387→  1387→  gap: 0.2em;
+  1388→  1388→}
+  1389→  1389→.prose-custom a:hover {
+  1390→  1390→  color: #fde68a;
+  1391→  1391→  background-size: 100% 2px;
+  1392→  1392→}
+  1393→  1393→.prose-custom a::after {
+  1394→  1394→  content: "";
+  1395→  1395→  display: inline-block;
+  1396→  1396→  width: 14px;
+  1397→  1397→  height: 14px;
+  1398→  1398→  min-width: 14px;
+  1399→  1399→  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23fbbf24' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 17L17 7'/%3E%3Cpath d='M7 7h10v10'/%3E%3C/svg%3E");
+  1400→  1400→  background-repeat: no-repeat;
+  1401→  1401→  background-position: center;
+  1402→  1402→  opacity: 0.85;
+  1403→  1403→  transition: opacity 0.2s, transform 0.2s;
+  1404→  1404→  vertical-align: middle;
+  1405→  1405→}
+  1406→  1406→.prose-custom a:hover::after {
+  1407→  1407→  opacity: 1;
+  1408→  1408→  transform: translate(2px, -2px);
+  1409→  1409→}
+  1410→  1410→@media (hover: none) {
+  1411→  1411→  .prose-custom a::after {
+  1412→  1412→    opacity: 1;
+  1413→  1413→  }
+  1414→  1414→}
+  1415→  1415→.prose-custom strong { color: #fff; font-weight: 600; }
+  1416→  1416→.prose-custom ul, .prose-custom ol { margin-bottom: 1.25em; padding-left: 1.5em; }
+  1417→  1417→.prose-custom ul { list-style-type: disc; }
+  1418→  1418→.prose-custom ol { list-style-type: decimal; }
+  1419→  1419→.prose-custom li { margin-bottom: 0.5em; color: rgba(236, 232, 223, 0.72); }
+  1420→  1420→.prose-custom blockquote {
+  1421→  1421→  border-left: 3px solid rgba(249, 189, 24, 0.5);
+  1422→  1422→  padding: 0.75em 1.25em;
+  1423→  1423→  margin: 1.5em 0;
+  1424→  1424→  background: linear-gradient(90deg, rgba(249,189,24,0.05), transparent);
+  1425→  1425→  border-radius: 0 0.5rem 0.5rem 0;
+  1426→  1426→}
+  1427→  1427→.prose-custom blockquote p { color: rgba(236, 232, 223, 0.65); font-style: italic; }
+  1428→  1428→.prose-custom pre {
+  1429→  1429→  background: rgba(0, 0, 0, 0.7);
+  1430→  1430→  border: 1px solid rgba(249, 189, 24, 0.14);
+  1431→  1431→  border-radius: 0.85rem;
+  1432→  1432→  padding: 1.25rem 1.5rem;
+  1433→  1433→  margin: 1.5em 0;
+  1434→  1434→  overflow-x: auto;
+  1435→  1435→  max-width: 100%;
+  1436→  1436→  width: 100%;
+  1437→  1437→  font-family: var(--font-jetbrains-mono), 'JetBrains Mono', monospace;
+  1438→  1438→  font-size: 0.875rem;
+  1439→  1439→  line-height: 1.65;
+  1440→  1440→  box-shadow: 0 8px 24px -12px rgba(0,0,0,0.8);
+  1441→  1441→}
+  1442→  1442→/* Shiki support */
+  1443→  1443→.prose-custom pre.shiki {
+  1444→  1444→  background-color: #1a1b26 !important; /* Tokyo Night background */
+  1445→  1445→  margin: 1.5em 0;
+  1446→  1446→  overflow-x: auto !important;
+  1447→  1447→  max-width: 100% !important;
+  1448→  1448→}
+  1449→  1449→.prose-custom pre.shiki code {
+  1450→  1450→  color: inherit;
+  1451→  1451→  display: block;
+  1452→  1452→  width: fit-content;
+  1453→  1453→  min-width: 100%;
+  1454→  1454→}
+  1455→  1455→.prose-custom code { font-family: var(--font-jetbrains-mono), 'JetBrains Mono', monospace; font-size: 0.875em; }
+  1456→  1456→.prose-custom :not(pre) > code {
+  1457→  1457→  background: rgba(249, 189, 24, 0.1);
+  1458→  1458→  color: #fbbf24;
+  1459→  1459→  padding: 0.15em 0.45em;
+  1460→  1460→  border-radius: 0.3rem;
+  1461→  1461→  border: 1px solid rgba(249, 189, 24, 0.15);
+  1462→  1462→}
+  1463→  1463→.prose-custom pre code { background: none; color: #d4c8b8; padding: 0; border: 0; }
+  1464→  1464→
+  1465→  1465→/* ─── Pre wrapper (holds copy button outside scroll) ── */
+  1466→  1466→.prose-custom .pre-wrapper {
+  1467→  1467→  position: relative;
+  1468→  1468→}
+  1469→  1469→
+  1470→  1470→/* ─── Code copy button ───────────────── */
+  1471→  1471→.prose-custom .pre-wrapper .copy-btn {
+  1472→  1472→  position: absolute;
+  1473→  1473→  top: 0.75rem;
+  1474→  1474→  right: 0.75rem;
+  1475→  1475→  display: flex;
+  1476→  1476→  align-items: center;
+  1477→  1477→  justify-content: center;
+  1478→  1478→  gap: 0.35rem;
+  1479→  1479→  padding: 0.4rem 0.55rem;
+  1480→  1480→  border-radius: 0.5rem;
+  1481→  1481→  border: 1px solid rgba(249, 189, 24, 0.2);
+  1482→  1482→  background: rgba(0, 0, 0, 0.6);
+  1483→  1483→  color: rgba(249, 189, 24, 0.6);
+  1484→  1484→  font-size: 0.7rem;
+  1485→  1485→  font-family: inherit;
+  1486→  1486→  cursor: pointer;
+  1487→  1487→  opacity: 1;
+  1488→  1488→  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  1489→  1489→  backdrop-filter: blur(8px);
+  1490→  1490→  z-index: 2;
+  1491→  1491→}
+  1492→  1492→.prose-custom .pre-wrapper .copy-btn:hover {
+  1493→  1493→  background: rgba(249, 189, 24, 0.15);
+  1494→  1494→  color: #fbbf24;
+  1495→  1495→  border-color: rgba(249, 189, 24, 0.4);
+  1496→  1496→}
+  1497→  1497→.prose-custom .pre-wrapper .copy-btn .check-icon,
+  1498→  1498→.prose-custom .pre-wrapper .copy-btn .copied-label {
+  1499→  1499→  display: none;
+  1500→  1500→}
+  1501→  1501→.prose-custom .pre-wrapper .copy-btn .copy-label {
+  1502→  1502→  display: inline;
+  1503→  1503→}
+  1504→  1504→.prose-custom .pre-wrapper .copy-btn.copied {
+  1505→  1505→  opacity: 1;
+  1506→  1506→  background: rgba(52, 211, 153, 0.15);
+  1507→  1507→  border-color: rgba(52, 211, 153, 0.4);
+  1508→  1508→  color: #34d399;
+  1509→  1509→}
+  1510→  1510→.prose-custom .pre-wrapper .copy-btn.copied .copy-icon,
+  1511→  1511→.prose-custom .pre-wrapper .copy-btn.copied .copy-label {
+  1512→  1512→  display: none;
+  1513→  1513→}
+  1514→  1514→.prose-custom .pre-wrapper .copy-btn.copied .check-icon,
+  1515→  1515→.prose-custom .pre-wrapper .copy-btn.copied .copied-label {
+  1516→  1516→  display: inline;
+  1517→  1517→}
+  1518→  1518→
+  1519→  1519→/* ─── Copy Toast Notification ───────────────── */
+  1520→  1520→.copy-toast {
+  1521→  1521→  position: fixed;
+  1522→  1522→  bottom: 2rem;
+  1523→  1523→  left: 50%;
+  1524→  1524→  transform: translateX(-50%) translateY(20px);
+  1525→  1525→  display: flex;
+  1526→  1526→  align-items: center;
+  1527→  1527→  gap: 0.5rem;
+  1528→  1528→  padding: 0.65rem 1.2rem;
+  1529→  1529→  border-radius: 9999px;
+  1530→  1530→  background: rgba(52, 211, 153, 0.15);
+  1531→  1531→  border: 1px solid rgba(52, 211, 153, 0.35);
+  1532→  1532→  color: #34d399;
+  1533→  1533→  font-size: 0.85rem;
+  1534→  1534→  font-weight: 500;
+  1535→  1535→  backdrop-filter: blur(16px);
+  1536→  1536→  -webkit-backdrop-filter: blur(16px);
+  1537→  1537→  z-index: 9999;
+  1538→  1538→  pointer-events: none;
+  1539→  1539→  opacity: 0;
+  1540→  1540→  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  1541→  1541→}
+  1542→  1542→.copy-toast.visible {
+  1543→  1543→  opacity: 1;
+  1544→  1544→  transform: translateX(-50%) translateY(0);
+  1545→  1545→}
+  1546→  1546→.prose-custom img {
+  1547→  1547→  border-radius: 0.85rem;
+  1548→  1548→  border: 1px solid rgba(255,255,255,0.06);
+  1549→  1549→  margin: 1.5em 0;
+  1550→  1550→  box-shadow: 0 20px 50px -20px rgba(0,0,0,0.7);
+  1551→  1551→}
+  1552→  1552→.prose-custom hr {
+  1553→  1553→  border: none;
+  1554→  1554→  height: 1px;
+  1555→  1555→  background: linear-gradient(90deg, transparent, rgba(249,189,24,0.3), transparent);
+  1556→  1556→  margin: 2em 0;
+  1557→  1557→}
+  1558→  1558→.prose-custom table {
+  1559→  1559→  width: 100%;
+  1560→  1560→  border-collapse: separate;
+  1561→  1561→  border-spacing: 0;
+  1562→  1562→  margin: 1.5em -0.5rem;
+  1563→  1563→  font-size: 0.8rem;
+  1564→  1564→  display: block;
+  1565→  1565→  overflow-x: auto;
+  1566→  1566→  -webkit-overflow-scrolling: touch;
+  1567→  1567→}
+  1568→  1568→.prose-custom table thead { }
+  1569→  1569→.prose-custom table tbody { }
+  1570→  1570→.prose-custom table tr { transition: background 0.15s ease; }
+  1571→  1571→.prose-custom table th, .prose-custom table td { }
+  1572→  1572→.prose-custom th {
+  1573→  1573→  text-align: left;
+  1574→  1574→  padding: 0.6em 0.75em;
+  1575→  1575→  background: rgba(249, 189, 24, 0.08);
+  1576→  1576→  color: #fbbf24;
+  1577→  1577→  font-weight: 600;
+  1578→  1578→  font-size: 0.72rem;
+  1579→  1579→  text-transform: uppercase;
+  1580→  1580→  letter-spacing: 0.06em;
+  1581→  1581→  border-bottom: 1px solid rgba(249, 189, 24, 0.18);
+  1582→  1582→  border-top: 1px solid rgba(249, 189, 24, 0.12);
+  1583→  1583→  white-space: nowrap;
+  1584→  1584→}
+  1585→  1585→.prose-custom th:first-child { border-left: 1px solid rgba(249, 189, 24, 0.12); border-top-left-radius: 0.75rem; }
+  1586→  1586→.prose-custom th:last-child { border-right: 1px solid rgba(249, 189, 24, 0.12); border-top-right-radius: 0.75rem; }
+  1587→  1587→.prose-custom td {
+  1588→  1588→  padding: 0.5em 0.75em;
+  1589→  1589→  border-bottom: 1px solid rgba(255,255,255,0.04);
+  1590→  1590→  border-left: 1px solid rgba(249, 189, 24, 0.06);
+  1591→  1591→  border-right: 1px solid rgba(249, 189, 24, 0.06);
+  1592→  1592→  color: rgba(236, 232, 223, 0.78);
+  1593→  1593→  text-align: center;
+  1594→  1594→  font-size: 0.8rem;
+  1595→  1595→}
+  1596→  1596→.prose-custom td:first-child, .prose-custom th:first-child {
+  1597→  1597→  text-align: left;
+  1598→  1598→  font-weight: 500;
+  1599→  1599→  color: rgba(236, 232, 223, 0.9);
+  1600→  1600→  border-left: 1px solid rgba(249, 189, 24, 0.12);
+  1601→  1601→}
+  1602→  1602→.prose-custom td:last-child, .prose-custom th:last-child {
+  1603→  1603→  border-right: 1px solid rgba(249, 189, 24, 0.12);
+  1604→  1604→}
+  1605→  1605→.prose-custom tbody tr:last-child td { border-bottom: none; }
+  1606→  1606→.prose-custom tbody tr:last-child td:first-child { border-bottom-left-radius: 0.75rem; }
+  1607→  1607→.prose-custom tbody tr:last-child td:last-child { border-bottom-right-radius: 0.75rem; }
+  1608→  1608→.prose-custom tbody tr:hover td { background: rgba(249, 189, 24, 0.05); }
+  1609→  1609→.prose-custom tbody tr:nth-child(even) td { background: rgba(255,255,255,0.012); }
+  1610→  1610→.prose-custom tbody tr:nth-child(even):hover td { background: rgba(249, 189, 24, 0.05); }
+  1611→  1611→
+  1612→  1612→/* ─── Table Status Icons ───────────────────── */
+  1613→  1613→.t-check,
+  1614→  1614→.t-cross,
+  1615→  1615→.t-partial {
+  1616→  1616→  display: inline-flex;
+  1617→  1617→  align-items: center;
+  1618→  1618→  justify-content: center;
+  1619→  1619→  width: 20px;
+  1620→  1620→  height: 20px;
+  1621→  1621→  border-radius: 50%;
+  1622→  1622→  font-size: 11px;
+  1623→  1623→  font-weight: 700;
+  1624→  1624→  line-height: 1;
+  1625→  1625→  vertical-align: middle;
+  1626→  1626→  margin: 0 2px;
+  1627→  1627→}
+  1628→  1628→.t-check {
+  1629→  1629→  background: rgba(34, 197, 94, 0.15);
+  1630→  1630→  color: #4ade80;
+  1631→  1631→  box-shadow: inset 0 0 0 1px rgba(34, 197, 94, 0.3);
+  1632→  1632→}
+  1633→  1633→.t-check::after {
+  1634→  1634→  content: "✓";
+  1635→  1635→}
+  1636→  1636→.t-cross {
+  1637→  1637→  background: rgba(239, 68, 68, 0.15);
+  1638→  1638→  color: #f87171;
+  1639→  1639→  box-shadow: inset 0 0 0 1px rgba(239, 68, 68, 0.3);
+  1640→  1640→}
+  1641→  1641→.t-cross::after {
+  1642→  1642→  content: "✕";
+  1643→  1643→}
+  1644→  1644→.t-partial {
+  1645→  1645→  background: rgba(251, 191, 36, 0.15);
+  1646→  1646→  color: #fbbf24;
+  1647→  1647→  box-shadow: inset 0 0 0 1px rgba(251, 191, 36, 0.3);
+  1648→  1648→}
+  1649→  1649→.t-partial::after {
+  1650→  1650→  content: "~";
+  1651→  1651→}
+  1652→  1652→
+  1653→  1653→/* ─── Cinematic Vignette ───────────────────── */
+  1654→  1654→.cinema-vignette {
+  1655→  1655→  position: fixed;
+  1656→  1656→  inset: 0;
+  1657→  1657→  z-index: 1;
+  1658→  1658→  pointer-events: none;
+  1659→  1659→  background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.55) 100%);
+  1660→  1660→}
+  1661→  1661→
+  1662→  1662→/* ─── Animated Film Grain ──────────────────── */
+  1663→  1663→.cinema-grain {
+  1664→  1664→  position: fixed;
+  1665→  1665→  inset: -50%;
+  1666→  1666→  z-index: 2;
+  1667→  1667→  pointer-events: none;
+  1668→  1668→  width: 200%;
+  1669→  1669→  height: 200%;
+  1670→  1670→  opacity: 0.045;
+  1671→  1671→  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  1672→  1672→  animation: grain-shift 0.4s steps(5) infinite;
+  1673→  1673→}
+  1674→  1674→@keyframes grain-shift {
+  1675→  1675→  0%, 100% { transform: translate(0, 0); }
+  1676→  1676→  20% { transform: translate(-5%, -8%); }
+  1677→  1677→  40% { transform: translate(3%, -4%); }
+  1678→  1678→  60% { transform: translate(-8%, 5%); }
+  1679→  1679→  80% { transform: translate(6%, 3%); }
+  1680→  1680→}
+  1681→  1681→
+  1682→  1682→/* ─── Light Leaks ──────────────────────────── */
+  1683→  1683→.light-leak {
+  1684→  1684→  position: fixed;
+  1685→  1685→  z-index: 2;
+  1686→  1686→  pointer-events: none;
+  1687→  1687→  border-radius: 50%;
+  1688→  1688→  filter: blur(90px);
+  1689→  1689→  mix-blend-mode: screen;
+  1690→  1690→  opacity: 0;
+  1691→  1691→}
+  1692→  1692→.light-leak--amber {
+  1693→  1693→  width: 450px; height: 450px;
+  1694→  1694→  background: radial-gradient(circle, rgba(249,189,24,0.12) 0%, transparent 70%);
+  1695→  1695→  top: -8%; right: -8%;
+  1696→  1696→  animation: leak-drift-1 14s ease-in-out infinite;
+  1697→  1697→}
+  1698→  1698→.light-leak--rose {
+  1699→  1699→  width: 380px; height: 380px;
+  1700→  1700→  background: radial-gradient(circle, rgba(244,63,94,0.08) 0%, transparent 70%);
+  1701→  1701→  bottom: 15%; left: -6%;
+  1702→  1702→  animation: leak-drift-2 18s ease-in-out infinite;
+  1703→  1703→}
+  1704→  1704→.light-leak--sky {
+  1705→  1705→  width: 320px; height: 320px;
+  1706→  1706→  background: radial-gradient(circle, rgba(56,189,248,0.06) 0%, transparent 70%);
+  1707→  1707→  top: 40%; right: 8%;
+  1708→  1708→  animation: leak-drift-3 22s ease-in-out infinite;
+  1709→  1709→}
+  1710→  1710→@keyframes leak-drift-1 {
+  1711→  1711→  0%, 100% { opacity: 0; transform: translate(0, 0) scale(1); }
+  1712→  1712→  30% { opacity: 0.6; }
+  1713→  1713→  55% { opacity: 0.35; transform: translate(-50px, 35px) scale(1.15); }
+  1714→  1714→  80% { opacity: 0.7; }
+  1715→  1715→}
+  1716→  1716→@keyframes leak-drift-2 {
+  1717→  1717→  0%, 100% { opacity: 0; transform: translate(0, 0) scale(1); }
+  1718→  1718→  35% { opacity: 0.4; }
+  1719→  1719→  65% { opacity: 0.5; transform: translate(40px, -25px) scale(1.1); }
+  1720→  1720→}
+  1721→  1721→@keyframes leak-drift-3 {
+  1722→  1722→  0%, 100% { opacity: 0; transform: translate(0, 0) scale(0.95); }
+  1723→  1723→  45% { opacity: 0.35; transform: translate(-25px, 15px) scale(1.08); }
+  1724→  1724→  75% { opacity: 0.5; }
+  1725→  1725→}
+  1726→  1726→
+  1727→  1727→/* ─── Bokeh Canvas ─────────────────────────── */
+  1728→  1728→.bokeh-canvas {
+  1729→  1729→  position: fixed;
+  1730→  1730→  inset: 0;
+  1731→  1731→  z-index: 2;
+  1732→  1732→  pointer-events: none;
+  1733→  1733→  opacity: 0.45;
+  1734→  1734→}
+  1735→  1735→
+  1736→  1736→/* ─── Welcome Screen (first-visit) ─────────── */
+  1737→  1737→.welcome-overlay {
+  1738→  1738→  position: fixed;
+  1739→  1739→  inset: 0;
+  1740→  1740→  z-index: 100;
+  1741→  1741→  background: var(--background);
+  1742→  1742→  display: flex;
+  1743→  1743→  align-items: center;
+  1744→  1744→  justify-content: center;
+  1745→  1745→  flex-direction: column;
+  1746→  1746→  overflow: hidden;
+  1747→  1747→  will-change: opacity, transform;
+  1748→  1748→}
+  1749→  1749→.welcome-enter {
+  1750→  1750→  animation: welcome-fade-in 0.5s ease-out both;
+  1751→  1751→}
+  1752→  1752→.welcome-hold {
+  1753→  1753→  opacity: 1;
+  1754→  1754→}
+  1755→  1755→.welcome-exit {
+  1756→  1756→  animation: welcome-fade-out 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  1757→  1757→}
+  1758→  1758→@keyframes welcome-fade-in {
+  1759→  1759→  from { opacity: 0; }
+  1760→  1760→  to   { opacity: 1; }
+  1761→  1761→}
+  1762→  1762→@keyframes welcome-fade-out {
+  1763→  1763→  0%   { opacity: 1; filter: blur(0); transform: scale(1); }
+  1764→  1764→  100% { opacity: 0; filter: blur(6px); transform: scale(1.04); }
+  1765→  1765→}
+  1766→  1766→
+  1767→  1767→/* Letterbox bars */
+  1768→  1768→.welcome-letterbox {
+  1769→  1769→  position: absolute;
+  1770→  1770→  left: 0;
+  1771→  1771→  right: 0;
+  1772→  1772→  height: 0;
+  1773→  1773→  background: var(--background);
+  1774→  1774→  z-index: 2;
+  1775→  1775→  transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  1776→  1776→}
+  1777→  1777→.welcome-enter .welcome-letterbox--top {
+  1778→  1778→  animation: letterbox-in-top 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+  1779→  1779→}
+  1780→  1780→.welcome-enter .welcome-letterbox--bottom {
+  1781→  1781→  animation: letterbox-in-bottom 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+  1782→  1782→}
+  1783→  1783→.welcome-exit .welcome-letterbox {
+  1784→  1784→  height: 0 !important;
+  1785→  1785→  transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.15s;
+  1786→  1786→}
+  1787→  1787→@keyframes letterbox-in-top {
+  1788→  1788→  from { height: 0; }
+  1789→  1789→  to   { height: 48px; }
+  1790→  1790→}
+  1791→  1791→@keyframes letterbox-in-bottom {
+  1792→  1792→  from { height: 0; }
+  1793→  1793→  to   { height: 48px; }
+  1794→  1794→}
+  1795→  1795→
+  1796→  1796→/* Vignette for welcome */
+  1797→  1797→.welcome-vignette {
+  1798→  1798→  position: absolute;
+  1799→  1799→  inset: 0;
+  1800→  1800→  background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.7) 100%);
+  1801→  1801→  z-index: 1;
+  1802→  1802→  pointer-events: none;
+  1803→  1803→}
+  1804→  1804→
+  1805→  1805→/* Ambient glow behind logo */
+  1806→  1806→.welcome-glow {
+  1807→  1807→  position: absolute;
+  1808→  1808→  width: 320px;
+  1809→  1809→  height: 320px;
+  1810→  1810→  border-radius: 50%;
+  1811→  1811→  background: radial-gradient(circle, rgba(249, 189, 24, 0.15) 0%, rgba(249, 189, 24, 0.04) 40%, transparent 70%);
+  1812→  1812→  filter: blur(40px);
+  1813→  1813→  z-index: 1;
+  1814→  1814→  animation: welcome-glow-pulse 2.5s ease-in-out infinite;
+  1815→  1815→}
+  1816→  1816→@keyframes welcome-glow-pulse {
+  1817→  1817→  0%, 100% { transform: scale(1); opacity: 0.8; }
+  1818→  1818→  50%      { transform: scale(1.15); opacity: 1; }
+  1819→  1819→}
+  1820→  1820→
+  1821→  1821→/* Content group */
+  1822→  1822→.welcome-content {
+  1823→  1823→  position: relative;
+  1824→  1824→  z-index: 3;
+  1825→  1825→  display: flex;
+  1826→  1826→  flex-direction: column;
+  1827→  1827→  align-items: center;
+  1828→  1828→  gap: 1.25rem;
+  1829→  1829→}
+  1830→  1830→
+  1831→  1831→/* Logo wrapper */
+  1832→  1832→.welcome-logo-wrap {
+  1833→  1833→  opacity: 0;
+  1834→  1834→  transform: scale(0.7) translateY(12px);
+  1835→  1835→  filter: blur(10px);
+  1836→  1836→}
+  1837→  1837→.welcome-enter .welcome-logo-wrap {
+  1838→  1838→  animation: welcome-logo-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+  1839→  1839→}
+  1840→  1840→.welcome-exit .welcome-logo-wrap {
+  1841→  1841→  animation: welcome-element-out 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+  1842→  1842→}
+  1843→  1843→@keyframes welcome-logo-in {
+  1844→  1844→  0%   { opacity: 0; transform: scale(0.7) translateY(12px); filter: blur(10px); }
+  1845→  1845→  100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+  1846→  1846→}
+  1847→  1847→
+  1848→  1848→/* Avatar circle for returning user */
+  1849→  1849→.welcome-avatar-circle {
+  1850→  1850→  width: 80px;
+  1851→  1851→  height: 80px;
+  1852→  1852→  border-radius: 50%;
+  1853→  1853→  overflow: hidden;
+  1854→  1854→  border: 2px solid rgba(249, 189, 24, 0.3);
+  1855→  1855→  box-shadow: 0 0 30px rgba(249, 189, 24, 0.15), 0 0 60px rgba(249, 189, 24, 0.08);
+  1856→  1856→}
+  1857→  1857→@media (min-width: 640px) {
+  1858→  1858→  .welcome-avatar-circle {
+  1859→  1859→    width: 96px;
+  1860→  1860→    height: 96px;
+  1861→  1861→  }
+  1862→  1862→}
+  1863→  1863→.welcome-avatar-circle--fallback {
+  1864→  1864→  display: flex;
+  1865→  1865→  align-items: center;
+  1866→  1866→  justify-content: center;
+  1867→  1867→  background: linear-gradient(135deg, rgba(249, 189, 24, 0.15), rgba(249, 189, 24, 0.05));
+  1868→  1868→  border: 2px solid rgba(249, 189, 24, 0.25);
+  1869→  1869→}
+  1870→  1870→
+  1871→  1871→/* Title */
+  1872→  1872→.welcome-title {
+  1873→  1873→  font-size: 2.5rem;
+  1874→  1874→  font-weight: 800;
+  1875→  1875→  letter-spacing: -0.03em;
+  1876→  1876→  line-height: 1.1;
+  1877→  1877→  opacity: 0;
+  1878→  1878→  transform: translateY(16px);
+  1879→  1879→  filter: blur(8px);
+  1880→  1880→}
+  1881→  1881→.welcome-enter .welcome-title {
+  1882→  1882→  animation: welcome-text-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.65s both;
+  1883→  1883→}
+  1884→  1884→.welcome-exit .welcome-title {
+  1885→  1885→  animation: welcome-element-out 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  1886→  1886→}
+  1887→  1887→.welcome-title--tech {
+  1888→  1888→  color: rgba(255, 255, 255, 0.9);
+  1889→  1889→}
+  1890→  1890→.welcome-title--mate {
+  1891→  1891→  font-size: 2.5rem;
+  1892→  1892→  font-weight: 800;
+  1893→  1893→}
+  1894→  1894→@keyframes welcome-text-in {
+  1895→  1895→  0%   { opacity: 0; transform: translateY(16px); filter: blur(8px); }
+  1896→  1896→  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+  1897→  1897→}
+  1898→  1898→
+  1899→  1899→/* Tagline */
+  1900→  1900→.welcome-tagline {
+  1901→  1901→  color: var(--muted);
+  1902→  1902→  font-size: 0.95rem;
+  1903→  1903→  font-weight: 400;
+  1904→  1904→  letter-spacing: 0.02em;
+  1905→  1905→  text-align: center;
+  1906→  1906→  opacity: 0;
+  1907→  1907→  transform: translateY(10px);
+  1908→  1908→}
+  1909→  1909→.welcome-enter .welcome-tagline {
+  1910→  1910→  animation: welcome-text-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) 1s both;
+  1911→  1911→}
+  1912→  1912→.welcome-exit .welcome-tagline {
+  1913→  1913→  animation: welcome-element-out 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  1914→  1914→}
+  1915→  1915→@keyframes welcome-element-out {
+  1916→  1916→  0%   { opacity: 1; transform: translateY(0); filter: blur(0); }
+  1917→  1917→  100% { opacity: 0; transform: translateY(-10px); filter: blur(6px); }
+  1918→  1918→}
+  1919→  1919→
+  1920→  1920→/* Decorative line */
+  1921→  1921→.welcome-line {
+  1922→  1922→  width: 60px;
+  1923→  1923→  height: 2px;
+  1924→  1924→  background: linear-gradient(90deg, transparent, rgba(249, 189, 24, 0.5), transparent);
+  1925→  1925→  border-radius: 9999px;
+  1926→  1926→  opacity: 0;
+  1927→  1927→  transform: scaleX(0);
+  1928→  1928→}
+  1929→  1929→.welcome-enter .welcome-line {
+  1930→  1930→  animation: welcome-line-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) 1.2s both;
+  1931→  1931→}
+  1932→  1932→.welcome-exit .welcome-line {
+  1933→  1933→  animation: welcome-line-out 0.4s ease-in both;
+  1934→  1934→}
+  1935→  1935→@keyframes welcome-line-in {
+  1936→  1936→  0%   { opacity: 0; transform: scaleX(0); }
+  1937→  1937→  100% { opacity: 1; transform: scaleX(1); }
+  1938→  1938→}
+  1939→  1939→@keyframes welcome-line-out {
+  1940→  1940→  0%   { opacity: 1; transform: scaleX(1); }
+  1941→  1941→  100% { opacity: 0; transform: scaleX(0); }
+  1942→  1942→}
+  1943→  1943→
+  1944→  1944→/* Decorative rings */
+  1945→  1945→.welcome-ring {
+  1946→  1946→  position: absolute;
+  1947→  1947→  border-radius: 9999px;
+  1948→  1948→  border: 1px solid rgba(249, 189, 24, 0.06);
+  1949→  1949→  pointer-events: none;
+  1950→  1950→  z-index: 1;
+  1951→  1951→  opacity: 0;
+  1952→  1952→}
+  1953→  1953→.welcome-ring:not(.welcome-ring--outer) {
+  1954→  1954→  width: 180px;
+  1955→  1955→  height: 180px;
+  1956→  1956→}
+  1957→  1957→.welcome-ring--outer {
+  1958→  1958→  width: 260px;
+  1959→  1959→  height: 260px;
+  1960→  1960→}
+  1961→  1961→.welcome-enter .welcome-ring {
+  1962→  1962→  animation: welcome-ring-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+  1963→  1963→}
+  1964→  1964→.welcome-enter .welcome-ring--outer {
+  1965→  1965→  animation: welcome-ring-in 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
+  1966→  1966→}
+  1967→  1967→@keyframes welcome-ring-in {
+  1968→  1968→  0%   { opacity: 0; transform: scale(0.6); }
+  1969→  1969→  100% { opacity: 0.6; transform: scale(1); }
+  1970→  1970→}
+  1971→  1971→
+  1972→  1972→/* Mobile tweaks for welcome */
+  1973→  1973→@media (max-width: 640px) {
+  1974→  1974→  .welcome-letterbox--top,
+  1975→  1975→  .welcome-letterbox--bottom {
+  1976→  1976→    height: 32px !important;
+  1977→  1977→  }
+  1978→  1978→  @keyframes letterbox-in-top {
+  1979→  1979→    from { height: 0; }
+  1980→  1980→    to   { height: 32px; }
+  1981→  1981→  }
+  1982→  1982→  @keyframes letterbox-in-bottom {
+  1983→  1983→    from { height: 0; }
+  1984→  1984→    to   { height: 32px; }
+  1985→  1985→  }
+  1986→  1986→  .welcome-title {
+  1987→  1987→    font-size: 1.4rem;
+  1988→  1988→    white-space: nowrap;
+  1989→  1989→  }
+  1990→  1990→  .welcome-title--mate {
+  1991→  1991→    font-size: 1.4rem;
+  1992→  1992→  }
+  1993→  1993→  .welcome-tagline {
+  1994→  1994→    font-size: 0.875rem;
+  1995→  1995→    white-space: nowrap;
+  1996→  1996→  }
+  1997→  1997→  .welcome-glow {
+  1998→  1998→    width: 220px;
+  1999→  1999→    height: 220px;
+  2000→  2000→  }
+
+[showing lines 1-2000 of 2002; use offset=2001 with limit to continue reading]

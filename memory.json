@@ -1,0 +1,59 @@
+{
+  "user": {
+    "name": "Micael San Pedro",
+    "github_username": "MicaelSanPedro",
+    "email": "micael@example.com"
+  },
+  "git_config": {
+    "user_name": "Micael San Pedro",
+    "user_email": "micael@example.com"
+  },
+  "projects": [
+    {
+      "name": "mundo-aprender",
+      "description": "Plataforma de e-commerce para materiais educacionais",
+      "tech": ["Next.js 15", "TypeScript", "Tailwind CSS v4", "shadcn/ui", "NextAuth v5", "Vercel KV (Redis)"],
+      "visibility": "private",
+      "vercel_project_id": "prj_aHhwNA9zuhJY8Zobx6Wb9MJIusMm"
+    },
+    {
+      "name": "techmate",
+      "description": "Blog técnico moderno com design Liquid Glass (Linux, Windows, dev, gaming)",
+      "tech": ["Next.js 15", "TypeScript", "Tailwind CSS v4"],
+      "visibility": "public"
+    },
+    {
+      "name": "nim-chat",
+      "description": "Chat com 121 modelos de IA NVIDIA NIM",
+      "tech": ["Next.js", "TypeScript", "Tailwind CSS", "NVIDIA NIM API"],
+      "visibility": "private",
+      "vercel_project_id": "prj_6s10JSGBirJ3gRJ5316AsQlVj5ze"
+    },
+    {
+      "name": "ieadmontelibano",
+      "description": "Site oficial da IEAD Monte Líbano",
+      "tech": ["Next.js", "TypeScript", "Tailwind CSS"],
+      "visibility": "private"
+    },
+    {
+      "name": "meu-navegador-remoto",
+      "description": "Chromium em container Docker com acesso via noVNC",
+      "tech": ["Docker", "Debian", "Xvfb", "Openbox", "Chromium", "x11vnc", "noVNC"],
+      "visibility": "private"
+    }
+  ],
+  "platforms": {
+    "vercel": {
+      "team": "team_gDiNurhaKP1lyqCJI1lhaddd"
+    },
+    "github": {
+      "total_repos": 5
+    }
+  },
+  "notes": {
+    "language": "Portuguese (Brazilian)",
+    "meu-navegador-privado": "deleted by user",
+    "auth_setup": "NextAuth v5 com JWT sessions (sem PrismaAdapter — SQLite não funciona no serverless da Vercel)",
+    "data_persistence": "Vercel KV (Redis) + localStorage fallback, sync com debounce de 500ms"
+  }
+}
